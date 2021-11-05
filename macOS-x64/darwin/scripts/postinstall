@@ -1,12 +1,21 @@
 #!/bin/bash
 
-#Custermize this for your application
-APPLICATION_FILE_PATH=bin/wso2server.sh
+#Customize this for your application
+APPLICATION_FILE_PATH=Glimmr
 
 #Parameters
 PRODUCT_HOME=/Library/__PRODUCT__/__VERSION__
 
 echo "Post installation process started"
+
+echo "Installing Homebrew..."
+which -s brew
+if [[ $? != 0 ]] ; then
+    # Install Homebrew
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+else
+    brew update
+fi
 
 #Change permissions in home directory
 echo "Change permissions in product home"
