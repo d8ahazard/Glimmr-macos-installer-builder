@@ -185,8 +185,8 @@ command -v mvn -v >/dev/null 2>&1 || {
     log_warn "Apache Maven was not found. Please install Maven first."
     # exit 1
 }
-command -v ballerina >/dev/null 2>&1 || {
-    log_warn "Ballerina was not found. Please install ballerina first."
+command -v bal >/dev/null 2>&1 || {
+    log_warn "Ballerina was not found. Please install bal first."
     # exit 1
 }
 
