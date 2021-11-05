@@ -31,7 +31,7 @@
   },
   "targets": {
     ".NETCoreApp,Version=v5.0": {
-      "Glimmr/1.2.0-dev-0000928": {
+      "Glimmr/1.2.0-dev-0000933": {
         "dependencies": {
           "AdalightNet": "1.0.8",
           "AutoMapper": "10.1.1",
@@ -3623,7 +3623,7 @@
       }
     },
     ".NETCoreApp,Version=v5.0/osx-x64": {
-      "Glimmr/1.2.0-dev-0000928": {
+      "Glimmr/1.2.0-dev-0000933": {
         "dependencies": {
           "AdalightNet": "1.0.8",
           "AutoMapper": "10.1.1",
@@ -7350,7 +7350,7 @@
     }
   },
   "libraries": {
-    "Glimmr/1.2.0-dev-0000928": {
+    "Glimmr/1.2.0-dev-0000933": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

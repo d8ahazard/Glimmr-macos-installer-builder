@@ -17,6 +17,23 @@ else
     brew update
 fi
 
+echo "Installing dependencies..."
+brew install gtk+3 hdf5 lapack
+export LDFLAGS="-L/usr/local/opt/lapack/lib"
+export CPPFLAGS="-I/usr/local/opt/lapack/include"
+brew install jasper
+brew tap cartr/qt4 && brew install qt@4
+brew install mesa libdc1394 tesseract
+brew install icu4c brew link icu4c --force
+export LDFLAGS="-L/usr/local/opt/icu4c/lib"
+export CPPFLAGS="-I/usr/local/opt/icu4c/include"
+brew install jpeg libpng libtiff libav ffmpeg gcc glfw3 glew opencv unzip libtiff libgeotiff gstreamer gst-plugins-base gst-plugins-good openexr eigen
+brew install --cask cmake
+brew install freeglut libusb
+brew install zlib
+export LDFLAGS="-L/usr/local/opt/zlib/lib"
+export CPPFLAGS="-I/usr/local/opt/zlib/include"
+
 #Change permissions in home directory
 echo "Change permissions in product home"
 cd ${PRODUCT_HOME}
