@@ -26,29 +26,27 @@ echo "Checking Homebrew..."
 which -s brew
 if [[ ! -f /usr/local/Homebrew/Library/Homebrew/brew.sh ]] ; then
   echo "Installing homebrew..."
-  alias brew="/usr/local/Homebrew/Library/Homebrew/brew.sh"
   # Install Homebrew
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 else
   echo "Updating homebrew..."
-  alias brew="/usr/local/Homebrew/Library/Homebrew/brew.sh"    
-  brew update
+  /usr/local/Homebrew/Library/Homebrew/brew.sh update
 fi
 
 echo "Installing dependencies..."
-brew install gtk+3 hdf5 lapack
+/usr/local/Homebrew/Library/Homebrew/brew.sh install gtk+3 hdf5 lapack
 export LDFLAGS="-L/usr/local/opt/lapack/lib"
 export CPPFLAGS="-I/usr/local/opt/lapack/include"
-brew install jasper
-brew tap cartr/qt4 && brew install qt@4
-brew install mesa libdc1394 tesseract
-brew install icu4c brew link icu4c --force
+/usr/local/Homebrew/Library/Homebrew/brew.sh install jasper
+/usr/local/Homebrew/Library/Homebrew/brew.sh tap cartr/qt4 && /usr/local/Homebrew/Library/Homebrew/brew.sh install qt@4
+/usr/local/Homebrew/Library/Homebrew/brew.sh install mesa libdc1394 tesseract
+/usr/local/Homebrew/Library/Homebrew/brew.sh install icu4c /usr/local/Homebrew/Library/Homebrew/brew.sh link icu4c --force
 export LDFLAGS="-L/usr/local/opt/icu4c/lib"
 export CPPFLAGS="-I/usr/local/opt/icu4c/include"
-brew install jpeg libpng libtiff libav ffmpeg gcc glfw3 glew opencv unzip libtiff libgeotiff gstreamer gst-plugins-base gst-plugins-good openexr eigen
-brew install --cask cmake
-brew install freeglut libusb
-brew install zlib
+/usr/local/Homebrew/Library/Homebrew/brew.sh install jpeg libpng libtiff libav ffmpeg gcc glfw3 glew opencv unzip libtiff libgeotiff gstreamer gst-plugins-base gst-plugins-good openexr eigen
+/usr/local/Homebrew/Library/Homebrew/brew.sh install --cask cmake
+/usr/local/Homebrew/Library/Homebrew/brew.sh install freeglut libusb
+/usr/local/Homebrew/Library/Homebrew/brew.sh install zlib
 export LDFLAGS="-L/usr/local/opt/zlib/lib"
 export CPPFLAGS="-I/usr/local/opt/zlib/include"
 
