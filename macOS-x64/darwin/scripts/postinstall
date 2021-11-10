@@ -23,7 +23,7 @@ ln -s ${PRODUCT_HOME}/${APPLICATION_FILE_PATH} /usr/local/bin/__PRODUCT__
 echo "Main post installation process finished."
 echo "User is $USER"
 echo "Checking Homebrew..."
-sudo -u $user bash <<EOF
+sudo -u $USER bash <<EOF
   which -s brew
   if [[ ! -f brew ]] ; then
     echo "Installing homebrew..."
