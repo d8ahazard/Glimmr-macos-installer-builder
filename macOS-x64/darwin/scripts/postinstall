@@ -14,6 +14,6 @@ chmod -R 755 .
 [ -d /usr/local/bin ] || mkdir /usr/local/bin
 
 echo "cp ./com.glimmr.loginscript.plist ~/Library/LaunchAgents/com.glimmr.loginscript.plist"
-cp ./com.glimmr.loginscript.plist ~/Library/LaunchAgents/com.glimmr.loginscript.plist
+cp /Library/__PRODUCT__/__VERSION__/com.glimmr.loginscript.plist ~/Library/LaunchAgents/com.glimmr.loginscript.plist
 launchctl load ~/Library/LaunchAgents/com.glimmr.loginscript.plist
 echo "Post installation process finished"
