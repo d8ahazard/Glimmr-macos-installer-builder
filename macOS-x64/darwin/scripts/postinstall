@@ -22,34 +22,34 @@ launchctl load ~/Library/LaunchAgents/com.glimmr.loginscript.plist
 ln -s ${PRODUCT_HOME}/${APPLICATION_FILE_PATH} /usr/local/bin/__PRODUCT__
 echo "Main post installation process finished."
 echo "User is $USER"
-echo "Checking Homebrew..."
+echo "Checking Home/usr/local/bin/brew..."
 sudo -u $USER bash <<EOF
-  which -s brew
-  if [[ ! -f brew ]] ; then
-    echo "Installing homebrew..."
-    # Install Homebrew
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  which -s /usr/local/bin/brew
+  if [[ ! -f /usr/local/bin/brew ]] ; then
+    echo "Installing home/usr/local/bin/brew..."
+    # Install Home/usr/local/bin/brew
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Home/usr/local/bin/brew/install/HEAD/install.sh)"
   else
-    echo "Updating homebrew..."
-    brew update
+    echo "Updating home/usr/local/bin/brew..."
+    /usr/local/bin/brew update
   fi
   
   echo "Installing dependencies..."
-  brew install gtk+3 hdf5 lapack
+  /usr/local/bin/brew install gtk+3 hdf5 lapack
   export LDFLAGS="-L/usr/local/opt/lapack/lib"
   export CPPFLAGS="-I/usr/local/opt/lapack/include"
-  brew install jasper
-  brew tap cartr/qt4 
-  brew install qt@4
-  brew install mesa libdc1394 tesseract
-  brew install icu4c 
-  brew link icu4c --force
+  /usr/local/bin/brew install jasper
+  /usr/local/bin/brew tap cartr/qt4 
+  /usr/local/bin/brew install qt@4
+  /usr/local/bin/brew install mesa libdc1394 tesseract
+  /usr/local/bin/brew install icu4c 
+  /usr/local/bin/brew link icu4c --force
   export LDFLAGS="-L/usr/local/opt/icu4c/lib"
   export CPPFLAGS="-I/usr/local/opt/icu4c/include"
-  brew install jpeg libpng libtiff libav ffmpeg gcc glfw3 glew opencv unzip libtiff libgeotiff gstreamer gst-plugins-base gst-plugins-good openexr eigen
-  brew install --cask cmake
-  brew install freeglut libusb
-  brew install zlib
+  /usr/local/bin/brew install jpeg libpng libtiff libav ffmpeg gcc glfw3 glew opencv unzip libtiff libgeotiff gstreamer gst-plugins-base gst-plugins-good openexr eigen
+  /usr/local/bin/brew install --cask cmake
+  /usr/local/bin/brew install freeglut libusb
+  /usr/local/bin/brew install zlib
   export LDFLAGS="-L/usr/local/opt/zlib/lib"
   export CPPFLAGS="-I/usr/local/opt/zlib/include"
 EOF
