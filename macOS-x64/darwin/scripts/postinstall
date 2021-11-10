@@ -24,29 +24,29 @@ echo "Main post installation process finished."
 echo "User is $USER"
 echo "Checking Homebrew..."
 which -s brew
-if [[ ! -f /usr/local/Homebrew/Library/Homebrew/brew.sh ]] ; then
+if [[ ! -f brew ]] ; then
   echo "Installing homebrew..."
   # Install Homebrew
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 else
   echo "Updating homebrew..."
-  sudo -u $USER /usr/local/Homebrew/Library/Homebrew/brew.sh update
+  sudo -u $USER brew update
 fi
 
 echo "Installing dependencies..."
-sudo -u $USER /usr/local/Homebrew/Library/Homebrew/brew.sh install gtk+3 hdf5 lapack
+sudo -u $USER brew install gtk+3 hdf5 lapack
 export LDFLAGS="-Lsudo -u $USER /usr/local/opt/lapack/lib"
 export CPPFLAGS="-Isudo -u $USER /usr/local/opt/lapack/include"
-sudo -u $USER /usr/local/Homebrew/Library/Homebrew/brew.sh install jasper
-sudo -u $USER /usr/local/Homebrew/Library/Homebrew/brew.sh tap cartr/qt4 && sudo -u $USER /usr/local/Homebrew/Library/Homebrew/brew.sh install qt@4
-sudo -u $USER /usr/local/Homebrew/Library/Homebrew/brew.sh install mesa libdc1394 tesseract
-sudo -u $USER /usr/local/Homebrew/Library/Homebrew/brew.sh install icu4c sudo -u $USER /usr/local/Homebrew/Library/Homebrew/brew.sh link icu4c --force
+sudo -u $USER brew install jasper
+sudo -u $USER brew tap cartr/qt4 && sudo -u $USER brew install qt@4
+sudo -u $USER brew install mesa libdc1394 tesseract
+sudo -u $USER brew install icu4c sudo -u $USER brew link icu4c --force
 export LDFLAGS="-Lsudo -u $USER /usr/local/opt/icu4c/lib"
 export CPPFLAGS="-Isudo -u $USER /usr/local/opt/icu4c/include"
-sudo -u $USER /usr/local/Homebrew/Library/Homebrew/brew.sh install jpeg libpng libtiff libav ffmpeg gcc glfw3 glew opencv unzip libtiff libgeotiff gstreamer gst-plugins-base gst-plugins-good openexr eigen
-sudo -u $USER /usr/local/Homebrew/Library/Homebrew/brew.sh install --cask cmake
-sudo -u $USER /usr/local/Homebrew/Library/Homebrew/brew.sh install freeglut libusb
-sudo -u $USER /usr/local/Homebrew/Library/Homebrew/brew.sh install zlib
+sudo -u $USER brew install jpeg libpng libtiff libav ffmpeg gcc glfw3 glew opencv unzip libtiff libgeotiff gstreamer gst-plugins-base gst-plugins-good openexr eigen
+sudo -u $USER brew install --cask cmake
+sudo -u $USER brew install freeglut libusb
+sudo -u $USER brew install zlib
 export LDFLAGS="-Lsudo -u $USER /usr/local/opt/zlib/lib"
 export CPPFLAGS="-Isudo -u $USER /usr/local/opt/zlib/include"
 
