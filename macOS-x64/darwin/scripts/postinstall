@@ -20,43 +20,5 @@ rm -f /usr/local/bin/__PRODUCT__-__VERSION__
 cp ${PRODUCT_HOME}/com.glimmr.loginscript.plist ~/Library/LaunchAgents/com.glimmr.loginscript.plist
 launchctl load ~/Library/LaunchAgents/com.glimmr.loginscript.plist
 ln -s ${PRODUCT_HOME}/${APPLICATION_FILE_PATH} /usr/local/bin/__PRODUCT__
-echo "Main post installation process finished."
-echo "User is $USER"
-echo "Checking Home/usr/local/bin/brew..."
-sudo -u $USER bash <<EOF2
-which -s /usr/local/bin/brew
-  if [ ! -f /usr/local/bin/brew ] ; then
-    echo "Installing home/usr/local/bin/brew..."
-    # Install Home/usr/local/bin/brew
-    sudo /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Home/usr/local/bin/brew/install/HEAD/install.sh)"
-  else
-    echo "Updating home/usr/local/bin/brew..."
-    /usr/local/bin/brew update
-  fi
-EOF2
-sudo -u $USER bash <<EOF
-  echo "Installing dependencies..."
-  /usr/local/bin/brew install gtk+3 hdf5 lapack
-  export LDFLAGS="-L/usr/local/opt/lapack/lib"
-  export CPPFLAGS="-I/usr/local/opt/lapack/include"
-  echo "Jasper"
-  /usr/local/bin/brew install jasper
-  /usr/local/bin/brew tap cartr/qt4 
-  /usr/local/bin/brew install qt@4
-  /usr/local/bin/brew install mesa libdc1394 tesseract
-  /usr/local/bin/brew install icu4c
-  echo "icu4" 
-  /usr/local/bin/brew link icu4c --force
-  export LDFLAGS="-L/usr/local/opt/icu4c/lib"
-  export CPPFLAGS="-I/usr/local/opt/icu4c/include"
-  echo "jpeg and stuff"
-  /usr/local/bin/brew install jpeg libpng libtiff libav ffmpeg gcc glfw3 glew opencv unzip libtiff libgeotiff gstreamer gst-plugins-base gst-plugins-good openexr eigen
-  /usr/local/bin/brew install --cask cmake
-  /usr/local/bin/brew install freeglut libusb
-  echo "zlib"
-  /usr/local/bin/brew install zlib
-  export LDFLAGS="-L/usr/local/opt/zlib/lib"
-  export CPPFLAGS="-I/usr/local/opt/zlib/include"
-  echo "done"
-EOF
+
 echo "Post installation process finished"
