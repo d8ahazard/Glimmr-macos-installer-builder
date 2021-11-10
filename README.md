@@ -3,6 +3,12 @@
 # macOS Installer Builder (For Glimmr)
 Generate macOS installers for your applications and products from one command.
 
+## Dependencies
+
+You will need [maven](https://maven.apache.org/install.html) and [ballerina](https://ballerina.io/downloads) installed before the script will work.
+
+
+
 ## Usage
 
 
