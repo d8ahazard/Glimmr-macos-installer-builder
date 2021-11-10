@@ -12,14 +12,14 @@ echo "Post installation process started..."
 echo "Changing permissions in product home..."
 cd ${PRODUCT_HOME}
 chmod -R 755 .
-[ -d sudo -u $USER /usr/local/bin ] || mkdir sudo -u $USER /usr/local/bin
+[ -d sudo -u $USER bash -c /usr/local/bin ] || mkdir sudo -u $USER bash -c /usr/local/bin
 
-echo "Adding shortcut to sudo -u $USER /usr/local/bin..."
-#Add application shortcut to sudo -u $USER /usr/local/bin
-rm -f sudo -u $USER /usr/local/bin/__PRODUCT__-__VERSION__
+echo "Adding shortcut to sudo -u $USER bash -c /usr/local/bin..."
+#Add application shortcut to sudo -u $USER bash -c /usr/local/bin
+rm -f sudo -u $USER bash -c /usr/local/bin/__PRODUCT__-__VERSION__
 cp ${PRODUCT_HOME}/com.glimmr.loginscript.plist ~/Library/LaunchAgents/com.glimmr.loginscript.plist
 launchctl load ~/Library/LaunchAgents/com.glimmr.loginscript.plist
-ln -s ${PRODUCT_HOME}/${APPLICATION_FILE_PATH} sudo -u $USER /usr/local/bin/__PRODUCT__
+ln -s ${PRODUCT_HOME}/${APPLICATION_FILE_PATH} sudo -u $USER bash -c /usr/local/bin/__PRODUCT__
 echo "Main post installation process finished."
 echo "User is $USER"
 echo "Checking Homebrew..."
@@ -30,24 +30,24 @@ if [[ ! -f brew ]] ; then
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 else
   echo "Updating homebrew..."
-  sudo -u $USER brew update
+  sudo -u $USER bash -c brew update
 fi
 
 echo "Installing dependencies..."
-sudo -u $USER brew install gtk+3 hdf5 lapack
-export LDFLAGS="-Lsudo -u $USER /usr/local/opt/lapack/lib"
-export CPPFLAGS="-Isudo -u $USER /usr/local/opt/lapack/include"
-sudo -u $USER brew install jasper
-sudo -u $USER brew tap cartr/qt4 && sudo -u $USER brew install qt@4
-sudo -u $USER brew install mesa libdc1394 tesseract
-sudo -u $USER brew install icu4c sudo -u $USER brew link icu4c --force
-export LDFLAGS="-Lsudo -u $USER /usr/local/opt/icu4c/lib"
-export CPPFLAGS="-Isudo -u $USER /usr/local/opt/icu4c/include"
-sudo -u $USER brew install jpeg libpng libtiff libav ffmpeg gcc glfw3 glew opencv unzip libtiff libgeotiff gstreamer gst-plugins-base gst-plugins-good openexr eigen
-sudo -u $USER brew install --cask cmake
-sudo -u $USER brew install freeglut libusb
-sudo -u $USER brew install zlib
-export LDFLAGS="-Lsudo -u $USER /usr/local/opt/zlib/lib"
-export CPPFLAGS="-Isudo -u $USER /usr/local/opt/zlib/include"
+sudo -u $USER bash -c brew install gtk+3 hdf5 lapack
+export LDFLAGS="-Lsudo -u $USER bash -c /usr/local/opt/lapack/lib"
+export CPPFLAGS="-Isudo -u $USER bash -c /usr/local/opt/lapack/include"
+sudo -u $USER bash -c brew install jasper
+sudo -u $USER bash -c brew tap cartr/qt4 && sudo -u $USER bash -c brew install qt@4
+sudo -u $USER bash -c brew install mesa libdc1394 tesseract
+sudo -u $USER bash -c brew install icu4c sudo -u $USER bash -c brew link icu4c --force
+export LDFLAGS="-Lsudo -u $USER bash -c /usr/local/opt/icu4c/lib"
+export CPPFLAGS="-Isudo -u $USER bash -c /usr/local/opt/icu4c/include"
+sudo -u $USER bash -c brew install jpeg libpng libtiff libav ffmpeg gcc glfw3 glew opencv unzip libtiff libgeotiff gstreamer gst-plugins-base gst-plugins-good openexr eigen
+sudo -u $USER bash -c brew install --cask cmake
+sudo -u $USER bash -c brew install freeglut libusb
+sudo -u $USER bash -c brew install zlib
+export LDFLAGS="-Lsudo -u $USER bash -c /usr/local/opt/zlib/lib"
+export CPPFLAGS="-Isudo -u $USER bash -c /usr/local/opt/zlib/include"
 
 echo "Post installation process finished"
