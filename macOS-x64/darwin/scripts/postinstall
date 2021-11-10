@@ -24,12 +24,14 @@ echo "Main post installation process finished."
 
 echo "Checking Homebrew..."
 which -s brew
-if [[ $? != 0 ]] ; then
+if [[ ! -f /usr/local/Homebrew/Library/Homebrew/brew.sh ]] ; then
   echo "Installing homebrew..."
+  alias brew="/usr/local/Homebrew/Library/Homebrew/brew.sh"
   # Install Homebrew
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 else
   echo "Updating homebrew..."
+  alias brew="/usr/local/Homebrew/Library/Homebrew/brew.sh"    
   brew update
 fi
 
