@@ -6,15 +6,31 @@ APPLICATION_FILE_PATH=Glimmr
 #Parameters
 PRODUCT_HOME=/Library/__PRODUCT__
 
-echo "Post installation process started"
+echo "Post installation process started..."
 
-echo "Installing Homebrew..."
+#Change permissions in home directory
+echo "Changing permissions in product home..."
+cd ${PRODUCT_HOME}
+chmod -R 755 .
+[ -d /usr/local/bin ] || mkdir /usr/local/bin
+
+echo "Adding shortcut to /usr/local/bin..."
+#Add application shortcut to /usr/local/bin
+rm -f /usr/local/bin/__PRODUCT__-__VERSION__
+cp ${PRODUCT_HOME}/com.glimmr.loginscript.plist ~/Library/LaunchAgents/com.glimmr.loginscript.plist
+launchctl load ~/Library/LaunchAgents/com.glimmr.loginscript.plist
+ln -s ${PRODUCT_HOME}/${APPLICATION_FILE_PATH} /usr/local/bin/__PRODUCT__-__VERSION__
+echo "Main post installation process finished."
+
+echo "Checking Homebrew..."
 which -s brew
 if [[ $? != 0 ]] ; then
-    # Install Homebrew
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  echo "Installing homebrew..."
+  # Install Homebrew
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 else
-    brew update
+  echo "Updating homebrew..."
+  brew update
 fi
 
 echo "Installing dependencies..."
@@ -34,15 +50,4 @@ brew install zlib
 export LDFLAGS="-L/usr/local/opt/zlib/lib"
 export CPPFLAGS="-I/usr/local/opt/zlib/include"
 
-#Change permissions in home directory
-echo "Change permissions in product home"
-cd ${PRODUCT_HOME}
-chmod -R 755 .
-[ -d /usr/local/bin ] || mkdir /usr/local/bin
-
-#Add application shortcut to /usr/local/bin
-rm -f /usr/local/bin/__PRODUCT__-__VERSION__
-cp ${PRODUCT_HOME}/com.glimmr.loginscript.plist ~/Library/LaunchAgents/com.glimmr.loginscript.plist
-launchctl load ~/Library/LaunchAgents/com.glimmr.loginscript.plist
-ln -s ${PRODUCT_HOME}/${APPLICATION_FILE_PATH} /usr/local/bin/__PRODUCT__-__VERSION__
 echo "Post installation process finished"
