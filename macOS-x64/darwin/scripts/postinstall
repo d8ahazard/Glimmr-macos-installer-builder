@@ -4,7 +4,7 @@
 APPLICATION_FILE_PATH=Glimmr
 
 #Parameters
-PRODUCT_HOME=/Library/__PRODUCT__
+PRODUCT_HOME=/Library/__PRODUCT__-__VERSION__
 
 echo "Post installation process started..."
 
@@ -12,16 +12,16 @@ echo "Post installation process started..."
 echo "Changing permissions in product home..."
 cd ${PRODUCT_HOME}
 chmod -R 755 .
-[ -d /usr/local/bin ] || mkdir /usr/local/bin
+[ -d sudo $USER -u /usr/local/bin ] || mkdir sudo $USER -u /usr/local/bin
 
-echo "Adding shortcut to /usr/local/bin..."
-#Add application shortcut to /usr/local/bin
-rm -f /usr/local/bin/__PRODUCT__-__VERSION__
+echo "Adding shortcut to sudo $USER -u /usr/local/bin..."
+#Add application shortcut to sudo $USER -u /usr/local/bin
+rm -f sudo $USER -u /usr/local/bin/__PRODUCT__-__VERSION__
 cp ${PRODUCT_HOME}/com.glimmr.loginscript.plist ~/Library/LaunchAgents/com.glimmr.loginscript.plist
 launchctl load ~/Library/LaunchAgents/com.glimmr.loginscript.plist
-ln -s ${PRODUCT_HOME}/${APPLICATION_FILE_PATH} /usr/local/bin/__PRODUCT__-__VERSION__
+ln -s ${PRODUCT_HOME}/${APPLICATION_FILE_PATH} sudo $USER -u /usr/local/bin/__PRODUCT__
 echo "Main post installation process finished."
-
+echo "User is $USER"
 echo "Checking Homebrew..."
 which -s brew
 if [[ ! -f /usr/local/Homebrew/Library/Homebrew/brew.sh ]] ; then
@@ -30,24 +30,24 @@ if [[ ! -f /usr/local/Homebrew/Library/Homebrew/brew.sh ]] ; then
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 else
   echo "Updating homebrew..."
-  /usr/local/Homebrew/Library/Homebrew/brew.sh update
+  sudo $USER -u /usr/local/Homebrew/Library/Homebrew/brew.sh update
 fi
 
 echo "Installing dependencies..."
-/usr/local/Homebrew/Library/Homebrew/brew.sh install gtk+3 hdf5 lapack
-export LDFLAGS="-L/usr/local/opt/lapack/lib"
-export CPPFLAGS="-I/usr/local/opt/lapack/include"
-/usr/local/Homebrew/Library/Homebrew/brew.sh install jasper
-/usr/local/Homebrew/Library/Homebrew/brew.sh tap cartr/qt4 && /usr/local/Homebrew/Library/Homebrew/brew.sh install qt@4
-/usr/local/Homebrew/Library/Homebrew/brew.sh install mesa libdc1394 tesseract
-/usr/local/Homebrew/Library/Homebrew/brew.sh install icu4c /usr/local/Homebrew/Library/Homebrew/brew.sh link icu4c --force
-export LDFLAGS="-L/usr/local/opt/icu4c/lib"
-export CPPFLAGS="-I/usr/local/opt/icu4c/include"
-/usr/local/Homebrew/Library/Homebrew/brew.sh install jpeg libpng libtiff libav ffmpeg gcc glfw3 glew opencv unzip libtiff libgeotiff gstreamer gst-plugins-base gst-plugins-good openexr eigen
-/usr/local/Homebrew/Library/Homebrew/brew.sh install --cask cmake
-/usr/local/Homebrew/Library/Homebrew/brew.sh install freeglut libusb
-/usr/local/Homebrew/Library/Homebrew/brew.sh install zlib
-export LDFLAGS="-L/usr/local/opt/zlib/lib"
-export CPPFLAGS="-I/usr/local/opt/zlib/include"
+sudo $USER -u /usr/local/Homebrew/Library/Homebrew/brew.sh install gtk+3 hdf5 lapack
+export LDFLAGS="-Lsudo $USER -u /usr/local/opt/lapack/lib"
+export CPPFLAGS="-Isudo $USER -u /usr/local/opt/lapack/include"
+sudo $USER -u /usr/local/Homebrew/Library/Homebrew/brew.sh install jasper
+sudo $USER -u /usr/local/Homebrew/Library/Homebrew/brew.sh tap cartr/qt4 && sudo $USER -u /usr/local/Homebrew/Library/Homebrew/brew.sh install qt@4
+sudo $USER -u /usr/local/Homebrew/Library/Homebrew/brew.sh install mesa libdc1394 tesseract
+sudo $USER -u /usr/local/Homebrew/Library/Homebrew/brew.sh install icu4c sudo $USER -u /usr/local/Homebrew/Library/Homebrew/brew.sh link icu4c --force
+export LDFLAGS="-Lsudo $USER -u /usr/local/opt/icu4c/lib"
+export CPPFLAGS="-Isudo $USER -u /usr/local/opt/icu4c/include"
+sudo $USER -u /usr/local/Homebrew/Library/Homebrew/brew.sh install jpeg libpng libtiff libav ffmpeg gcc glfw3 glew opencv unzip libtiff libgeotiff gstreamer gst-plugins-base gst-plugins-good openexr eigen
+sudo $USER -u /usr/local/Homebrew/Library/Homebrew/brew.sh install --cask cmake
+sudo $USER -u /usr/local/Homebrew/Library/Homebrew/brew.sh install freeglut libusb
+sudo $USER -u /usr/local/Homebrew/Library/Homebrew/brew.sh install zlib
+export LDFLAGS="-Lsudo $USER -u /usr/local/opt/zlib/lib"
+export CPPFLAGS="-Isudo $USER -u /usr/local/opt/zlib/include"
 
 echo "Post installation process finished"
