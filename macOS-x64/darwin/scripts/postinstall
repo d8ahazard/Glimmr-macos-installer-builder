@@ -11,7 +11,7 @@ echo "Post installation process started..."
 echo "Changing permissions in product home..."
 cd ${PRODUCT_HOME}
 chmod -R 755 .
-[ -d /usr/local/bin ] || mkdir /usr/local/bin
+[ -d ~/Library/LaunchAgents ] || mkdir ~/Library/LaunchAgents
 
 echo "cp /Library/__PRODUCT__/__VERSION__/com.glimmr.loginscript.plist ~/Library/LaunchAgents/com.glimmr.loginscript.plist"
 cp /Library/__PRODUCT__/__VERSION__/com.glimmr.loginscript.plist ~/Library/LaunchAgents/com.glimmr.loginscript.plist
