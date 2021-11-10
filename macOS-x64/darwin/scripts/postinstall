@@ -25,7 +25,7 @@ echo "User is $USER"
 echo "Checking Home/usr/local/bin/brew..."
 sudo -u $USER bash <<EOF
   which -s /usr/local/bin/brew
-  if [[ ! -f /usr/local/bin/brew ]] ; then
+  if [ ! -f /usr/local/bin/brew ] ; then
     echo "Installing home/usr/local/bin/brew..."
     # Install Home/usr/local/bin/brew
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Home/usr/local/bin/brew/install/HEAD/install.sh)"
