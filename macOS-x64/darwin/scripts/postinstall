@@ -5,7 +5,6 @@ APPLICATION_FILE_PATH=Glimmr
 
 #Parameters
 PRODUCT_HOME=/Library/__PRODUCT__/__VERSION__
-
 echo "Post installation process started..."
 
 #Change permissions in home directory
@@ -14,10 +13,7 @@ cd ${PRODUCT_HOME}
 chmod -R 755 .
 [ -d /usr/local/bin ] || mkdir /usr/local/bin
 
-echo "Adding shortcut to /usr/local/bin..."
-#Add application shortcut to /usr/local/bin
-rm -f /usr/local/bin/__PRODUCT__-__VERSION__
-rm -f /usr/local/bin/__PRODUCT__
-cp ${PRODUCT_HOME}/com.glimmr.loginscript.plist ~/Library/LaunchAgents/com.glimmr.loginscript.plist
+echo "cp ./com.glimmr.loginscript.plist ~/Library/LaunchAgents/com.glimmr.loginscript.plist"
+cp ./com.glimmr.loginscript.plist ~/Library/LaunchAgents/com.glimmr.loginscript.plist
 launchctl load ~/Library/LaunchAgents/com.glimmr.loginscript.plist
 echo "Post installation process finished"
