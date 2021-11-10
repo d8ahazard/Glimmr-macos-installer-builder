@@ -1,13 +1,29 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-# macOS Installer Builder
+# macOS Installer Builder (For Glimmr)
 Generate macOS installers for your applications and products from one command.
 
-For more detailed process please refer medium blog about the macOS installer builder: https://medium.com/swlh/the-easiest-way-to-build-macos-installer-for-your-application-34a11dd08744
-<p align="center"> 
-  <img src="https://cdn.dribbble.com/users/1161517/screenshots/7896076/apple-logo-animation.gif" width="600" height="450" />
-</p>
+## Usage
 
-Please suggest any modifications that will improve these implementations by reporting an issue. Happy to help you!
+
+Clone the repository:
+
+```git clone https://github.com/d8ahazard/Glimmr-macos-installer-builder```
+
+CD into the new directory, set permissions:
+
+```
+cd ./Glimmr-macos-installer-builder
+chmod -R 777 ./*
+```
+
+Run the build script:
+```
+cd ./macOS-x64
+./build-macos-x64.sh Glimmr 1.2.0
+```
+
+Skip signing for now...
+
 
 Cheers!! 🍺
