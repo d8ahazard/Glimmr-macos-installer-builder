@@ -31,7 +31,7 @@
   },
   "targets": {
     ".NETCoreApp,Version=v5.0": {
-      "Glimmr/1.2.0-dev-0000940": {
+      "Glimmr/1.2.0-dev-0000944": {
         "dependencies": {
           "AdalightNet": "1.0.8",
           "AutoMapper": "10.1.1",
@@ -44,7 +44,7 @@
           "Emgu.CV.runtime.ubuntu.20.04-x64": "4.5.4.4788",
           "Emgu.CV.runtime.windows": "4.5.4.4788",
           "JsonSubTypes": "1.8.0",
-          "LibreHardwareMonitorLib": "0.8.9-pre47",
+          "LibreHardwareMonitorLib": "0.8.9",
           "LifxNetPlus": "1.1.5",
           "LiteDB": "5.0.11",
           "MMALSharp": "0.6.0",
@@ -70,7 +70,9 @@
           "SimpleGitVersion.Core": "5.1.1",
           "Swashbuckle.AspNetCore": "6.2.3",
           "Swashbuckle.AspNetCore.Annotations": "6.2.3",
+          "System.Drawing.Common": "5.0.2",
           "System.Net.WebSockets": "4.3.0",
+          "Xamarin.Mac.digitalhigh": "8.2.0.1",
           "YeelightAPI": "1.10.2",
           "digitalhigh.rpi-ws281x-csharp": "1.1.7",
           "Microsoft.AspNetCore.Antiforgery": "5.0.0.0",
@@ -1927,7 +1929,7 @@
         }
       },
       "LibGit2Sharp.NativeBinaries/2.0.306": {},
-      "LibreHardwareMonitorLib/0.8.9-pre47": {
+      "LibreHardwareMonitorLib/0.8.9": {
         "dependencies": {
           "HidSharp": "2.1.0",
           "Microsoft.Win32.Registry": "5.0.0",
@@ -3612,6 +3614,11 @@
           "ref/netstandard2.0/Tmds.LibC.dll": {}
         }
       },
+      "Xamarin.Mac.digitalhigh/8.2.0.1": {
+        "compile": {
+          "lib/Xamarin.Mac.dll": {}
+        }
+      },
       "YeelightAPI/1.10.2": {
         "dependencies": {
           "Newtonsoft.Json": "13.0.1",
@@ -3623,7 +3630,7 @@
       }
     },
     ".NETCoreApp,Version=v5.0/osx-x64": {
-      "Glimmr/1.2.0-dev-0000940": {
+      "Glimmr/1.2.0-dev-0000944": {
         "dependencies": {
           "AdalightNet": "1.0.8",
           "AutoMapper": "10.1.1",
@@ -3636,7 +3643,7 @@
           "Emgu.CV.runtime.ubuntu.20.04-x64": "4.5.4.4788",
           "Emgu.CV.runtime.windows": "4.5.4.4788",
           "JsonSubTypes": "1.8.0",
-          "LibreHardwareMonitorLib": "0.8.9-pre47",
+          "LibreHardwareMonitorLib": "0.8.9",
           "LifxNetPlus": "1.1.5",
           "LiteDB": "5.0.11",
           "MMALSharp": "0.6.0",
@@ -3662,7 +3669,9 @@
           "SimpleGitVersion.Core": "5.1.1",
           "Swashbuckle.AspNetCore": "6.2.3",
           "Swashbuckle.AspNetCore.Annotations": "6.2.3",
+          "System.Drawing.Common": "5.0.2",
           "System.Net.WebSockets": "4.3.0",
+          "Xamarin.Mac.digitalhigh": "8.2.0.1",
           "YeelightAPI": "1.10.2",
           "digitalhigh.rpi-ws281x-csharp": "1.1.7",
           "Microsoft.AspNetCore.Antiforgery": "5.0.0.0",
@@ -5403,7 +5412,7 @@
           }
         }
       },
-      "LibreHardwareMonitorLib/0.8.9-pre47": {
+      "LibreHardwareMonitorLib/0.8.9": {
         "dependencies": {
           "HidSharp": "2.1.0",
           "Microsoft.Win32.Registry": "5.0.0",
@@ -7335,6 +7344,14 @@
         }
       },
       "Tmds.LibC/0.2.0": {},
+      "Xamarin.Mac.digitalhigh/8.2.0.1": {
+        "runtime": {
+          "lib/Xamarin.Mac.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
       "YeelightAPI/1.10.2": {
         "dependencies": {
           "Newtonsoft.Json": "13.0.1",
@@ -7350,7 +7367,7 @@
     }
   },
   "libraries": {
-    "Glimmr/1.2.0-dev-0000940": {
+    "Glimmr/1.2.0-dev-0000944": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -7526,12 +7543,12 @@
       "path": "libgit2sharp.nativebinaries/2.0.306",
       "hashPath": "libgit2sharp.nativebinaries.2.0.306.nupkg.sha512"
     },
-    "LibreHardwareMonitorLib/0.8.9-pre47": {
+    "LibreHardwareMonitorLib/0.8.9": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-hYvBp77jexubFF1q5sXw3I9+WpElNdcRh37/6uN6Jv7BERKvEi8D0+oWwgcX+M+CsJ6LOR7m44fDyZsP2s9osg==",
-      "path": "librehardwaremonitorlib/0.8.9-pre47",
-      "hashPath": "librehardwaremonitorlib.0.8.9-pre47.nupkg.sha512"
+      "sha512": "sha512-e0axsjvbjtQLdsuL25PwYgPsOAZjDORY+K+qgvtvUh8Rt4P/t+Xk0sDKRCHVcTlr/J6UGWKcd0dhmE5v25ujqQ==",
+      "path": "librehardwaremonitorlib/0.8.9",
+      "hashPath": "librehardwaremonitorlib.0.8.9.nupkg.sha512"
     },
     "LifxNetPlus/1.1.5": {
       "type": "package",
@@ -9128,6 +9145,13 @@
       "sha512": "sha512-+RvLuNHOLW7cxzgDe9yHLoayBgjsuH2/gJtJnuVMxweKrxxYT6TwQNAmt06SFWpjwk68aRcwwD4FfMMA6tZvVA==",
       "path": "tmds.libc/0.2.0",
       "hashPath": "tmds.libc.0.2.0.nupkg.sha512"
+    },
+    "Xamarin.Mac.digitalhigh/8.2.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-kT/41TFwAxo1DUkIVhv23Pm5xyLqAfQRtfm2rzlyCBWYEzvNifsG/+aph193OqVL0Lb/gGnDdEokU0ApeOg8Ig==",
+      "path": "xamarin.mac.digitalhigh/8.2.0.1",
+      "hashPath": "xamarin.mac.digitalhigh.8.2.0.1.nupkg.sha512"
     },
     "YeelightAPI/1.10.2": {
       "type": "package",
