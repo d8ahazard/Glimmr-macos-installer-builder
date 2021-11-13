@@ -24,8 +24,8 @@ loggedInUser=$( ls -l /dev/console | awk '{print $3}' )
 # Get loggedInUser ID
 userID=$( id -u $loggedInUser )
 
-chown root:wheel /Libary/LaunchAgents/com.glimmr.plist
-chmod 644 /Libary/LaunchAgents/com.glimmr.plist
+chown root:wheel /Library/LaunchAgents/com.glimmr.plist
+chmod 644 /Library/LaunchAgents/com.glimmr.plist
 
 launchctl bootstrap gui/$userID /Library/LaunchAgents/com.glimmr.plist
 
