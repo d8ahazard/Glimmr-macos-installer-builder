@@ -41,14 +41,19 @@ done
 VERSION=__VERSION__
 PRODUCT=__PRODUCT__
 
-echo "Application uninstalling process started"
-# remove link to shorcut file
-find "/usr/local/bin/" -name "__PRODUCT__-__VERSION__" | xargs rm
+# As needed through script, logged in user is variable below
+loggedInUser=$( ls -l /dev/console | awk '{print $3}' )
+
+# Get loggedInUser ID
+userID=$( id -u $loggedInUser )
+
+launchctl bootout gui/$userID /Library/LaunchAgents/com.glimmr.plist > /dev/null 2>&1
+pkill Glimmr
 if [ $? -eq 0 ]
 then
-  echo "[1/3] [DONE] Successfully deleted shortcut links"
+  echo "[1/3] [DONE] Successfully unlinked startup agent."
 else
-  echo "[1/3] [ERROR] Could not delete shortcut links" >&2
+  echo "[1/3] [ERROR] Could not unlink startup agent." >&2
 fi
 
 #forget from pkgutil
