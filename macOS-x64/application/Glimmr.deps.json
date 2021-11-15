@@ -6,7 +6,7 @@
   "compilationOptions": {
     "defines": [
       "TRACE",
-      "DEBUG",
+      "RELEASE",
       "NET",
       "NET5_0",
       "NETCOREAPP",
@@ -23,56 +23,46 @@
     "platform": "x64",
     "allowUnsafe": true,
     "warningsAsErrors": false,
-    "optimize": false,
+    "optimize": true,
     "keyFile": "",
     "emitEntryPoint": true,
-    "xmlDoc": true,
-    "debugType": "full"
+    "xmlDoc": false,
+    "debugType": "portable"
   },
   "targets": {
     ".NETCoreApp,Version=v5.0": {
-      "Glimmr/1.2.0-dev-0000944": {
+      "Glimmr/1.1.7-master-0000860": {
         "dependencies": {
           "AdalightNet": "1.0.8",
           "AutoMapper": "10.1.1",
           "DasMulli.SimpleGitVersion": "1.0.0",
           "DirectShowLib.Standard": "2.1.0",
-          "DreamScreenNet": "1.0.5",
-          "Emgu.CV": "4.5.4.4788",
-          "Emgu.CV.Bitmap": "4.5.4.4788",
-          "Emgu.CV.runtime.linux-arm": "4.5.4.4788",
-          "Emgu.CV.runtime.ubuntu.20.04-x64": "4.5.4.4788",
-          "Emgu.CV.runtime.windows": "4.5.4.4788",
-          "JsonSubTypes": "1.8.0",
-          "LibreHardwareMonitorLib": "0.8.9",
+          "DreamScreenNet": "1.0.4",
+          "Emgu.CV": "4.5.1.4349",
+          "Emgu.CV.Bitmap": "4.5.1.4349",
+          "Emgu.CV.runtime.windows": "4.5.1.4349",
           "LifxNetPlus": "1.1.5",
           "LiteDB": "5.0.11",
           "MMALSharp": "0.6.0",
           "Makaretu.Dns.Multicast": "0.27.0",
           "ManagedBass": "3.1.0",
           "Microsoft.AspNet.SignalR.Client": "2.4.2",
-          "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "5.0.11",
-          "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": "5.0.11",
+          "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "5.0.9",
+          "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": "5.0.9",
           "Microsoft.AspNetCore.SignalR": "1.1.0",
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.11.1",
           "Nanoleaf.Core": "2.0.0",
           "Newtonsoft.Json": "13.0.1",
           "OpenRGB.NET": "1.7.0",
-          "Packaging.Targets": "0.1.189",
           "Q42.HueApi": "3.18.1",
           "Q42.HueApi.Entertainment": "3.18.1",
           "Serilog": "2.10.0",
           "Serilog.AspNetCore": "4.1.0",
-          "Serilog.Sinks.AspNetCore.SignalR": "0.4.0",
           "Serilog.Sinks.Async": "1.5.0",
           "Serilog.Sinks.Console": "4.0.0",
           "Serilog.Sinks.File": "5.0.0",
           "SimpleGitVersion.Core": "5.1.1",
-          "Swashbuckle.AspNetCore": "6.2.3",
-          "Swashbuckle.AspNetCore.Annotations": "6.2.3",
-          "System.Drawing.Common": "5.0.2",
           "System.Net.WebSockets": "4.3.0",
-          "Xamarin.Mac.digitalhigh": "8.2.0.1",
           "YeelightAPI": "1.10.2",
           "digitalhigh.rpi-ws281x-csharp": "1.1.7",
           "Microsoft.AspNetCore.Antiforgery": "5.0.0.0",
@@ -1847,7 +1837,7 @@
           "lib/netstandard2.0/DirectShowLib.dll": {}
         }
       },
-      "DreamScreenNet/1.0.5": {
+      "DreamScreenNet/1.0.4": {
         "dependencies": {
           "Newtonsoft.Json": "13.0.1"
         },
@@ -1855,7 +1845,7 @@
           "lib/netstandard2.0/DreamScreenNet.dll": {}
         }
       },
-      "Emgu.CV/4.5.4.4788": {
+      "Emgu.CV/4.5.1.4349": {
         "dependencies": {
           "System.Drawing.Primitives": "4.3.0",
           "System.Runtime": "4.3.1",
@@ -1865,39 +1855,24 @@
           "lib/netstandard2.0/Emgu.CV.Platform.NetStandard.dll": {}
         }
       },
-      "Emgu.CV.Bitmap/4.5.4.4788": {
+      "Emgu.CV.Bitmap/4.5.1.4349": {
         "dependencies": {
-          "Emgu.CV": "4.5.4.4788",
-          "System.Drawing.Common": "5.0.2"
+          "Emgu.CV": "4.5.1.4349",
+          "System.Drawing.Common": "5.0.0"
         },
         "compile": {
           "lib/netstandard2.0/Emgu.CV.Bitmap.dll": {}
         }
       },
-      "Emgu.CV.runtime.linux-arm/4.5.4.4788": {
+      "Emgu.CV.runtime.windows/4.5.1.4349": {
         "dependencies": {
-          "Emgu.CV": "4.5.4.4788"
+          "Emgu.CV": "4.5.1.4349",
+          "Emgu.runtime.windows.msvc.rt.x64": "19.28.29336",
+          "Emgu.runtime.windows.msvc.rt.x86": "19.28.29336"
         }
       },
-      "Emgu.CV.runtime.ubuntu.20.04-x64/4.5.4.4788": {
-        "dependencies": {
-          "Emgu.CV": "4.5.4.4788"
-        }
-      },
-      "Emgu.CV.runtime.windows/4.5.4.4788": {
-        "dependencies": {
-          "Emgu.CV": "4.5.4.4788",
-          "Emgu.runtime.windows.msvc.rt.x64": "19.29.30136",
-          "Emgu.runtime.windows.msvc.rt.x86": "19.29.30136"
-        }
-      },
-      "Emgu.runtime.windows.msvc.rt.x64/19.29.30136": {},
-      "Emgu.runtime.windows.msvc.rt.x86/19.29.30136": {},
-      "HidSharp/2.1.0": {
-        "compile": {
-          "lib/netstandard2.0/HidSharp.dll": {}
-        }
-      },
+      "Emgu.runtime.windows.msvc.rt.x64/19.28.29336": {},
+      "Emgu.runtime.windows.msvc.rt.x86/19.28.29336": {},
       "HttpMachine.PCL/3.1.0": {
         "compile": {
           "lib/netstandard1.0/HttpMachine.dll": {},
@@ -1912,14 +1887,6 @@
           "lib/netstandard1.3/System.Net.IPNetwork.dll": {}
         }
       },
-      "JsonSubTypes/1.8.0": {
-        "dependencies": {
-          "Newtonsoft.Json": "13.0.1"
-        },
-        "compile": {
-          "lib/netstandard2.0/JsonSubTypes.dll": {}
-        }
-      },
       "LibGit2Sharp/0.26.2": {
         "dependencies": {
           "LibGit2Sharp.NativeBinaries": "2.0.306"
@@ -1929,18 +1896,6 @@
         }
       },
       "LibGit2Sharp.NativeBinaries/2.0.306": {},
-      "LibreHardwareMonitorLib/0.8.9": {
-        "dependencies": {
-          "HidSharp": "2.1.0",
-          "Microsoft.Win32.Registry": "5.0.0",
-          "System.IO.FileSystem.AccessControl": "5.0.0",
-          "System.IO.Ports": "5.0.1",
-          "System.Management": "5.0.0"
-        },
-        "compile": {
-          "lib/net5.0/LibreHardwareMonitorLib.dll": {}
-        }
-      },
       "LifxNetPlus/1.1.5": {
         "dependencies": {
           "Newtonsoft.Json": "13.0.1"
@@ -2055,7 +2010,7 @@
         "dependencies": {
           "Microsoft.AspNetCore.Connections.Abstractions": "2.2.0",
           "Newtonsoft.Json": "13.0.1",
-          "System.Buffers": "4.5.1"
+          "System.Buffers": "4.5.0"
         }
       },
       "Microsoft.AspNetCore.Http.Extensions/2.2.0": {
@@ -2063,7 +2018,7 @@
           "Microsoft.AspNetCore.Http.Abstractions": "2.2.0",
           "Microsoft.Extensions.FileProviders.Abstractions": "3.1.8",
           "Microsoft.Net.Http.Headers": "2.2.0",
-          "System.Buffers": "4.5.1"
+          "System.Buffers": "4.5.0"
         }
       },
       "Microsoft.AspNetCore.Http.Features/2.2.0": {
@@ -2071,7 +2026,7 @@
           "Microsoft.Extensions.Primitives": "5.0.0"
         }
       },
-      "Microsoft.AspNetCore.JsonPatch/5.0.11": {
+      "Microsoft.AspNetCore.JsonPatch/5.0.9": {
         "dependencies": {
           "Microsoft.CSharp": "4.7.0",
           "Newtonsoft.Json": "13.0.1"
@@ -2080,9 +2035,9 @@
           "lib/netstandard2.0/Microsoft.AspNetCore.JsonPatch.dll": {}
         }
       },
-      "Microsoft.AspNetCore.Mvc.NewtonsoftJson/5.0.11": {
+      "Microsoft.AspNetCore.Mvc.NewtonsoftJson/5.0.9": {
         "dependencies": {
-          "Microsoft.AspNetCore.JsonPatch": "5.0.11",
+          "Microsoft.AspNetCore.JsonPatch": "5.0.9",
           "Newtonsoft.Json": "13.0.1",
           "Newtonsoft.Json.Bson": "1.0.2"
         },
@@ -2090,26 +2045,26 @@
           "lib/net5.0/Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll": {}
         }
       },
-      "Microsoft.AspNetCore.Mvc.Razor.Extensions/5.0.11": {
+      "Microsoft.AspNetCore.Mvc.Razor.Extensions/5.0.9": {
         "dependencies": {
-          "Microsoft.AspNetCore.Razor.Language": "5.0.11",
-          "Microsoft.CodeAnalysis.Razor": "5.0.11"
+          "Microsoft.AspNetCore.Razor.Language": "5.0.9",
+          "Microsoft.CodeAnalysis.Razor": "5.0.9"
         },
         "compile": {
           "lib/netstandard2.0/Microsoft.AspNetCore.Mvc.Razor.Extensions.dll": {}
         }
       },
-      "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation/5.0.11": {
+      "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation/5.0.9": {
         "dependencies": {
-          "Microsoft.AspNetCore.Mvc.Razor.Extensions": "5.0.11",
-          "Microsoft.CodeAnalysis.Razor": "5.0.11",
+          "Microsoft.AspNetCore.Mvc.Razor.Extensions": "5.0.9",
+          "Microsoft.CodeAnalysis.Razor": "5.0.9",
           "Microsoft.Extensions.DependencyModel": "5.0.0"
         },
         "compile": {
           "lib/net5.0/Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.dll": {}
         }
       },
-      "Microsoft.AspNetCore.Razor.Language/5.0.11": {
+      "Microsoft.AspNetCore.Razor.Language/5.0.9": {
         "compile": {
           "lib/netstandard2.0/Microsoft.AspNetCore.Razor.Language.dll": {}
         }
@@ -2139,7 +2094,7 @@
           "Microsoft.AspNetCore.Connections.Abstractions": "2.2.0",
           "Microsoft.Extensions.Options": "5.0.0",
           "Newtonsoft.Json": "13.0.1",
-          "System.Buffers": "4.5.1"
+          "System.Buffers": "4.5.0"
         }
       },
       "Microsoft.AspNetCore.SignalR.Core/1.1.0": {
@@ -2196,9 +2151,9 @@
           "lib/netcoreapp3.1/Microsoft.CodeAnalysis.CSharp.dll": {}
         }
       },
-      "Microsoft.CodeAnalysis.Razor/5.0.11": {
+      "Microsoft.CodeAnalysis.Razor/5.0.9": {
         "dependencies": {
-          "Microsoft.AspNetCore.Razor.Language": "5.0.11",
+          "Microsoft.AspNetCore.Razor.Language": "5.0.9",
           "Microsoft.CodeAnalysis.CSharp": "3.8.0",
           "Microsoft.CodeAnalysis.Common": "3.8.0"
         },
@@ -2207,7 +2162,6 @@
         }
       },
       "Microsoft.CSharp/4.7.0": {},
-      "Microsoft.Extensions.ApiDescription.Server/3.0.0": {},
       "Microsoft.Extensions.Configuration/2.0.0": {
         "dependencies": {
           "Microsoft.Extensions.Configuration.Abstractions": "3.1.8"
@@ -2275,16 +2229,11 @@
       "Microsoft.Net.Http.Headers/2.2.0": {
         "dependencies": {
           "Microsoft.Extensions.Primitives": "5.0.0",
-          "System.Buffers": "4.5.1"
+          "System.Buffers": "4.5.0"
         }
       },
       "Microsoft.NETCore.Platforms/5.0.0": {},
       "Microsoft.NETCore.Targets/1.1.3": {},
-      "Microsoft.OpenApi/1.2.3": {
-        "compile": {
-          "lib/netstandard2.0/Microsoft.OpenApi.dll": {}
-        }
-      },
       "Microsoft.VisualStudio.Azure.Containers.Tools.Targets/1.11.1": {},
       "Microsoft.Win32.Primitives/4.3.0": {
         "dependencies": {
@@ -2319,7 +2268,7 @@
       "MMALSharp.Common/0.6.0": {
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "5.0.0",
-          "System.Drawing.Common": "5.0.2",
+          "System.Drawing.Common": "5.0.0",
           "System.Numerics.Vectors": "4.4.0"
         },
         "compile": {
@@ -2330,7 +2279,7 @@
         "dependencies": {
           "MMALSharp.Common": "0.6.0",
           "Microsoft.Extensions.Logging.Abstractions": "5.0.0",
-          "System.Drawing.Common": "5.0.2"
+          "System.Drawing.Common": "5.0.0"
         },
         "compile": {
           "lib/netstandard2.0/MMALSharp.Processing.dll": {}
@@ -2409,11 +2358,6 @@
       "OpenRGB.NET/1.7.0": {
         "compile": {
           "lib/netstandard2.0/OpenRGB.NET.dll": {}
-        }
-      },
-      "Packaging.Targets/0.1.189": {
-        "dependencies": {
-          "System.Buffers": "4.5.1"
         }
       },
       "Portable.BouncyCastle/1.8.10": {
@@ -2560,7 +2504,7 @@
       },
       "runtime.unix.System.IO.FileSystem/4.3.0": {
         "dependencies": {
-          "System.Buffers": "4.5.1",
+          "System.Buffers": "4.5.0",
           "System.Collections": "4.3.0",
           "System.Diagnostics.Debug": "4.3.0",
           "System.IO": "4.3.0",
@@ -2685,15 +2629,6 @@
           "lib/netstandard2.0/Serilog.Settings.Configuration.dll": {}
         }
       },
-      "Serilog.Sinks.AspNetCore.SignalR/0.4.0": {
-        "dependencies": {
-          "Microsoft.AspNetCore.SignalR": "1.1.0",
-          "Serilog": "2.10.0"
-        },
-        "compile": {
-          "lib/netcoreapp3.1/Serilog.Sinks.AspNetCore.SignalR.dll": {}
-        }
-      },
       "Serilog.Sinks.Async/1.5.0": {
         "dependencies": {
           "Serilog": "2.10.0"
@@ -2769,54 +2704,12 @@
           "lib/netstandard2.0/SocketLite.dll": {}
         }
       },
-      "Swashbuckle.AspNetCore/6.2.3": {
-        "dependencies": {
-          "Microsoft.Extensions.ApiDescription.Server": "3.0.0",
-          "Swashbuckle.AspNetCore.Swagger": "6.2.3",
-          "Swashbuckle.AspNetCore.SwaggerGen": "6.2.3",
-          "Swashbuckle.AspNetCore.SwaggerUI": "6.2.3"
-        }
-      },
-      "Swashbuckle.AspNetCore.Annotations/6.2.3": {
-        "dependencies": {
-          "Swashbuckle.AspNetCore.SwaggerGen": "6.2.3"
-        },
-        "compile": {
-          "lib/net5.0/Swashbuckle.AspNetCore.Annotations.dll": {}
-        }
-      },
-      "Swashbuckle.AspNetCore.Swagger/6.2.3": {
-        "dependencies": {
-          "Microsoft.OpenApi": "1.2.3"
-        },
-        "compile": {
-          "lib/net5.0/Swashbuckle.AspNetCore.Swagger.dll": {}
-        }
-      },
-      "Swashbuckle.AspNetCore.SwaggerGen/6.2.3": {
-        "dependencies": {
-          "Swashbuckle.AspNetCore.Swagger": "6.2.3"
-        },
-        "compile": {
-          "lib/net5.0/Swashbuckle.AspNetCore.SwaggerGen.dll": {}
-        }
-      },
-      "Swashbuckle.AspNetCore.SwaggerUI/6.2.3": {
-        "compile": {
-          "lib/net5.0/Swashbuckle.AspNetCore.SwaggerUI.dll": {}
-        }
-      },
       "System.AppContext/4.3.0": {
         "dependencies": {
           "System.Runtime": "4.3.1"
         }
       },
-      "System.Buffers/4.5.1": {},
-      "System.CodeDom/5.0.0": {
-        "compile": {
-          "ref/netstandard2.0/System.CodeDom.dll": {}
-        }
-      },
+      "System.Buffers/4.5.0": {},
       "System.Collections/4.3.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "5.0.0",
@@ -2897,7 +2790,7 @@
           "runtime.any.System.Diagnostics.Tracing": "4.3.0"
         }
       },
-      "System.Drawing.Common/5.0.2": {
+      "System.Drawing.Common/5.0.0": {
         "dependencies": {
           "Microsoft.Win32.SystemEvents": "5.0.0"
         },
@@ -2970,7 +2863,7 @@
       "System.IO.Compression/4.3.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "5.0.0",
-          "System.Buffers": "4.5.1",
+          "System.Buffers": "4.5.0",
           "System.Collections": "4.3.0",
           "System.Diagnostics.Debug": "4.3.0",
           "System.IO": "4.3.0",
@@ -2988,7 +2881,7 @@
       },
       "System.IO.Compression.ZipFile/4.3.0": {
         "dependencies": {
-          "System.Buffers": "4.5.1",
+          "System.Buffers": "4.5.0",
           "System.IO": "4.3.0",
           "System.IO.Compression": "4.3.0",
           "System.IO.FileSystem": "4.3.0",
@@ -3010,15 +2903,6 @@
           "System.Text.Encoding": "4.3.0",
           "System.Threading.Tasks": "4.3.0",
           "runtime.unix.System.IO.FileSystem": "4.3.0"
-        }
-      },
-      "System.IO.FileSystem.AccessControl/5.0.0": {
-        "dependencies": {
-          "System.Security.AccessControl": "5.0.0",
-          "System.Security.Principal.Windows": "5.0.0"
-        },
-        "compile": {
-          "ref/netstandard2.0/System.IO.FileSystem.AccessControl.dll": {}
         }
       },
       "System.IO.FileSystem.Primitives/4.3.0": {
@@ -3064,16 +2948,6 @@
           "System.Runtime": "4.3.1",
           "System.Runtime.Extensions": "4.3.0",
           "System.Threading": "4.3.0"
-        }
-      },
-      "System.Management/5.0.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "Microsoft.Win32.Registry": "5.0.0",
-          "System.CodeDom": "5.0.0"
-        },
-        "compile": {
-          "ref/netstandard2.0/System.Management.dll": {}
         }
       },
       "System.Memory/4.5.4": {},
@@ -3614,11 +3488,6 @@
           "ref/netstandard2.0/Tmds.LibC.dll": {}
         }
       },
-      "Xamarin.Mac.digitalhigh/8.2.0.1": {
-        "compile": {
-          "lib/Xamarin.Mac.dll": {}
-        }
-      },
       "YeelightAPI/1.10.2": {
         "dependencies": {
           "Newtonsoft.Json": "13.0.1",
@@ -3630,48 +3499,38 @@
       }
     },
     ".NETCoreApp,Version=v5.0/osx-x64": {
-      "Glimmr/1.2.0-dev-0000944": {
+      "Glimmr/1.1.7-master-0000860": {
         "dependencies": {
           "AdalightNet": "1.0.8",
           "AutoMapper": "10.1.1",
           "DasMulli.SimpleGitVersion": "1.0.0",
           "DirectShowLib.Standard": "2.1.0",
-          "DreamScreenNet": "1.0.5",
-          "Emgu.CV": "4.5.4.4788",
-          "Emgu.CV.Bitmap": "4.5.4.4788",
-          "Emgu.CV.runtime.linux-arm": "4.5.4.4788",
-          "Emgu.CV.runtime.ubuntu.20.04-x64": "4.5.4.4788",
-          "Emgu.CV.runtime.windows": "4.5.4.4788",
-          "JsonSubTypes": "1.8.0",
-          "LibreHardwareMonitorLib": "0.8.9",
+          "DreamScreenNet": "1.0.4",
+          "Emgu.CV": "4.5.1.4349",
+          "Emgu.CV.Bitmap": "4.5.1.4349",
+          "Emgu.CV.runtime.windows": "4.5.1.4349",
           "LifxNetPlus": "1.1.5",
           "LiteDB": "5.0.11",
           "MMALSharp": "0.6.0",
           "Makaretu.Dns.Multicast": "0.27.0",
           "ManagedBass": "3.1.0",
           "Microsoft.AspNet.SignalR.Client": "2.4.2",
-          "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "5.0.11",
-          "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": "5.0.11",
+          "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "5.0.9",
+          "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": "5.0.9",
           "Microsoft.AspNetCore.SignalR": "1.1.0",
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.11.1",
           "Nanoleaf.Core": "2.0.0",
           "Newtonsoft.Json": "13.0.1",
           "OpenRGB.NET": "1.7.0",
-          "Packaging.Targets": "0.1.189",
           "Q42.HueApi": "3.18.1",
           "Q42.HueApi.Entertainment": "3.18.1",
           "Serilog": "2.10.0",
           "Serilog.AspNetCore": "4.1.0",
-          "Serilog.Sinks.AspNetCore.SignalR": "0.4.0",
           "Serilog.Sinks.Async": "1.5.0",
           "Serilog.Sinks.Console": "4.0.0",
           "Serilog.Sinks.File": "5.0.0",
           "SimpleGitVersion.Core": "5.1.1",
-          "Swashbuckle.AspNetCore": "6.2.3",
-          "Swashbuckle.AspNetCore.Annotations": "6.2.3",
-          "System.Drawing.Common": "5.0.2",
           "System.Net.WebSockets": "4.3.0",
-          "Xamarin.Mac.digitalhigh": "8.2.0.1",
           "YeelightAPI": "1.10.2",
           "digitalhigh.rpi-ws281x-csharp": "1.1.7",
           "Microsoft.AspNetCore.Antiforgery": "5.0.0.0",
@@ -5297,7 +5156,7 @@
           }
         }
       },
-      "DreamScreenNet/1.0.5": {
+      "DreamScreenNet/1.0.4": {
         "dependencies": {
           "Newtonsoft.Json": "13.0.1"
         },
@@ -5308,7 +5167,7 @@
           }
         }
       },
-      "Emgu.CV/4.5.4.4788": {
+      "Emgu.CV/4.5.1.4349": {
         "dependencies": {
           "System.Drawing.Primitives": "4.3.0",
           "System.Runtime": "4.3.1",
@@ -5316,50 +5175,32 @@
         },
         "runtime": {
           "lib/netstandard2.0/Emgu.CV.Platform.NetStandard.dll": {
-            "assemblyVersion": "4.5.4.4788",
-            "fileVersion": "4.5.4.4788"
+            "assemblyVersion": "4.5.1.4349",
+            "fileVersion": "4.5.1.4349"
           }
         }
       },
-      "Emgu.CV.Bitmap/4.5.4.4788": {
+      "Emgu.CV.Bitmap/4.5.1.4349": {
         "dependencies": {
-          "Emgu.CV": "4.5.4.4788",
-          "System.Drawing.Common": "5.0.2"
+          "Emgu.CV": "4.5.1.4349",
+          "System.Drawing.Common": "5.0.0"
         },
         "runtime": {
           "lib/netstandard2.0/Emgu.CV.Bitmap.dll": {
-            "assemblyVersion": "4.5.4.4788",
-            "fileVersion": "4.5.4.4788"
+            "assemblyVersion": "4.5.1.4349",
+            "fileVersion": "4.5.1.4349"
           }
         }
       },
-      "Emgu.CV.runtime.linux-arm/4.5.4.4788": {
+      "Emgu.CV.runtime.windows/4.5.1.4349": {
         "dependencies": {
-          "Emgu.CV": "4.5.4.4788"
+          "Emgu.CV": "4.5.1.4349",
+          "Emgu.runtime.windows.msvc.rt.x64": "19.28.29336",
+          "Emgu.runtime.windows.msvc.rt.x86": "19.28.29336"
         }
       },
-      "Emgu.CV.runtime.ubuntu.20.04-x64/4.5.4.4788": {
-        "dependencies": {
-          "Emgu.CV": "4.5.4.4788"
-        }
-      },
-      "Emgu.CV.runtime.windows/4.5.4.4788": {
-        "dependencies": {
-          "Emgu.CV": "4.5.4.4788",
-          "Emgu.runtime.windows.msvc.rt.x64": "19.29.30136",
-          "Emgu.runtime.windows.msvc.rt.x86": "19.29.30136"
-        }
-      },
-      "Emgu.runtime.windows.msvc.rt.x64/19.29.30136": {},
-      "Emgu.runtime.windows.msvc.rt.x86/19.29.30136": {},
-      "HidSharp/2.1.0": {
-        "runtime": {
-          "lib/netstandard2.0/HidSharp.dll": {
-            "assemblyVersion": "2.1.0.0",
-            "fileVersion": "2.1.0.0"
-          }
-        }
-      },
+      "Emgu.runtime.windows.msvc.rt.x64/19.28.29336": {},
+      "Emgu.runtime.windows.msvc.rt.x86/19.28.29336": {},
       "HttpMachine.PCL/3.1.0": {
         "runtime": {
           "lib/netstandard1.0/HttpMachine.dll": {
@@ -5383,17 +5224,6 @@
           }
         }
       },
-      "JsonSubTypes/1.8.0": {
-        "dependencies": {
-          "Newtonsoft.Json": "13.0.1"
-        },
-        "runtime": {
-          "lib/netstandard2.0/JsonSubTypes.dll": {
-            "assemblyVersion": "1.8.0.0",
-            "fileVersion": "1.8.0.0"
-          }
-        }
-      },
       "LibGit2Sharp/0.26.2": {
         "dependencies": {
           "LibGit2Sharp.NativeBinaries": "2.0.306"
@@ -5409,21 +5239,6 @@
         "native": {
           "runtimes/osx/native/libgit2-106a5f2.dylib": {
             "fileVersion": "0.0.0.0"
-          }
-        }
-      },
-      "LibreHardwareMonitorLib/0.8.9": {
-        "dependencies": {
-          "HidSharp": "2.1.0",
-          "Microsoft.Win32.Registry": "5.0.0",
-          "System.IO.FileSystem.AccessControl": "5.0.0",
-          "System.IO.Ports": "5.0.1",
-          "System.Management": "5.0.0"
-        },
-        "runtime": {
-          "lib/net5.0/LibreHardwareMonitorLib.dll": {
-            "assemblyVersion": "0.8.9.0",
-            "fileVersion": "0.8.9.0"
           }
         }
       },
@@ -5559,7 +5374,7 @@
         "dependencies": {
           "Microsoft.AspNetCore.Connections.Abstractions": "2.2.0",
           "Newtonsoft.Json": "13.0.1",
-          "System.Buffers": "4.5.1"
+          "System.Buffers": "4.5.0"
         }
       },
       "Microsoft.AspNetCore.Http.Extensions/2.2.0": {
@@ -5567,7 +5382,7 @@
           "Microsoft.AspNetCore.Http.Abstractions": "2.2.0",
           "Microsoft.Extensions.FileProviders.Abstractions": "3.1.8",
           "Microsoft.Net.Http.Headers": "2.2.0",
-          "System.Buffers": "4.5.1"
+          "System.Buffers": "4.5.0"
         }
       },
       "Microsoft.AspNetCore.Http.Features/2.2.0": {
@@ -5575,61 +5390,61 @@
           "Microsoft.Extensions.Primitives": "5.0.0"
         }
       },
-      "Microsoft.AspNetCore.JsonPatch/5.0.11": {
+      "Microsoft.AspNetCore.JsonPatch/5.0.9": {
         "dependencies": {
           "Microsoft.CSharp": "4.7.0",
           "Newtonsoft.Json": "13.0.1"
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.AspNetCore.JsonPatch.dll": {
-            "assemblyVersion": "5.0.11.0",
-            "fileVersion": "5.0.1121.47605"
+            "assemblyVersion": "5.0.9.0",
+            "fileVersion": "5.0.921.36503"
           }
         }
       },
-      "Microsoft.AspNetCore.Mvc.NewtonsoftJson/5.0.11": {
+      "Microsoft.AspNetCore.Mvc.NewtonsoftJson/5.0.9": {
         "dependencies": {
-          "Microsoft.AspNetCore.JsonPatch": "5.0.11",
+          "Microsoft.AspNetCore.JsonPatch": "5.0.9",
           "Newtonsoft.Json": "13.0.1",
           "Newtonsoft.Json.Bson": "1.0.2"
         },
         "runtime": {
           "lib/net5.0/Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll": {
-            "assemblyVersion": "5.0.11.0",
-            "fileVersion": "5.0.1121.47605"
+            "assemblyVersion": "5.0.9.0",
+            "fileVersion": "5.0.921.36503"
           }
         }
       },
-      "Microsoft.AspNetCore.Mvc.Razor.Extensions/5.0.11": {
+      "Microsoft.AspNetCore.Mvc.Razor.Extensions/5.0.9": {
         "dependencies": {
-          "Microsoft.AspNetCore.Razor.Language": "5.0.11",
-          "Microsoft.CodeAnalysis.Razor": "5.0.11"
+          "Microsoft.AspNetCore.Razor.Language": "5.0.9",
+          "Microsoft.CodeAnalysis.Razor": "5.0.9"
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.AspNetCore.Mvc.Razor.Extensions.dll": {
-            "assemblyVersion": "5.0.11.0",
-            "fileVersion": "5.0.1121.47605"
+            "assemblyVersion": "5.0.9.0",
+            "fileVersion": "5.0.921.36503"
           }
         }
       },
-      "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation/5.0.11": {
+      "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation/5.0.9": {
         "dependencies": {
-          "Microsoft.AspNetCore.Mvc.Razor.Extensions": "5.0.11",
-          "Microsoft.CodeAnalysis.Razor": "5.0.11",
+          "Microsoft.AspNetCore.Mvc.Razor.Extensions": "5.0.9",
+          "Microsoft.CodeAnalysis.Razor": "5.0.9",
           "Microsoft.Extensions.DependencyModel": "5.0.0"
         },
         "runtime": {
           "lib/net5.0/Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.dll": {
-            "assemblyVersion": "5.0.11.0",
-            "fileVersion": "5.0.1121.47605"
+            "assemblyVersion": "5.0.9.0",
+            "fileVersion": "5.0.921.36503"
           }
         }
       },
-      "Microsoft.AspNetCore.Razor.Language/5.0.11": {
+      "Microsoft.AspNetCore.Razor.Language/5.0.9": {
         "runtime": {
           "lib/netstandard2.0/Microsoft.AspNetCore.Razor.Language.dll": {
-            "assemblyVersion": "5.0.11.0",
-            "fileVersion": "5.0.1121.47605"
+            "assemblyVersion": "5.0.9.0",
+            "fileVersion": "5.0.921.36503"
           }
         }
       },
@@ -5658,7 +5473,7 @@
           "Microsoft.AspNetCore.Connections.Abstractions": "2.2.0",
           "Microsoft.Extensions.Options": "5.0.0",
           "Newtonsoft.Json": "13.0.1",
-          "System.Buffers": "4.5.1"
+          "System.Buffers": "4.5.0"
         }
       },
       "Microsoft.AspNetCore.SignalR.Core/1.1.0": {
@@ -5803,21 +5618,20 @@
           }
         }
       },
-      "Microsoft.CodeAnalysis.Razor/5.0.11": {
+      "Microsoft.CodeAnalysis.Razor/5.0.9": {
         "dependencies": {
-          "Microsoft.AspNetCore.Razor.Language": "5.0.11",
+          "Microsoft.AspNetCore.Razor.Language": "5.0.9",
           "Microsoft.CodeAnalysis.CSharp": "3.8.0",
           "Microsoft.CodeAnalysis.Common": "3.8.0"
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.CodeAnalysis.Razor.dll": {
-            "assemblyVersion": "5.0.11.0",
-            "fileVersion": "5.0.1121.47605"
+            "assemblyVersion": "5.0.9.0",
+            "fileVersion": "5.0.921.36503"
           }
         }
       },
       "Microsoft.CSharp/4.7.0": {},
-      "Microsoft.Extensions.ApiDescription.Server/3.0.0": {},
       "Microsoft.Extensions.Configuration/2.0.0": {
         "dependencies": {
           "Microsoft.Extensions.Configuration.Abstractions": "3.1.8"
@@ -5888,19 +5702,11 @@
       "Microsoft.Net.Http.Headers/2.2.0": {
         "dependencies": {
           "Microsoft.Extensions.Primitives": "5.0.0",
-          "System.Buffers": "4.5.1"
+          "System.Buffers": "4.5.0"
         }
       },
       "Microsoft.NETCore.Platforms/5.0.0": {},
       "Microsoft.NETCore.Targets/1.1.3": {},
-      "Microsoft.OpenApi/1.2.3": {
-        "runtime": {
-          "lib/netstandard2.0/Microsoft.OpenApi.dll": {
-            "assemblyVersion": "1.2.3.0",
-            "fileVersion": "1.2.3.0"
-          }
-        }
-      },
       "Microsoft.VisualStudio.Azure.Containers.Tools.Targets/1.11.1": {},
       "Microsoft.Win32.Primitives/4.3.0": {
         "dependencies": {
@@ -5938,7 +5744,7 @@
       "MMALSharp.Common/0.6.0": {
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "5.0.0",
-          "System.Drawing.Common": "5.0.2",
+          "System.Drawing.Common": "5.0.0",
           "System.Numerics.Vectors": "4.4.0"
         },
         "runtime": {
@@ -5952,7 +5758,7 @@
         "dependencies": {
           "MMALSharp.Common": "0.6.0",
           "Microsoft.Extensions.Logging.Abstractions": "5.0.0",
-          "System.Drawing.Common": "5.0.2"
+          "System.Drawing.Common": "5.0.0"
         },
         "runtime": {
           "lib/netstandard2.0/MMALSharp.Processing.dll": {
@@ -6046,11 +5852,6 @@
             "assemblyVersion": "1.7.0.0",
             "fileVersion": "1.7.0.0"
           }
-        }
-      },
-      "Packaging.Targets/0.1.189": {
-        "dependencies": {
-          "System.Buffers": "4.5.1"
         }
       },
       "Portable.BouncyCastle/1.8.10": {
@@ -6215,7 +6016,7 @@
       },
       "runtime.unix.System.IO.FileSystem/4.3.0": {
         "dependencies": {
-          "System.Buffers": "4.5.1",
+          "System.Buffers": "4.5.0",
           "System.Collections": "4.3.0",
           "System.Diagnostics.Debug": "4.3.0",
           "System.IO": "4.3.0",
@@ -6358,18 +6159,6 @@
           }
         }
       },
-      "Serilog.Sinks.AspNetCore.SignalR/0.4.0": {
-        "dependencies": {
-          "Microsoft.AspNetCore.SignalR": "1.1.0",
-          "Serilog": "2.10.0"
-        },
-        "runtime": {
-          "lib/netcoreapp3.1/Serilog.Sinks.AspNetCore.SignalR.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
-          }
-        }
-      },
       "Serilog.Sinks.Async/1.5.0": {
         "dependencies": {
           "Serilog": "2.10.0"
@@ -6478,69 +6267,12 @@
           }
         }
       },
-      "Swashbuckle.AspNetCore/6.2.3": {
-        "dependencies": {
-          "Microsoft.Extensions.ApiDescription.Server": "3.0.0",
-          "Swashbuckle.AspNetCore.Swagger": "6.2.3",
-          "Swashbuckle.AspNetCore.SwaggerGen": "6.2.3",
-          "Swashbuckle.AspNetCore.SwaggerUI": "6.2.3"
-        }
-      },
-      "Swashbuckle.AspNetCore.Annotations/6.2.3": {
-        "dependencies": {
-          "Swashbuckle.AspNetCore.SwaggerGen": "6.2.3"
-        },
-        "runtime": {
-          "lib/net5.0/Swashbuckle.AspNetCore.Annotations.dll": {
-            "assemblyVersion": "6.2.3.0",
-            "fileVersion": "6.2.3.0"
-          }
-        }
-      },
-      "Swashbuckle.AspNetCore.Swagger/6.2.3": {
-        "dependencies": {
-          "Microsoft.OpenApi": "1.2.3"
-        },
-        "runtime": {
-          "lib/net5.0/Swashbuckle.AspNetCore.Swagger.dll": {
-            "assemblyVersion": "6.2.3.0",
-            "fileVersion": "6.2.3.0"
-          }
-        }
-      },
-      "Swashbuckle.AspNetCore.SwaggerGen/6.2.3": {
-        "dependencies": {
-          "Swashbuckle.AspNetCore.Swagger": "6.2.3"
-        },
-        "runtime": {
-          "lib/net5.0/Swashbuckle.AspNetCore.SwaggerGen.dll": {
-            "assemblyVersion": "6.2.3.0",
-            "fileVersion": "6.2.3.0"
-          }
-        }
-      },
-      "Swashbuckle.AspNetCore.SwaggerUI/6.2.3": {
-        "runtime": {
-          "lib/net5.0/Swashbuckle.AspNetCore.SwaggerUI.dll": {
-            "assemblyVersion": "6.2.3.0",
-            "fileVersion": "6.2.3.0"
-          }
-        }
-      },
       "System.AppContext/4.3.0": {
         "dependencies": {
           "System.Runtime": "4.3.1"
         }
       },
-      "System.Buffers/4.5.1": {},
-      "System.CodeDom/5.0.0": {
-        "runtime": {
-          "lib/netstandard2.0/System.CodeDom.dll": {
-            "assemblyVersion": "5.0.0.0",
-            "fileVersion": "5.0.20.51904"
-          }
-        }
-      },
+      "System.Buffers/4.5.0": {},
       "System.Collections/4.3.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "5.0.0",
@@ -6617,7 +6349,7 @@
           "runtime.any.System.Diagnostics.Tracing": "4.3.0"
         }
       },
-      "System.Drawing.Common/5.0.2": {
+      "System.Drawing.Common/5.0.0": {
         "dependencies": {
           "Microsoft.Win32.SystemEvents": "5.0.0"
         }
@@ -6687,7 +6419,7 @@
       "System.IO.Compression/4.3.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "5.0.0",
-          "System.Buffers": "4.5.1",
+          "System.Buffers": "4.5.0",
           "System.Collections": "4.3.0",
           "System.Diagnostics.Debug": "4.3.0",
           "System.IO": "4.3.0",
@@ -6705,7 +6437,7 @@
       },
       "System.IO.Compression.ZipFile/4.3.0": {
         "dependencies": {
-          "System.Buffers": "4.5.1",
+          "System.Buffers": "4.5.0",
           "System.IO": "4.3.0",
           "System.IO.Compression": "4.3.0",
           "System.IO.FileSystem": "4.3.0",
@@ -6727,12 +6459,6 @@
           "System.Text.Encoding": "4.3.0",
           "System.Threading.Tasks": "4.3.0",
           "runtime.unix.System.IO.FileSystem": "4.3.0"
-        }
-      },
-      "System.IO.FileSystem.AccessControl/5.0.0": {
-        "dependencies": {
-          "System.Security.AccessControl": "5.0.0",
-          "System.Security.Principal.Windows": "5.0.0"
         }
       },
       "System.IO.FileSystem.Primitives/4.3.0": {
@@ -6781,19 +6507,6 @@
           "System.Runtime": "4.3.1",
           "System.Runtime.Extensions": "4.3.0",
           "System.Threading": "4.3.0"
-        }
-      },
-      "System.Management/5.0.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "Microsoft.Win32.Registry": "5.0.0",
-          "System.CodeDom": "5.0.0"
-        },
-        "runtime": {
-          "lib/netstandard2.0/System.Management.dll": {
-            "assemblyVersion": "4.0.0.0",
-            "fileVersion": "5.0.20.51904"
-          }
         }
       },
       "System.Memory/4.5.4": {},
@@ -7344,14 +7057,6 @@
         }
       },
       "Tmds.LibC/0.2.0": {},
-      "Xamarin.Mac.digitalhigh/8.2.0.1": {
-        "runtime": {
-          "lib/Xamarin.Mac.dll": {
-            "assemblyVersion": "0.0.0.0",
-            "fileVersion": "0.0.0.0"
-          }
-        }
-      },
       "YeelightAPI/1.10.2": {
         "dependencies": {
           "Newtonsoft.Json": "13.0.1",
@@ -7367,7 +7072,7 @@
     }
   },
   "libraries": {
-    "Glimmr/1.2.0-dev-0000944": {
+    "Glimmr/1.1.7-master-0000860": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -7445,68 +7150,47 @@
       "path": "directshowlib.standard/2.1.0",
       "hashPath": "directshowlib.standard.2.1.0.nupkg.sha512"
     },
-    "DreamScreenNet/1.0.5": {
+    "DreamScreenNet/1.0.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-QcxawWOLEozl01Kel+H6pyGDpTKx+IFxQ6vMuS0ORYovJ5Qk5VREb4I7KgnYUc0UPJ4VXVfNg6vVZtRKMdPGHw==",
-      "path": "dreamscreennet/1.0.5",
-      "hashPath": "dreamscreennet.1.0.5.nupkg.sha512"
+      "sha512": "sha512-ozcxfPyXkTP3RUIcF1LYTNKK5Q3XyJRRyn07TGpwJ1Sztx0LTdCVHTBD5bVLxPAflEktbx4Dm/ruERg4/3udEw==",
+      "path": "dreamscreennet/1.0.4",
+      "hashPath": "dreamscreennet.1.0.4.nupkg.sha512"
     },
-    "Emgu.CV/4.5.4.4788": {
+    "Emgu.CV/4.5.1.4349": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-RJUW46+ktLVr0JLJ0lgdeVbqw3Dt4L8miUYdTwe+9BVUKwgn8aD2ozEc6zAGJJEt8SkgihY62WM8Yq6DxkPtCA==",
-      "path": "emgu.cv/4.5.4.4788",
-      "hashPath": "emgu.cv.4.5.4.4788.nupkg.sha512"
+      "sha512": "sha512-HkjpYLxh9IVK311p/MXd54hRd2mF62LEO6vswYgiFdHdSQvNmnnZR3umQYP3lcuInqK2qp75w69m5Rz9lgA2bg==",
+      "path": "emgu.cv/4.5.1.4349",
+      "hashPath": "emgu.cv.4.5.1.4349.nupkg.sha512"
     },
-    "Emgu.CV.Bitmap/4.5.4.4788": {
+    "Emgu.CV.Bitmap/4.5.1.4349": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-wavOaWzaMh7iwUAmX66nr7UfKVNZlvYHWGCSY3cERxitAp7YHUbBHYS8mC3FF9re+2+t9us184Txiutu/TzThg==",
-      "path": "emgu.cv.bitmap/4.5.4.4788",
-      "hashPath": "emgu.cv.bitmap.4.5.4.4788.nupkg.sha512"
+      "sha512": "sha512-Dq9vno6Gb0FESrd8WexIOILgQyXLG56xWKJJsx/kCErGsMZxHAN5NysDerHg1G+39aphUiHDMPykkTLiYt4ANQ==",
+      "path": "emgu.cv.bitmap/4.5.1.4349",
+      "hashPath": "emgu.cv.bitmap.4.5.1.4349.nupkg.sha512"
     },
-    "Emgu.CV.runtime.linux-arm/4.5.4.4788": {
+    "Emgu.CV.runtime.windows/4.5.1.4349": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-VVapEg4V+5Lnxp9v66/Jl082Ye7ISW8vjCw7NkqIbd1o+TL4oepUvvv3pdWafh+QpUV4Q0l8/19rCbDQm53FKA==",
-      "path": "emgu.cv.runtime.linux-arm/4.5.4.4788",
-      "hashPath": "emgu.cv.runtime.linux-arm.4.5.4.4788.nupkg.sha512"
+      "sha512": "sha512-IOhubaLFZUv9WZgdlCw9jmXODWhr8UWnoJqUkPmKp0q7fK+NmRdiAtR9yKyo4jtOrb5bytmpGQcTJ2weFP3DUg==",
+      "path": "emgu.cv.runtime.windows/4.5.1.4349",
+      "hashPath": "emgu.cv.runtime.windows.4.5.1.4349.nupkg.sha512"
     },
-    "Emgu.CV.runtime.ubuntu.20.04-x64/4.5.4.4788": {
+    "Emgu.runtime.windows.msvc.rt.x64/19.28.29336": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-OIwykaB4ywTHmuHZsIRa204aVtMXE2lPdUL2dCGEpfjg2i2Owl0Mwja/+gqSmfp2ux+0elmiQU8c3F++tWyctA==",
-      "path": "emgu.cv.runtime.ubuntu.20.04-x64/4.5.4.4788",
-      "hashPath": "emgu.cv.runtime.ubuntu.20.04-x64.4.5.4.4788.nupkg.sha512"
+      "sha512": "sha512-GCDS8BtMW+xTE7p6eTbZmJQAdrjMMC+ThGk7b1c+2J/OKwqwjsCkAr6IGVcyx0C3cpQkJX79XyEj8L48SZCGzA==",
+      "path": "emgu.runtime.windows.msvc.rt.x64/19.28.29336",
+      "hashPath": "emgu.runtime.windows.msvc.rt.x64.19.28.29336.nupkg.sha512"
     },
-    "Emgu.CV.runtime.windows/4.5.4.4788": {
+    "Emgu.runtime.windows.msvc.rt.x86/19.28.29336": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-vrFsPWHkyTlbfagykJNEyKtlJRGZ56oNu4BrQk/gSyVaqMnaNCiQo7erqslCZhV2nLa7+x4rb5urW1J8MIy6kQ==",
-      "path": "emgu.cv.runtime.windows/4.5.4.4788",
-      "hashPath": "emgu.cv.runtime.windows.4.5.4.4788.nupkg.sha512"
-    },
-    "Emgu.runtime.windows.msvc.rt.x64/19.29.30136": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-1XjyBGpr/EKGPHhDmrnmpA6pdDMuscpzzV87qjd9QywKcdDAap9jQsL9wekKEJaY3xOitDxIOaQCsylk7RoLww==",
-      "path": "emgu.runtime.windows.msvc.rt.x64/19.29.30136",
-      "hashPath": "emgu.runtime.windows.msvc.rt.x64.19.29.30136.nupkg.sha512"
-    },
-    "Emgu.runtime.windows.msvc.rt.x86/19.29.30136": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-Pc/z2ZGWfqaVcgSSG1rd2AOQdC7NvSbLBweHs8vlHflGCEmFrejI0sg0w14ZWz2iWrOAsHiJIChO0l3H63gTqw==",
-      "path": "emgu.runtime.windows.msvc.rt.x86/19.29.30136",
-      "hashPath": "emgu.runtime.windows.msvc.rt.x86.19.29.30136.nupkg.sha512"
-    },
-    "HidSharp/2.1.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-UTdxWvbgp2xzT1Ajaa2va+Qi3oNHJPasYmVhbKI2VVdu1VYP6yUG+RikhsHvpD7iM0S8e8UYb5Qm/LTWxx9QAA==",
-      "path": "hidsharp/2.1.0",
-      "hashPath": "hidsharp.2.1.0.nupkg.sha512"
+      "sha512": "sha512-GkZCA+RyK4S6PSWE8pVisud6v//p35T+bR49BIU+AMOrnAzCTGt6AxWx9nZd7mjaseWFuBg0svHf6BxDj6Uneg==",
+      "path": "emgu.runtime.windows.msvc.rt.x86/19.28.29336",
+      "hashPath": "emgu.runtime.windows.msvc.rt.x86.19.28.29336.nupkg.sha512"
     },
     "HttpMachine.PCL/3.1.0": {
       "type": "package",
@@ -7522,13 +7206,6 @@
       "path": "ipnetwork2/2.1.2",
       "hashPath": "ipnetwork2.2.1.2.nupkg.sha512"
     },
-    "JsonSubTypes/1.8.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-pBChxyl9mt0F1s1giHlN6yQ9WWb5FljluCNhMnSb7sspPfPRPTrc0a0psdu2/FVb5nZu5bQN50OMMaSp8jm8xQ==",
-      "path": "jsonsubtypes/1.8.0",
-      "hashPath": "jsonsubtypes.1.8.0.nupkg.sha512"
-    },
     "LibGit2Sharp/0.26.2": {
       "type": "package",
       "serviceable": true,
@@ -7542,13 +7219,6 @@
       "sha512": "sha512-LY9nyPE2X/eLl69ttuDPFFlKR8b5KXlqYej1YR1YmqmhF8Izo+vPX90q5ouOO5YGCf5d4lDUOC0x2yMWw00P7Q==",
       "path": "libgit2sharp.nativebinaries/2.0.306",
       "hashPath": "libgit2sharp.nativebinaries.2.0.306.nupkg.sha512"
-    },
-    "LibreHardwareMonitorLib/0.8.9": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-e0axsjvbjtQLdsuL25PwYgPsOAZjDORY+K+qgvtvUh8Rt4P/t+Xk0sDKRCHVcTlr/J6UGWKcd0dhmE5v25ujqQ==",
-      "path": "librehardwaremonitorlib/0.8.9",
-      "hashPath": "librehardwaremonitorlib.0.8.9.nupkg.sha512"
     },
     "LifxNetPlus/1.1.5": {
       "type": "package",
@@ -7676,40 +7346,40 @@
       "path": "microsoft.aspnetcore.http.features/2.2.0",
       "hashPath": "microsoft.aspnetcore.http.features.2.2.0.nupkg.sha512"
     },
-    "Microsoft.AspNetCore.JsonPatch/5.0.11": {
+    "Microsoft.AspNetCore.JsonPatch/5.0.9": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-uBftjbW1fDnFVr/JTpdeeyp48C1hyzzsBDQ7sR4b3fvLp6eNLAAOBTZnPQMOs0EvUt66ttPeUKRuWZjpAHQu2Q==",
-      "path": "microsoft.aspnetcore.jsonpatch/5.0.11",
-      "hashPath": "microsoft.aspnetcore.jsonpatch.5.0.11.nupkg.sha512"
+      "sha512": "sha512-Y898BNDwTNaLK9AV4sZfYUeVC0LtWP0VdcOd04txbpFpFv5BgYbiLumQkmecwX40+KnxsqxGSCcOB8buBeadtw==",
+      "path": "microsoft.aspnetcore.jsonpatch/5.0.9",
+      "hashPath": "microsoft.aspnetcore.jsonpatch.5.0.9.nupkg.sha512"
     },
-    "Microsoft.AspNetCore.Mvc.NewtonsoftJson/5.0.11": {
+    "Microsoft.AspNetCore.Mvc.NewtonsoftJson/5.0.9": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Et5eJGuxtMSqYmHv3FYzLh8pf66RxSsDtw2Uy1ihDOvGSy4YKUBLW2Um+WlecLfMMrrq/QcW/asRPkCcLveiuA==",
-      "path": "microsoft.aspnetcore.mvc.newtonsoftjson/5.0.11",
-      "hashPath": "microsoft.aspnetcore.mvc.newtonsoftjson.5.0.11.nupkg.sha512"
+      "sha512": "sha512-tJ7i6BDf/y+iKc1fuS6SRwelcSvhHkfQ86RhHVpUol4LfcW3WnSSL+njPuT2KmJidfJ349/7+eb/pCERHYG0/A==",
+      "path": "microsoft.aspnetcore.mvc.newtonsoftjson/5.0.9",
+      "hashPath": "microsoft.aspnetcore.mvc.newtonsoftjson.5.0.9.nupkg.sha512"
     },
-    "Microsoft.AspNetCore.Mvc.Razor.Extensions/5.0.11": {
+    "Microsoft.AspNetCore.Mvc.Razor.Extensions/5.0.9": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-e4/WABGRm/0E1bAHbO79yPirom1qFYPLWErPBuNDz6A81jAyrBdv/gInbaf8CzW1H/J6aE9jhCIlECuclMCEng==",
-      "path": "microsoft.aspnetcore.mvc.razor.extensions/5.0.11",
-      "hashPath": "microsoft.aspnetcore.mvc.razor.extensions.5.0.11.nupkg.sha512"
+      "sha512": "sha512-DRDXPFr1msqGIif9DWPk+dVxEUJ7PUeOIBdrGtxnhuhr/VN+s/bfNE8PDacUpL977zG72IUn7VrwmgrDi4DPRQ==",
+      "path": "microsoft.aspnetcore.mvc.razor.extensions/5.0.9",
+      "hashPath": "microsoft.aspnetcore.mvc.razor.extensions.5.0.9.nupkg.sha512"
     },
-    "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation/5.0.11": {
+    "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation/5.0.9": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-gI1sX77mEovq2OQk45HeqOIsi0G3KGy9zLywj8Hgm9LEqTrhAcZxitmMq6RuzMxpZ3m9FtqrjTsWdhmCB5Ky0w==",
-      "path": "microsoft.aspnetcore.mvc.razor.runtimecompilation/5.0.11",
-      "hashPath": "microsoft.aspnetcore.mvc.razor.runtimecompilation.5.0.11.nupkg.sha512"
+      "sha512": "sha512-aklDsw/J7alaaQpmFCkFI3FvLf5S42ba5vdGRmrA/3VrWXZ5dan1q2rYXB8C3KrDbVY3DwIUcACgsG2OtmsbZg==",
+      "path": "microsoft.aspnetcore.mvc.razor.runtimecompilation/5.0.9",
+      "hashPath": "microsoft.aspnetcore.mvc.razor.runtimecompilation.5.0.9.nupkg.sha512"
     },
-    "Microsoft.AspNetCore.Razor.Language/5.0.11": {
+    "Microsoft.AspNetCore.Razor.Language/5.0.9": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-gJ0fIwiAsGjE5JjtJ8VKG3dNvFCu1coLRZYh3217iAy4XEjKiIkKWaqmW5Ua8/OJ2P3U4gkT0BU8InIDSTS2LA==",
-      "path": "microsoft.aspnetcore.razor.language/5.0.11",
-      "hashPath": "microsoft.aspnetcore.razor.language.5.0.11.nupkg.sha512"
+      "sha512": "sha512-HxpSdAWFxODqqJ0usB05vU8h4b512wj6DGo8FLF38ihTcSYTAwGkqGHhtPOaXwUplH+y8aLj9yZJbfXvBZa0iQ==",
+      "path": "microsoft.aspnetcore.razor.language/5.0.9",
+      "hashPath": "microsoft.aspnetcore.razor.language.5.0.9.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Routing/2.2.0": {
       "type": "package",
@@ -7788,12 +7458,12 @@
       "path": "microsoft.codeanalysis.csharp/3.8.0",
       "hashPath": "microsoft.codeanalysis.csharp.3.8.0.nupkg.sha512"
     },
-    "Microsoft.CodeAnalysis.Razor/5.0.11": {
+    "Microsoft.CodeAnalysis.Razor/5.0.9": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-+x0y8OMpssxZlizgFPj4Ehdq83n8hEAYtOv60/4NdNoC6CYGkQsuThfwGKEYkZpVzNz7Hm3D/IYiGW9Unj2lWA==",
-      "path": "microsoft.codeanalysis.razor/5.0.11",
-      "hashPath": "microsoft.codeanalysis.razor.5.0.11.nupkg.sha512"
+      "sha512": "sha512-d5ZhvMUwHQYAF/gWTOV7k3BYwID5FUEJudNRt1CcE+gp8yMJTRe4Wk4n4XnhqTzsz2sYmSJA1sRPfSFVHxXaGg==",
+      "path": "microsoft.codeanalysis.razor/5.0.9",
+      "hashPath": "microsoft.codeanalysis.razor.5.0.9.nupkg.sha512"
     },
     "Microsoft.CSharp/4.7.0": {
       "type": "package",
@@ -7801,13 +7471,6 @@
       "sha512": "sha512-pTj+D3uJWyN3My70i2Hqo+OXixq3Os2D1nJ2x92FFo6sk8fYS1m1WLNTs0Dc1uPaViH0YvEEwvzddQ7y4rhXmA==",
       "path": "microsoft.csharp/4.7.0",
       "hashPath": "microsoft.csharp.4.7.0.nupkg.sha512"
-    },
-    "Microsoft.Extensions.ApiDescription.Server/3.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-LH4OE/76F6sOCslif7+Xh3fS/wUUrE5ryeXAMcoCnuwOQGT5Smw0p57IgDh/pHgHaGz/e+AmEQb7pRgb++wt0w==",
-      "path": "microsoft.extensions.apidescription.server/3.0.0",
-      "hashPath": "microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512"
     },
     "Microsoft.Extensions.Configuration/2.0.0": {
       "type": "package",
@@ -7928,13 +7591,6 @@
       "path": "microsoft.netcore.targets/1.1.3",
       "hashPath": "microsoft.netcore.targets.1.1.3.nupkg.sha512"
     },
-    "Microsoft.OpenApi/1.2.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-Nug3rO+7Kl5/SBAadzSMAVgqDlfGjJZ0GenQrLywJ84XGKO0uRqkunz5Wyl0SDwcR71bAATXvSdbdzPrYRYKGw==",
-      "path": "microsoft.openapi/1.2.3",
-      "hashPath": "microsoft.openapi.1.2.3.nupkg.sha512"
-    },
     "Microsoft.VisualStudio.Azure.Containers.Tools.Targets/1.11.1": {
       "type": "package",
       "serviceable": true,
@@ -8018,13 +7674,6 @@
       "sha512": "sha512-12pMEUaeoG8mN707QRO9hdT529+UnqUpwMW1H/gDTMsJrerhJve6Yt5Dnheu1isQB4PWP1wu3IDVbHCchznkiw==",
       "path": "openrgb.net/1.7.0",
       "hashPath": "openrgb.net.1.7.0.nupkg.sha512"
-    },
-    "Packaging.Targets/0.1.189": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-UgeC41VxWHqMdcQVh3DlPHMzujt1041rh9bQ1yFi+3POtbik5+63E59ZunEH7Di5vaU91UBYGHtN8+k9liOH6Q==",
-      "path": "packaging.targets/0.1.189",
-      "hashPath": "packaging.targets.0.1.189.nupkg.sha512"
     },
     "Portable.BouncyCastle/1.8.10": {
       "type": "package",
@@ -8418,13 +8067,6 @@
       "path": "serilog.settings.configuration/3.1.0",
       "hashPath": "serilog.settings.configuration.3.1.0.nupkg.sha512"
     },
-    "Serilog.Sinks.AspNetCore.SignalR/0.4.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-Mxv0+FJ51rOAzE0On9KzN6rubNZXw2N57eYS2rUoGyNeRz6QnxmASRGz4RLapvfh/HyRXIzU3Ams9Lp4YJdFXg==",
-      "path": "serilog.sinks.aspnetcore.signalr/0.4.0",
-      "hashPath": "serilog.sinks.aspnetcore.signalr.0.4.0.nupkg.sha512"
-    },
     "Serilog.Sinks.Async/1.5.0": {
       "type": "package",
       "serviceable": true,
@@ -8488,41 +8130,6 @@
       "path": "socketlite.pcl/4.2.1",
       "hashPath": "socketlite.pcl.4.2.1.nupkg.sha512"
     },
-    "Swashbuckle.AspNetCore/6.2.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-cnzQDn0Le+hInsw2SYwlOhOCPXpYi/szcvnyqZJ12v+QyrLBwAmWXBg6RIyHB18s/mLeywC+Rg2O9ndz0IUNYQ==",
-      "path": "swashbuckle.aspnetcore/6.2.3",
-      "hashPath": "swashbuckle.aspnetcore.6.2.3.nupkg.sha512"
-    },
-    "Swashbuckle.AspNetCore.Annotations/6.2.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-I8rcqNo+60+zJl5TpRF9JZSnGYPGJmgtlK+ZyTDsG+0lRDjMCPTPndcSSgeUpUh1XsMPuCx38hNu78Xf+xvjeg==",
-      "path": "swashbuckle.aspnetcore.annotations/6.2.3",
-      "hashPath": "swashbuckle.aspnetcore.annotations.6.2.3.nupkg.sha512"
-    },
-    "Swashbuckle.AspNetCore.Swagger/6.2.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-qOF7j1sL0bWm8g/qqHVPCvkO3JlVvUIB8WfC98kSh6BT5y5DAnBNctfac7XR5EZf+eD7/WasvANncTqwZYfmWQ==",
-      "path": "swashbuckle.aspnetcore.swagger/6.2.3",
-      "hashPath": "swashbuckle.aspnetcore.swagger.6.2.3.nupkg.sha512"
-    },
-    "Swashbuckle.AspNetCore.SwaggerGen/6.2.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-+Xq7WdMCCfcXlnbLJVFNgY8ITdP2TRYIlpbt6IKzDw5FwFxdi9lBfNDtcT+/wkKwX70iBBFmXldnnd02/VO72A==",
-      "path": "swashbuckle.aspnetcore.swaggergen/6.2.3",
-      "hashPath": "swashbuckle.aspnetcore.swaggergen.6.2.3.nupkg.sha512"
-    },
-    "Swashbuckle.AspNetCore.SwaggerUI/6.2.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-bCRI87uKJVb4G+KURWm8LQrL64St04dEFZcF6gIM67Zc0Sr/N47EO83ybLMYOvfNdO1DCv8xwPcrz9J/VEhQ5g==",
-      "path": "swashbuckle.aspnetcore.swaggerui/6.2.3",
-      "hashPath": "swashbuckle.aspnetcore.swaggerui.6.2.3.nupkg.sha512"
-    },
     "System.AppContext/4.3.0": {
       "type": "package",
       "serviceable": true,
@@ -8530,19 +8137,12 @@
       "path": "system.appcontext/4.3.0",
       "hashPath": "system.appcontext.4.3.0.nupkg.sha512"
     },
-    "System.Buffers/4.5.1": {
+    "System.Buffers/4.5.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Rw7ijyl1qqRS0YQD/WycNst8hUUMgrMH4FCn1nNm27M4VxchZ1js3fVjQaANHO5f3sN4isvP4a+Met9Y4YomAg==",
-      "path": "system.buffers/4.5.1",
-      "hashPath": "system.buffers.4.5.1.nupkg.sha512"
-    },
-    "System.CodeDom/5.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-JPJArwA1kdj8qDAkY2XGjSWoYnqiM7q/3yRNkt6n28Mnn95MuEGkZXUbPBf7qc3IjwrGY5ttQon7yqHZyQJmOQ==",
-      "path": "system.codedom/5.0.0",
-      "hashPath": "system.codedom.5.0.0.nupkg.sha512"
+      "sha512": "sha512-pL2ChpaRRWI/p4LXyy4RgeWlYF2sgfj/pnVMvBqwNFr5cXg7CXNnWZWxrOONLg8VGdFB8oB+EG2Qw4MLgTOe+A==",
+      "path": "system.buffers/4.5.0",
+      "hashPath": "system.buffers.4.5.0.nupkg.sha512"
     },
     "System.Collections/4.3.0": {
       "type": "package",
@@ -8614,12 +8214,12 @@
       "path": "system.diagnostics.tracing/4.3.0",
       "hashPath": "system.diagnostics.tracing.4.3.0.nupkg.sha512"
     },
-    "System.Drawing.Common/5.0.2": {
+    "System.Drawing.Common/5.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-rvr/M1WPf24ljpvvrVd74+NdjRUJu1bBkspkZcnzSZnmAUQWSvanlQ0k/hVHk+cHufZbZfu7vOh/vYc0q5Uu/A==",
-      "path": "system.drawing.common/5.0.2",
-      "hashPath": "system.drawing.common.5.0.2.nupkg.sha512"
+      "sha512": "sha512-SztFwAnpfKC8+sEKXAFxCBWhKQaEd97EiOL7oZJZP56zbqnLpmxACWA8aGseaUExciuEAUuR9dY8f7HkTRAdnw==",
+      "path": "system.drawing.common/5.0.0",
+      "hashPath": "system.drawing.common.5.0.0.nupkg.sha512"
     },
     "System.Drawing.Primitives/4.3.0": {
       "type": "package",
@@ -8684,13 +8284,6 @@
       "path": "system.io.filesystem/4.3.0",
       "hashPath": "system.io.filesystem.4.3.0.nupkg.sha512"
     },
-    "System.IO.FileSystem.AccessControl/5.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-SxHB3nuNrpptVk+vZ/F+7OHEpoHUIKKMl02bUmYHQr1r+glbZQxs7pRtsf4ENO29TVm2TH3AEeep2fJcy92oYw==",
-      "path": "system.io.filesystem.accesscontrol/5.0.0",
-      "hashPath": "system.io.filesystem.accesscontrol.5.0.0.nupkg.sha512"
-    },
     "System.IO.FileSystem.Primitives/4.3.0": {
       "type": "package",
       "serviceable": true,
@@ -8725,13 +8318,6 @@
       "sha512": "sha512-PGKkrd2khG4CnlyJwxwwaWWiSiWFNBGlgXvJpeO0xCXrZ89ODrQ6tjEWS/kOqZ8GwEOUATtKtzp1eRgmYNfclg==",
       "path": "system.linq.expressions/4.3.0",
       "hashPath": "system.linq.expressions.4.3.0.nupkg.sha512"
-    },
-    "System.Management/5.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-MF1CHaRcC+MLFdnDthv4/bKWBZnlnSpkGqa87pKukQefgEdwtb9zFW6zs0GjPp73qtpYYg4q6PEKbzJbxCpKfw==",
-      "path": "system.management/5.0.0",
-      "hashPath": "system.management.5.0.0.nupkg.sha512"
     },
     "System.Memory/4.5.4": {
       "type": "package",
@@ -9145,13 +8731,6 @@
       "sha512": "sha512-+RvLuNHOLW7cxzgDe9yHLoayBgjsuH2/gJtJnuVMxweKrxxYT6TwQNAmt06SFWpjwk68aRcwwD4FfMMA6tZvVA==",
       "path": "tmds.libc/0.2.0",
       "hashPath": "tmds.libc.0.2.0.nupkg.sha512"
-    },
-    "Xamarin.Mac.digitalhigh/8.2.0.1": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-kT/41TFwAxo1DUkIVhv23Pm5xyLqAfQRtfm2rzlyCBWYEzvNifsG/+aph193OqVL0Lb/gGnDdEokU0ApeOg8Ig==",
-      "path": "xamarin.mac.digitalhigh/8.2.0.1",
-      "hashPath": "xamarin.mac.digitalhigh.8.2.0.1.nupkg.sha512"
     },
     "YeelightAPI/1.10.2": {
       "type": "package",

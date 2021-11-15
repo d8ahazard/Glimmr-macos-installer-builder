@@ -41,65 +41,47 @@ let reload = false;
 let toLoad = null;
 let devTimeout = null;
 let ledData = '{"AutoBrightnessLevel":true,"FixGamma":true,"AblMaxMilliamps":5000,"GpioNumber":18,"LedCount":150,"MilliampsPerLed":25,"Offset":50,"StartupAnimation":0,"StripType":0,"Name":"Demo LED Strip","Id":"-1","Tag":"Led","IpAddress":"","Brightness":100,"Enable":false,"LastSeen":"08/05/2021 13:28:53","KeyProperties":[{"Options":{},"ValueLabel":"","ValueHint":"","ValueMax":"100","ValueMin":"0","ValueName":"ledmap","ValueStep":"1","ValueType":"ledmap"},{"Options":{},"ValueLabel":"Led Count","ValueHint":"","ValueMax":"100","ValueMin":"0","ValueName":"LedCount","ValueStep":"1","ValueType":"text"},{"Options":{},"ValueLabel":"Led Offset","ValueHint":"","ValueMax":"100","ValueMin":"0","ValueName":"Offset","ValueStep":"1","ValueType":"text"},{"Options":{},"ValueLabel":"LED Multiplier","ValueHint":"Positive values to multiply (skip), negative values to divide (duplicate).","ValueMax":"5","ValueMin":"-5","ValueName":"LedMultiplier","ValueStep":"1","ValueType":"number"},{"Options":{},"ValueLabel":"Reverse Strip","ValueHint":"Reverse the order of the leds to clockwise (facing screen).","ValueMax":"100","ValueMin":"0","ValueName":"ReverseStrip","ValueStep":"1","ValueType":"check"},{"Options":{},"ValueLabel":"Fix Gamma","ValueHint":"Automatically correct Gamma (recommended)","ValueMax":"100","ValueMin":"0","ValueName":"FixGamma","ValueStep":"1","ValueType":"check"},{"Options":{},"ValueLabel":"Enable Auto Brightness","ValueHint":"Automatically adjust brightness to avoid dropouts.","ValueMax":"100","ValueMin":"0","ValueName":"AutoBrightnessLevel","ValueStep":"1","ValueType":"check"},{"Options":{},"ValueLabel":"Milliamps Per LED","ValueHint":"\'Conservative\' = 25, \'Normal\' = 55","ValueMax":"100","ValueMin":"0","ValueName":"MilliampsPerLed","ValueStep":"1","ValueType":"text"},{"Options":{},"ValueLabel":"Power Supply Voltage","ValueHint":"Total PSU voltage in Milliamps","ValueMax":"100","ValueMin":"0","ValueName":"AblMaxMilliamps","ValueStep":"1","ValueType":"text"}]}';
-let logEl = document.getElementById("logModal");
 let errModal = new bootstrap.Modal(document.getElementById('errorModal'));
-let logModal = new bootstrap.Modal(logEl);
-let log1 = true;
-let log2 = true;
-let log3 = true;
-let log4 = true;
-let logOpen = false;
 let winWidth, winHeight;
 
 // We're going to create one object to store our stuff, and add listeners for when values are changed.
 let data = {
-    devicesInternal: [],
-    systemInternal: [],
-    audioScenes: [],
-    ambientScenes: [],
-    audioDevices: [],
-    usbDevices: [],
-    version: "",
-    statsInternal: {},
-    load: function (val) {
-        if (val.hasOwnProperty("systemData")) {
-            this.systemInternal = val["systemData"];
-            this.version = val["systemData"]["version"];
+    devicesInternal:[],
+    systemInternal:[],
+    audioScenes:[],
+    ambientScenes:[],
+    audioDevices:[],
+    usbDevices:[],
+    version:"",
+    load: function(val){
+        if (val.hasOwnProperty("SystemData")) {
+            this.systemInternal = val["SystemData"];
+            console.log("Loaded system data: ", this.systemInternal);
             this.systemListener(this.systemInternal);
         }
-        if (val.hasOwnProperty("devices")) {
-            this.devicesInternal = val["devices"];
-            this.devicesInternal.sort((a, b) => (a["name"] > b["name"]) ? 1 : -1);
+        if (val.hasOwnProperty("Devices")) {
+            this.devicesInternal = val["Devices"];
+            this.devicesInternal.sort((a, b) => (a.Name > b.Name) ? 1 : -1);
+            console.log("Loaded devices: ", this.devicesInternal);
             this.devicesListener(this.devicesInternal);
         }
-        if (val.hasOwnProperty("devUsb")) {
-            this.usbDevices = val["devUsb"];
+        if (val.hasOwnProperty("Dev_Usb")) {
+            this.usbDevices = val["Dev_Usb"];
         }
-        if (val.hasOwnProperty("devAudio")) {
-            this.audioDevices = val["devAudio"];
+        if (val.hasOwnProperty("Dev_Audio")) {
+            this.audioDevices = val["Dev_Audio"];
         }
-        if (val.hasOwnProperty("ambientScenes")) {
-            this.ambientScenes = val["ambientScenes"];
+        if (val.hasOwnProperty("Version")) {
+            this.version = val["Version"];
         }
-        if (val.hasOwnProperty("audioScenes")) {
-            this.audioScenes = val["audioScenes"];
+        if (val.hasOwnProperty("AmbientScenes")) {
+            this.ambientScenes = val["AmbientScenes"];
         }
-        if (val.hasOwnProperty("stats")) {
-            this.statsInternal = val["stats"];
-            this.statListener(val["stats"]);
+        if (val.hasOwnProperty("AudioScenes")) {
+            this.audioScenes = val["AudioScenes"];
         }
     },
-    statListener: function (val) {
-    },
-    set Stats(val) {
-        this.statsInternal = val;
-        this.statListener(val);
-    },
-    get Stats() {
-        return this.statsInternal;
-    },
-    systemListener: function (val) {
-    },
+    systemListener: function(val) {},
     set SystemData(val) {
         this.systemInternal = val;
         this.systemListener(val);
@@ -107,32 +89,30 @@ let data = {
     get SystemData() {
         return this.systemInternal;
     },
-    devicesListener: function (val) {
-    },
+    devicesListener: function(val) {},
     set Devices(val) {
         this.devicesInternal = val;
-        this.devicesInternal.sort((a, b) => (a["name"] > b["name"]) ? 1 : -1);
+        this.devicesInternal.sort((a, b) => (a.Name > b.Name) ? 1 : -1);
         this.devicesListener(val);
     },
     get Devices() {
         return this.devicesInternal;
     },
     deleteDevice(id) {
-        console.log("Removing device: ", id);
         let devs = this.devicesInternal;
         let newDevs = [];
         for (let i = 0; i < devs.length; i++) {
-            if (devs[i].id !== id) {
+            if (devs[i].Id !== id) {
                 newDevs.push(devs[i]);
-            }
+            } 
         }
         this.devicesInternal = newDevs;
-        this.devicesInternal.sort((a, b) => (a["name"] > b["name"]) ? 1 : -1);
+        this.devicesInternal.sort((a, b) => (a.Name > b.Name) ? 1 : -1);
         this.devicesListener(this.devicesInternal);
     },
     getDevice(id) {
-        for (let i = 0; i < this.devicesInternal.length; i++) {
-            if (id === this.devicesInternal[i]["id"]) {
+        for (let i=0; i < this.devicesInternal.length; i++) {
+            if (id === this.devicesInternal[i].Id) {
                 return this.devicesInternal[i];
             }
         }
@@ -140,15 +120,15 @@ let data = {
     },
     setDevice(deviceData) {
         let exists = false;
-        for (let i = 0; i < this.devicesInternal.length; i++) {
-            if (deviceData["id"] === this.devicesInternal[i]["id"]) {
+        for (let i=0; i < this.devicesInternal.length; i++) {
+            if (deviceData.Id === this.devicesInternal[i].Id) {
                 this.devicesInternal[i] = deviceData;
                 exists = true;
             }
         }
         if (!exists) this.devicesInternal.push(deviceData);
-        this.devicesInternal.sort((a, b) => (a["name"] > b["name"]) ? 1 : -1);
-        this.devicesListener(this.devicesInternal);
+      this.devicesInternal.sort((a, b) => (a.Name > b.Name) ? 1 : -1);
+      this.devicesListener(this.devicesInternal);
     },
     getProp(string) {
         if (this.systemInternal.hasOwnProperty(string)) return this.systemInternal[string];
@@ -158,23 +138,27 @@ let data = {
         if (this.systemInternal.hasOwnProperty(string)) {
             let check = this.systemInternal[string];
             // If types match, set it
-            if (typeof (check) === typeof (value)) {
+            if (typeof(check) === typeof(value)) {
+                console.log("Type match, setting ", string, value);
                 this.systemInternal[string] = value;
                 return;
             }
             // If not, try a conversion
             switch (typeof (check)) {
                 case "number":
+                    console.log("NUM NUM");
                     let num = parseInt(value);
-                    if (typeof (num) === typeof (check)) {
+                    if (typeof(num) === typeof(check)) {
+                        console.log("Setting (parsed num)", string, num);
                         this.systemInternal[string] = num;
                     } else {
-                        console.log("FAIL: " + typeof (num));
+                        console.log("FAIL: " + typeof(num));
                     }
                     break;
                 case "string":
                     let str = value.toString();
                     if (isValid(str)) {
+                        console.log("Setting (string conversion)", string, str);
                         this.systemInternal[string] = str;
                     }
                     break;
@@ -186,12 +170,13 @@ let data = {
                     break;
                 case "object":
                     if (value === null) this.systemInternal[string] = value;
-                    if (typeof (value) === "string") {
+                    if (typeof(value) === "string") {
                         try {
                             let obj = JSON.parse(value);
-                            if (typeof (obj) === "object" && isValid(obj)) {
+                            if (typeof(obj) === "object" && isValid(obj)) {
+                                console.log("Parsed...");
                                 this.systemInternal[string] = obj;
-                            }
+                            } 
                         } catch {
                             console.log("Error...");
                         }
@@ -203,42 +188,36 @@ let data = {
             }
             this.systemListener();
         } else {
-            console.log("Property doesn't exist, stupid: " + string);
+            console.log("Property doesn't exist, stupid: ");
         }
     },
-    registerSystemListener: function (listener) {
-        this.systemListener = listener;
+    registerSystemListener: function(listener) {
+        this.systemListener = listener;        
     },
-    registerDevicesListener: function (listener) {
+    registerDevicesListener: function(listener) {
         this.devicesListener = listener;
-    },
-    registerStatsListener: function (listener) {
-        this.statListener = listener;
     }
 };
 
-data.registerSystemListener(function () {
+data.registerSystemListener(function() {
     if (loadTimeout !== null) {
         clearTimeout(loadTimeout);
         loadTimeout = null;
     }
-    loadTimeout = setTimeout(function () {
+    loadTimeout = setTimeout(function() {
+        console.log("Re-loading UI via listener.");
         loadUi();
         clearTimeout(loadTimeout);
         loadTimeout = null;
     }, 250);
 });
 
-data.registerStatsListener(function (data) {
-    loadStats(data);
-});
-
-data.registerDevicesListener(function () {
+data.registerDevicesListener(function() {
     if (devTimeout !== null) {
         clearTimeout(devTimeout);
         devTimeout = null;
     }
-    devTimeout = setTimeout(function () {
+    devTimeout = setTimeout(function() {
         loadDevices();
     }, 500);
 });
@@ -248,40 +227,77 @@ let websocket = new signalR.HubConnectionBuilder()
     .withUrl("/socket")
     .build();
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function(){
+    let popover = new bootstrap.Popover(document.getElementById("fps"), {
+        container: 'body'
+    });
     document.addEventListener("backbutton", onBackKeyDown, false);
-    document.addEventListener('keydown', function (e) {
+    document.addEventListener('keydown', function(e) {
         if (e.key === "Escape") {
+            console.log("ESCAPE");
             onBackKeyDown();
         }
     });
+    window.addEventListener("hashchange", function(e) {
+        console.log("haschange");
+        if (expanded) closeCard().then();
+        if (settingsShown) toggleSettingsDiv().then();
+        if (expanded || settingsShown) {
+            console.log("Doing the damned thang.")
+            history.pushState(null, null, window.location.pathname);
+        }
+    });
 
+    window.addEventListener('popstate', function(event) {
+        // The popstate event is fired each time when the current history entry changes.
+        console.log("Popstate...");
+        if (expanded) closeCard().then();
+        if (settingsShown) toggleSettingsDiv().then();
+        if (expanded || settingsShown) {
+            console.log("Doing the damned thang.")
+            history.pushState(null, null, window.location.pathname);
+        } else {
+            // Stay on the current page.
+            history.back();
+        }
+
+        history.pushState(null, null, window.location.pathname);
+
+    }, false);
     let getUrl = window.location;
-    baseUrl = getUrl.protocol + "//" + getUrl.host;
+    baseUrl = getUrl .protocol + "//" + getUrl.host;
     fpsCounter = document.getElementById("fps");
     closeButton = document.querySelectorAll(".closeBtn");
-    settingsRow = document.getElementById("settingsRow");
+    settingsRow = document.getElementById("settingsRow");    
     settingsTab = document.getElementById("settingsTab");
     settingsContent = document.getElementById("settingsContent");
-    cardRow = document.getElementById("cardRow");
+    cardRow = document.getElementById("cardRow");   
     setSocketListeners();
     loadSocket();
-    setTimeout(function () {
-        new Image().src = "../img/sectoring_screen.png";
+    setTimeout(function() {
+        new Image().src = "../img/sectoring_screen.png";        
     }, 1000);
 });
 
 function onBackKeyDown() {
+    console.log("OB1");
+    if (expanded) closeCard().then();
+    if (settingsShown) toggleSettingsDiv().then();
+}
+
+function onBackKeyDown2() {
+    console.log("OB2");
     if (expanded) closeCard().then();
     if (settingsShown) toggleSettingsDiv().then();
 }
 
 
 function loadPickr() {
+    console.log("Creating pickr", data.getProp("AmbientColor"));
     pickr = Pickr.create({
         el: '.pickrBtn',
         theme: 'nano',
-        default: "#" + data.getProp("ambientColor"),
+        default: "#" + data.getProp("AmbientColor"),
         swatches: [
             'rgb(255, 0, 0)',
             'rgb(255, 128, 0)',
@@ -308,26 +324,26 @@ function loadPickr() {
             }
         }
     });
-    pickr.on('change', (color) => {
+    pickr.on('change', (color, source, instance) => {
         let col = color.toHEXA();
         newColor = col[0] + col[1] + col[2];
-    }).on('changestop', () => {
-        data.setProp("ambientColor", newColor);
-        data.setProp("ambientScene", -1);
-        let asSelect = document.getElementById("AmbientScene");
+    }).on('changestop', (source, instance) => {        
+        data.setProp("AmbientColor", newColor);
+        data.setProp("AmbientShow", -1);
+        let asSelect = document.getElementById("AmbientShow");
         asSelect.value = "-1";
         pickr.setColor("#" + newColor);
-        sendMessage("systemData", data.SystemData);
+        sendMessage("SystemData",data.SystemData);
 
-    }).on('swatchselect', (color) => {
+    }).on('swatchselect', (color, instance) => {
         let col = color.toHEXA();
         newColor = col[0] + col[1] + col[2];
-        data.setProp("ambientColor", newColor);
-        data.setProp("ambientScene", -1);
-        let asSelect = document.getElementById("AmbientScene");
+        data.setProp("AmbientColor", newColor);
+        data.setProp("AmbientShow", -1);
+        let asSelect = document.getElementById("AmbientShow");
         asSelect.value = "-1";
         pickr.setColor("#" + newColor);
-        sendMessage("systemData", data.SystemData);
+        sendMessage("SystemData",data.SystemData);
     });
 }
 
@@ -341,7 +357,7 @@ function loadCounts() {
     vSectors = 3;
 
     if (!isValid(sd)) return;
-    let target = sd["dsIp"];
+    let target = sd["DsIp"];
     let devs = data.Devices;
     let devSelect = document.getElementById("targetDs");
     if (isValid(devSelect)) {
@@ -349,7 +365,7 @@ function loadCounts() {
             devSelect.options[i] = null;
         }
     }
-
+    
     if (isValid(devs)) {
         let opt = document.createElement("option");
         opt.value = "";
@@ -357,30 +373,30 @@ function loadCounts() {
         devSelect.appendChild(opt);
         for (let i = 0; i < devs.length; i++) {
             let dev = devs[i];
-            if (dev["tag"] === "DreamScreen" && dev["deviceTag"].includes("DreamScreen")) {
+            if (dev["Tag"] === "DreamScreen" && dev["DeviceTag"].includes("DreamScreen")) {
                 let opt = document.createElement("option");
-                opt.value = dev["id"];
-                opt.innerText = dev["name"] + " - " + dev["id"];
+                opt.value = dev["Id"];
+                opt.innerText = dev["Name"] + " - " + dev["Id"];
                 if (isValid(target) && opt.value === target) opt.selected = true;
                 devSelect.appendChild(opt);
             }
         }
     }
-
-    let lSel = document.querySelector('[data-property="leftCount"][data-object="SystemData"]');
-    let rSel = document.querySelector('[data-property="rightCount"][data-object="SystemData"]');
-    let tSel = document.querySelector('[data-property="topCount"][data-object="SystemData"]');
-    let bSel = document.querySelector('[data-property="bottomCount"][data-object="SystemData"]');
+    
+    let lSel = document.querySelector('[data-property="LeftCount"][data-object="SystemData"]');
+    let rSel = document.querySelector('[data-property="RightCount"][data-object="SystemData"]');
+    let tSel = document.querySelector('[data-property="TopCount"][data-object="SystemData"]');
+    let bSel = document.querySelector('[data-property="BottomCount"][data-object="SystemData"]');
 
     // If using DS capture, set static/dev LED counts.    
-    leftCount = sd["leftCount"];
-    rightCount = sd["rightCount"];
-    topCount = sd["topCount"];
-    bottomCount = sd["bottomCount"];
-    hSectors = sd["hSectors"];
-    vSectors = sd["vSectors"];
-    useCenter = sd["useCenter"];
-
+    leftCount = sd["LeftCount"];
+    rightCount = sd["RightCount"];
+    topCount = sd["TopCount"];
+    bottomCount = sd["BottomCount"];
+    hSectors = sd["HSectors"];
+    vSectors = sd["VSectors"];
+    useCenter = sd["UseCenter"];
+    
     lSel.value = leftCount;
     rSel.value = rightCount;
     tSel.value = topCount;
@@ -388,7 +404,7 @@ function loadCounts() {
 }
 
 // Send a message to the server, websocket or not
-function sendMessage(endpoint, sData, encode = true) {
+function sendMessage(endpoint, sData, encode= true) {
     let input = sData;
     if (encode && isValid(sData)) sData = JSON.stringify(sData);
     if (socketLoaded) {
@@ -409,14 +425,14 @@ function sendMessage(endpoint, sData, encode = true) {
 }
 
 function doPost(endpoint, payload) {
-    let url = baseUrl + "/api/Glimmr/" + endpoint;
+    let url = baseUrl + "/api/DreamData/" + endpoint;
     if (posting) {
         return;
     }
     let xhttp = new XMLHttpRequest();
-
+        
     xhttp.open("POST", url, true);
-    xhttp.onreadystatechange = function () {
+    xhttp.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
             let postResult = this.json;
             if (endpoint === "loadData") {
@@ -427,12 +443,12 @@ function doPost(endpoint, payload) {
     };
     xhttp.setRequestHeader("Content-Type", "application/json");
     xhttp.send(JSON.stringify(payload));
-    xhttp.send();
+    xhttp.send();    
 }
 
 function doGet(endpoint) {
     fetch(endpoint)
-        .then(function (response) {
+        .then(function(response) {
             return response.json();
         });
 }
@@ -446,18 +462,43 @@ function setSocketListeners() {
     websocket.on("mode", function (mode) {
         console.log("Mode updated via web socket:", mode);
         setMode(mode);
-        data.setProp("deviceMode", mode);
+        data.setProp("DeviceMode",mode);
     });
 
-    websocket.on("stats", function (cpuData) {
-        data.Stats = cpuData;
+    websocket.on("cpuData", function (cpuData) {
+        let tempDiv = $("#tempDiv");
+        let tempText = $("#temperature");
+        let cpuText = $("#cpuPct");
+        let overIcon = $("#overIcon");
+        let sd = data.SystemData;
+        let tempUnit = "°F";
+
+        if (isValid(sd)) {
+            tempUnit = (sd["Units"] === "0") ? "°F" : "°C";
+        }
+        tempText.textContent = cpuData["tempCurrent"] + tempUnit;
+        cpuText.textContent = cpuData["loadAvg1"] + "%";
+        overIcon.textContent = "";
+        tempDiv.classList.remove("text-danger");
+        tempDiv.classList.add("text-success");
+        overIcon.classList.remove("text-danger");
+        for(let i=0; i< cpuData["throttledState"].length; i++) {
+            if (cpuData["throttledState"][i] === "Currently throttled") {
+                tempDiv.classList.add("text-danger");
+                tempDiv.classList.remove("text-success");
+            }
+            if (cpuData["throttledState"][i] === "Under-voltage detected") {
+                overIcon.textContent = "power_input";
+                overIcon.classList.add("text-danger");
+            }
+        }
     });
 
     websocket.on("ambientMode", function (mode) {
         console.log("Socket has set ambient mode to " + mode);
     });
 
-    websocket.on("ambientScene", function (show) {
+    websocket.on("ambientShow", function (show) {
         console.log("Socket has set ambient show to " + show);
     });
 
@@ -477,46 +518,8 @@ function setSocketListeners() {
         console.log("Updating device data " + device);
     });
 
-    let logDiv = document.getElementById("logWrap");
-    websocket.on("log", function (msg) {
-        let message = JSON.parse(msg);
-        let logLine = document.createElement("div");
-        let lvl = "";
-        let show = true;
-        switch (message["Level"]) {
-            case 1:
-                lvl = "DBG";
-                show = log1;
-                break;
-            case 2:
-                lvl = "INF";
-                show = log2;
-                break;
-            case 3:
-                lvl = "WRN";
-                show = log3;
-                break;
-            case 4:
-                lvl = "ERR";
-                show = log4;
-                break;
-        }
-        logLine.classList.add("logLine");
-        if (!show) logLine.classList.add("hideLine");
-        logLine.classList.add("log-" + message["Level"].toString());
-        let ts = message["Timestamp"].split("T")[1].split(".")[0];
-        logLine.innerHTML = "[" + ts + " " + lvl + "]" + message["Properties"]["Caller"]["Value"] + " " + message["MessageTemplate"]["Text"];
-        logDiv.prepend(logLine);
-        for (let i = 0; i < logDiv.children.length; i++) {
-            if (i > 500) {
-                logDiv.children[i].remove();
-            }
-        }
-    });
-
-
     websocket.on("auth", function (value1, value2) {
-        let cb = document.getElementById("CircleBar");
+        let cb = document.getElementById("CircleBar");        
         switch (value1) {
             case "start":
                 bar.animate(0);
@@ -529,7 +532,7 @@ function setSocketListeners() {
                 cb.classList.add("hide");
                 break;
             case "update":
-                bar.animate(value2 / 30);
+                bar.animate(value2/30);
                 if (value2 === 30) cb.classList.add("hide");
                 break;
             case "authorized":
@@ -544,65 +547,75 @@ function setSocketListeners() {
     });
 
 
-    websocket.on('open', function () {
+    websocket.on('open', function() {
         console.log("Socket connected.");
-        socketLoaded = true;
+        socketLoaded = true;        
     });
 
-    websocket.on('olo', function (parsed) {
+    websocket.on('olo', function(stuff) {
+        stuff = stuff.replace(/\\n/g, '');
+        let parsed = JSON.parse(stuff);
         if (isValid(parsed)) {
-            console.log("Loading data: ", parsed);
-            data.load(parsed);
-        }
+            console.log("Loading data.");
+            data.load(parsed);   
+        }                
     });
-
-    websocket.on('inputImage', function (data) {
+    
+    websocket.on('inputImage',function(data) {
         document.getElementById("inputPreview").src = "data:image/png;base64," + data;
     });
 
-    websocket.on('outputImage', function (data) {
+    websocket.on('outputImage',function(data) {
         document.getElementById("outputPreview").src = "data:image/png;base64," + data;
     });
-
-    websocket.on('deleteDevice', function (id) {
+    
+    websocket.on('deleteDevice', function(id) {
+       console.log("Removing device: ", id);
         data.deleteDevice(id);
-        if (isValid(deviceData) && deviceData["id"] === id) {
+        if (isValid(deviceData) && deviceData["Id"] === id) {
             if (expanded) {
-                closeCard().then(function () {
-                    let devCard = document.querySelector('.devCard[data-id="' + id + '"]');
+                closeCard().then(function(){
+                    let devCard = document.querySelector('.devCard[data-id="'+id+'"]');
                     if (isValid(devCard)) {
                         devCard.classList.add('min');
-                        setTimeout(function () {
+                        setTimeout(function(){
                             devCard.remove();
-                        }, 750);
-                    }
+                        },750);
+                    }           
                 });
             }
         } else {
-            let devCard = document.querySelector('.devCard[data-id="' + id + '"]');
+            let devCard = document.querySelector('.devCard[data-id="'+id+'"]');
             if (isValid(devCard)) {
                 devCard.classList.add('min');
-                setTimeout(function () {
+                setTimeout(function(){
                     devCard.remove();
                 }, 500);
-            }
-        }
+            }    
+        }        
+    });
+    
+    websocket.on('frames', function(stuff) {
+        //console.log("frame counts: ", stuff); 
+        fpsCounter.innerText = stuff['source'] + "FPS"; 
     });
 
-    websocket.on('device', function (dData) {
+    websocket.on('device', function(dData) {
         let parsed = JSON.parse(dData);
-        if (parsed && typeof(parsed) === "object" && parsed.hasOwnProperty("Id") && parsed["Id"] !== undefined && parsed["Id"] !== "") {
-            console.log("Received device data from server: ", parsed);
+        if (isValid(parsed) && isValid(parsed.Id)) {
+            console.log("Got device data: ", parsed);    
         } else {
-            console.log("Device data is invalid:", parsed);
+            console.log("Device data is invalid:", dData);
             return;
         }
-
-        let existing = data.getDevice(parsed["id"]);
+        
+        let existing = data.getDevice(parsed.Id);
+        console.log("Existing:",existing);
         data.setDevice(parsed);
-        if (isValid(existing) && existing !== null) {
+        if (isValid(existing) && existing !== null) {            
             // Check if dev settings are shown and refresh them
-            if (isValid(deviceData) && deviceData["id"] === parsed["id"]) {
+            if (isValid(deviceData) && deviceData["Id"] === parsed["Id"]) {
+                console.log("Dev data matches, updating.");
                 deviceData = parsed;
                 if (expanded) {
                     createDeviceSettings();
@@ -613,12 +626,12 @@ function setSocketListeners() {
         }
     });
 
-    websocket.onclose(function () {
+    websocket.onclose(function() {
         console.log("Socket Disconnected...");
         socketLoaded = false;
         showSocketError();
         let i = 0;
-        let intr = setInterval(function () {
+        let intr = setInterval(function() {
             loadSocket();
             if (++i >= 100 || socketLoaded) clearInterval(intr);
         }, 5000);
@@ -631,48 +644,12 @@ function loadSocket() {
     console.log("Trying to connect to socket...");
     websocket.start().then(function () {
         console.log("Socket connected.");
-        socketLoaded = true;
+        socketLoaded = true;        
         errModal.hide();
-        sendMessage("settingsShown", settingsShown, false);
     }).catch(function (err) {
         console.log("Socket connection error: ", err.toString());
         showSocketError();
     });
-}
-
-function loadStats(cpuData) {
-    let tempDiv = $("#tempDiv");
-    let tempText = $("#temperature");
-    let cpuText = $("#cpuPct");
-    let memText = $("#memPct");
-    let overIcon = $("#overIcon");
-    let sd = data.SystemData;
-    let utDiv = document.getElementById("utDiv");
-    data.stats = cpuData;
-    let tempUnit = "°F";
-
-    if (isValid(sd)) {
-        tempUnit = (sd["units"] === 0) ? "°F" : "°C";
-    }
-    tempText.textContent = cpuData["cpuTemp"] + tempUnit;
-    cpuText.textContent = cpuData["cpuUsage"] + "%";
-    memText.textContent = cpuData["memoryUsage"] + "%";
-    utDiv.innerHTML = cpuData["uptime"];
-    overIcon.textContent = "";
-    tempDiv.classList.remove("text-danger");
-    tempDiv.classList.add("text-success");
-    overIcon.classList.remove("text-danger");
-    fpsCounter.innerText = cpuData["fps"]["source"] + "FPS";
-    for (let i = 0; i < cpuData["throttledState"].length; i++) {
-        if (cpuData["throttledState"][i] === "Currently throttled") {
-            tempDiv.classList.add("text-danger");
-            tempDiv.classList.remove("text-success");
-        }
-        if (cpuData["throttledState"][i] === "Under-voltage detected") {
-            overIcon.textContent = "power_input";
-            overIcon.classList.add("text-danger");
-        }
-    }
 }
 
 function downloadDb() {
@@ -680,7 +657,7 @@ function downloadDb() {
     // If you don't know the name or want to use
     // the webserver default set name = ''
     link.setAttribute('download', name);
-    link.href = "/api/Glimmr/database";
+    link.href = "/api/DreamData/DbDownload";
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -691,7 +668,7 @@ function fetchLog() {
     // If you don't know the name or want to use
     // the webserver default set name = ''
     link.setAttribute('download', name);
-    link.href = "/api/Glimmr/logs";
+    link.href = "/api/DreamData/LogDownload";
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -701,85 +678,45 @@ function showSocketError() {
     errModal.show();
 }
 
-function showLog() {
-    logModal.show();
-    logOpen = true;
-}
-
-function hideLog() {
-    logModal.hide();
-    logOpen = false;
-}
-
-function clearLog() {
-    let logDiv = document.getElementById("logWrap");
-    logDiv.innerHTML = "";
-}
-
-function toggleLog(event, level) {
-    let highlightedItems = document.querySelectorAll(".log-" + level.toString());
-    console.log("E: ", event);
-    switch (level) {
-        case 1:
-            log1 = !log1;
-            break;
-        case 2:
-            log2 = !log2;
-            break;
-        case 3:
-            log3 = !log3;
-            break;
-        case 4:
-            log4 = !log4;
-            break;
-    }
-    event.classList.toggle("active");
-    highlightedItems.forEach(function (userItem) {
-        userItem.classList.toggle("hideLine");
-    });
-}
-
 function TriggerRefresh() {
     let sd = data.SystemData;
     let refreshIcon = document.getElementById("refreshIcon");
     if (refreshTimer == null) {
         if (!isValid(sd)) return;
         refreshIcon.classList.add("rotate");
-        sendMessage("scanDevices");
-        refreshTimer = setTimeout(function () {
+        sendMessage("ScanDevices");
+        refreshTimer = setTimeout(function() {
             refreshIcon.classList.remove("rotate");
             refreshTimer = null;
-        }, sd["discoveryTimeout"] * 1000);
+        }, sd["DiscoveryTimeout"] * 1000);
     }
-
+    
 }
 
 // Set all of the various listeners our page may use
 function setListeners() {
     listenersSet = true;
     window.addEventListener('resize', sizeContent);
-
-    document.addEventListener('keydown', function (event) {
-        if (event.key === 'l') {
-            if (logOpen) {
-                hideLog();
-            } else {
-                showLog();
-            }
+    
+    document.addEventListener('input', function(e) {
+        let target = e.target;
+        if (target.classList.contains("multiSlider")) {
+            console.log("Handle slide.");
+            // let handle = target.querySelector(".slider-handle");
+            // handle.text = target.value;
         }
     });
-
-
-    document.addEventListener('change', function (e) {
+    
+    document.addEventListener('change', function(e) {
         let target = e.target;
         let obj = target.getAttribute("data-object");
         let property = target.getAttribute("data-property");
         let val = target.value;
-        if (target.type && target.type === "checkbox") {
+        if (target.type && target.type ==="checkbox") {
             val = target.checked;
         }
-
-
+        
+        
         if (target.classList.contains("beam-control")) {
             let pos = parseInt(target.getAttribute("data-position"));
             let prop = target.getAttribute("data-beamproperty");
@@ -791,7 +728,7 @@ function setListeners() {
                 val = target.checked;
             }
             updateBeamProperty(pos, prop, val);
-
+            
         }
         if (target.classList.contains("lightProperty")) {
             let id = target.getAttribute("data-id");
@@ -801,56 +738,60 @@ function setListeners() {
             updateLightProperty(id, property, val);
             return;
         }
-
+        
         if (isValid(obj) && isValid(property) && isValid(val) && obj === "SystemData") {
+            console.log("Setting system property: ", obj, property, val);
             data.setProp(property, val);
-            if (property === "screenCapMode" || property === "captureMode" || property === "streamMode") {
+            if (property === "ScreenCapMode" || property === "CaptureMode" || property === "StreamMode") {
                 updateCaptureUi();
             }
-
+            
             console.log("Sending updated object: ", obj, data.SystemData);
-            sendMessage(obj, data.SystemData, true);
-
-            if (property === "leftCount" || property === "rightCount" || property === "topCount" || property === "bottomCount") {
+            sendMessage(obj, data.SystemData,true);
+                                    
+            if (property === "LeftCount" || property === "RightCount" || property ==="TopCount" || property === "BottomCount") {
                 let lPreview = document.getElementById("sLedWrap");
                 createLedMap(lPreview);
             }
 
-            if (property === "yseCenter" || property === "hSectors" || property === "vSectors") {
-                if (property === "useCenter") useCenter = val;
-                if (property === "hSectors") hSectors = val;
-                if (property === "vSectors") vSectors = val;
+            if (property === "UseCenter" || property === "HSectors" || property === "VSectors") {
+                if (property === "UseCenter") useCenter = val;
+                if (property === "HSectors") hSectors = val;
+                if (property === "VSectors") vSectors = val;
                 let sPreview = document.getElementById("sectorWrap");
                 createSectorMap(sPreview);
             }
 
-            if (property === "theme") {
+            if (property === "Theme") {
                 loadTheme(val);
-            }
+            }   
             return;
         }
-
+        
         // If we're still here, check for a device setting
         if (target.classList.contains("devSetting")) {
+            console.log("Change listener got it:", obj, property, val);
             updateDevice(obj, property, val);
             return;
         }
-
+        
         obj = target.getAttribute("data-target");
         property = target.getAttribute("data-attribute");
         if (isValid(obj) && isValid(property) && isValid(val)) {
             updateDevice(obj, property, val);
+            return;
         }
+        console.log("What are we trying to set??", obj, property, value);
     });
-
-    document.addEventListener('click', function (e) {
+    
+    document.addEventListener('click',function(e){
         let target = e.target;
         handleClick(target);
     });
 }
 
 function handleClick(target) {
-    switch (true) {
+    switch(true) {
         case target.id === "showIntro":
             showIntro();
             break;
@@ -858,7 +799,7 @@ function handleClick(target) {
             fetchLog();
             break;
         case target.id === "capture-tab":
-            sizeContent();
+            sizeContent(true);
             break;
         case target.classList.contains("controlBtn"):
             let action = target.getAttribute("data-action");
@@ -879,7 +820,7 @@ function handleClick(target) {
             }
             message += " Would you like to continue?";
             if (confirm(message)) {
-                sendMessage("systemControl", action, false);
+                sendMessage("SystemControl", action, false);
             } else {
                 console.log(action + " canceled.");
             }
@@ -888,28 +829,29 @@ function handleClick(target) {
             closeCard().then();
             break;
         case target.classList.contains("sector"):
-            let val = parseInt(target.getAttribute("data-sector"));
+            let val = parseInt(target.getAttribute("data-sector"));            
             if (target.classList.contains("flashSectorRegion")) {
                 console.log("Flashing sector...");
-                sendMessage("flashSector", val, false);
+                sendMessage("FlashSector",val, false);
                 return;
             }
             if (target.classList.contains("nanoRegion")) {
+                console.log("Hiding nano modal.");
                 if (nanoModal != null) {
                     nanoModal.hide();
                     nanoModal = null;
                 }
                 updateDeviceSector(val, target);
                 return;
-            }
+            } 
             if (target.classList.contains("lifxSectorRegion") || target.classList.contains("wledSectorRegion") || target.classList.contains("dreamSectorRegion")) {
-                updateDevice(deviceData["id"], "targetSector", val);
+                updateDevice(deviceData.Id, "TargetSector", val);
                 return;
             }
             break;
         case target.classList.contains("linkDiv"):
             if (target.getAttribute("data-linked") === "false") {
-                let devId = deviceData["id"];
+                let devId = deviceData["Id"];
                 if (!isValid(bar)) {
                     bar = new ProgressBar.Circle("#CircleBar", {
                         strokeWidth: 15,
@@ -920,9 +862,9 @@ function handleClick(target) {
                         trailWidth: 0,
                         svgStyle: null,
                         value: 1
-                    });
-                }
-                sendMessage("authorizeDevice", devId, false);
+                    });    
+                }                
+                sendMessage("AuthorizeDevice", devId,false);
             }
             break;
         case target.classList.contains("led"):
@@ -935,25 +877,25 @@ function handleClick(target) {
             sendMessage("flashDevice", targetId, false);
             break;
         case target.classList.contains("removeDevice"):
-            let deviceId = deviceData["id"];
-            let devName = deviceData["name"];
+            let deviceId = deviceData["Id"];
+            let devName = deviceData["Name"];
             if (confirm('Warning! The device named ' + devName + " will have all settings removed. Do you want to continue?")) {
-                closeCard().then(function () {
+                closeCard().then(function(){
                     data.deleteDevice(deviceId);
-                    let devCard = document.querySelector('.devCard[data-id="' + deviceId + '"]');
+                    let devCard = document.querySelector('.devCard[data-id="'+deviceId+'"]');
                     if (isValid(devCard)) {
                         if (isValid(devCard)) {
-                            setTimeout(function () {
+                            setTimeout(function(){
                                 devCard.classList.add('min');
-                                setTimeout(function () {
+                                setTimeout(function(){
                                     devCard.remove();
-                                }, 750);
-                            }, 1500);
+                                }, 750);    
+                            },1500);                            
                         }
                     }
                 });
-
-                sendMessage("deleteDevice", deviceId, false);
+                
+                sendMessage("DeleteDevice", deviceId, false);
                 console.log('Deleting device.');
             } else {
                 console.log('Device deletion canceled.');
@@ -964,6 +906,7 @@ function handleClick(target) {
                 closeCard().then();
             } else {
                 let devId = target.getAttribute("data-target");
+                console.log("Device id: ", devId);
                 deviceData = data.getDevice(devId);
                 if (devId === "-1") deviceData = JSON.parse(ledData);
                 showDeviceCard(target).then();
@@ -974,23 +917,23 @@ function handleClick(target) {
             let devEnabled = target.getAttribute("data-enabled");
             let icon = target.firstChild;
             if (devEnabled === "true") {
-                target.setAttribute("data-enabled", "false");
+                target.setAttribute("data-enabled","false");
                 icon.innerText = "cast";
             } else {
-                target.setAttribute("data-enabled", "true");
+                target.setAttribute("data-enabled","true");
                 icon.innerText = "cast_connected";
             }
             deviceData = data.getDevice(dId);
-            updateDevice(dId, "enable", (devEnabled !== "true"));
+            updateDevice(dId,"Enable",(devEnabled !== "true"));
             break;
         case target.classList.contains("refreshBtn"):
             TriggerRefresh();
             break;
         case target.classList.contains("modeBtn"):
             let newMode = parseInt(target.getAttribute("data-mode"));
-            data.setProp("deviceMode", mode);
+            data.setProp("DeviceMode",mode);
             setMode(newMode);
-            sendMessage("mode", newMode, false);
+            sendMessage("Mode", newMode, false);
             break;
         case target.classList.contains("mainSettings"):
             toggleSettingsDiv().then();
@@ -998,7 +941,7 @@ function handleClick(target) {
         case target.classList.contains("nav-link"):
             let cDiv = target.getAttribute("href");
             let fadePanes = document.querySelectorAll(".tab-pane");
-            for (let i = 0; i < fadePanes.length; i++) {
+            for (let i=0; i < fadePanes.length; i++) {
                 if (fadePanes[i]) {
                     if (fadePanes[i].classList.contains("show")) {
                         fadePanes[i].classList.remove("show", "active");
@@ -1012,91 +955,96 @@ function handleClick(target) {
 
 
 async function toggleSettingsDiv() {
-    let x = window.matchMedia("(max-width: 576px)");
+    let x = window.matchMedia("(max-width: 576px)");    
     let settingsIcon = document.querySelector(".mainSettings.mainSettings-lg span");
     if (x.matches) settingsIcon = document.querySelector(".mainSettings.mainSettings-sm span");
     if (!settingsShown) {
         settingsIcon.textContent = "chevron_left";
-        showSettingsCard().then(function () {
+        showSettingsCard().then(function(){
             cardRow.classList.add("d-none");
             loadSettings();
-        });
+        });                
     } else {
         settingsIcon.textContent = "settings_applications";
-        hideSettingsCard().then(function () {
-            cardRow.classList.remove("d-none");
+        hideSettingsCard().then(function(){
+            cardRow.classList.remove("d-none");    
         });
+        
     }
-    sendMessage("settingsShown", settingsShown, false);
 }
 
 
 function updateDeviceSector(sector, target) {
     console.log("Sector click: ", sector, target);
+    // let sectors = document.querySelectorAll(".sector");
+    // for (let i=0; i<sectors.length; i++) {
+    //     sectors[i].classList.remove("checked");
+    // }
+    // target.classList.add("checked");
     let dev = deviceData;
-    if (dev["tag"] === "Nanoleaf") {
-        let layout = dev["layout"];
-        let positions = layout["positionData"];
-        for (let i = 0; i < positions.length; i++) {
-            if (positions[i]["panelId"] === nanoTarget) {
-                positions[i]["targetSector"] = sector;
-            }
+    if (dev["Tag"] === "Nanoleaf") {
+        let layout = dev["Layout"];        
+        let positions = layout["PositionData"];      
+        for(let i=0; i < positions.length; i++) {
+            if (positions[i]["PanelId"] === nanoTarget) {
+                positions[i]["TargetSector"] = sector;
+            }    
         }
         layout["PositionData"] = positions;
         dev["Layout"] = layout;
-        updateDevice(dev["id"], "layout", layout);
+        updateDevice(dev["Id"],"Layout", layout);
     } else {
-        updateDevice(dev["id"], "targetSector", sector);
-    }
-    sendMessage("flashSector", sector, false);
+        updateDevice(dev["Id"],"TargetSector",sector);
+    }    
+    sendMessage("FlashSector", sector, false);
 }
 
 function updateLightProperty(myId, propertyName, value) {
     let lm = getLightMap(myId);
     lm[propertyName] = value;
     setLightMap(lm);
-    let fGroup = deviceData["groups"];
+    let fGroup = deviceData["Groups"];
     let nGroup = [];
     for (let g in fGroup) {
         if (fGroup.hasOwnProperty(g)) {
-            fGroup[g]["id"] = fGroup[g]["id"];
+            fGroup[g]["Id"] = fGroup[g]["_id"];
             nGroup.push(fGroup[g]);
         }
 
     }
-    updateDevice(deviceData["id"], "groups", nGroup);
+    updateDevice(deviceData["Id"],"Groups", nGroup);    
 }
 
 function updateBeamProperty(beamPos, propertyName, value) {
-    let id = deviceData["id"];
-    if (propertyName === "offset") value = parseInt(value);
-    let beamLayout = deviceData["beamLayout"];
-    let beams = beamLayout["segments"];
-    for (let i = 0; i < beams.length; i++) {
+    let id = deviceData["Id"];
+    if (propertyName === "Offset") value = parseInt(value);
+    let beamLayout = deviceData["BeamLayout"];
+    let beams = beamLayout["Segments"];
+    for(let i=0; i < beams.length; i++) {
         let beam = beams[i];
-        if (beam["position"] === beamPos) {
+        if (beam["Position"] === beamPos) {
             beam[propertyName] = value;
             beams[i] = beam;
         }
     }
 
-    beamLayout["segments"] = beams;
+    beamLayout["Segments"] = beams;
     console.log("Updating beam " + id, propertyName, value);
     appendBeamLedMap();
-    updateDevice(id, "beamLayout", beamLayout);
+    updateDevice(id,"BeamLayout", beamLayout);
 }
 
 function getLightMap(id) {
-    let hueLightMap = deviceData["mappedLights"];
+    let hueLightMap = deviceData["MappedLights"];
     for (let l in hueLightMap) {
         if (hueLightMap.hasOwnProperty(l)) {
-            if (hueLightMap[l]["id"] === id) {
+            if (hueLightMap[l]["_id"] === id) {
                 return hueLightMap[l];
             }
         }
     }
     return {
-        id: id,
+        _id: id,
         TargetSector: -1,
         TargetSector2: -1,
         Brightness: 255,
@@ -1105,27 +1053,26 @@ function getLightMap(id) {
 }
 
 function setLightMap(map) {
-    let hueLightMap = deviceData["mappedLights"];
+    let hueLightMap = deviceData["MappedLights"];
     for (let l in hueLightMap) {
         if (hueLightMap.hasOwnProperty(l)) {
-            if (hueLightMap[l]["id"] === map["id"]) {
+            if (hueLightMap[l]["_id"] === map["_id"]) {
                 hueLightMap[l] = map;
                 return;
             }
         }
     }
     hueLightMap.push(map);
-    updateDevice(deviceData["id"], "mappedLights", hueLightMap);
+    updateDevice(deviceData["_id"],"MappedLights", hueLightMap);
 }
 
 
-function setMode(newMode) {
-    if (newMode == null) return;
+function setMode(newMode) {    
     mode = newMode;
-    console.log("Updating mode: " + mode);
-    let target = document.querySelector("[data-mode='" + mode + "']");
+    console.log("Updating mode: " + mode);    
+    let target = document.querySelector("[data-mode='"+mode+"']");    
     let others = document.querySelectorAll(".modeBtn");
-    for (let i = 0; i < others.length; i++) {
+    for (let i=0; i< others.length; i++) {
         if (others[i]) {
             others[i].classList.remove("active");
         }
@@ -1145,16 +1092,16 @@ function setMode(newMode) {
         case 4:
         case 2:
             audioNav.classList.add("show");
-            audioNav.classList.remove("hide");
+            audioNav.classList.remove("hide");            
     }
-
-    sizeContent();
+        
+    sizeContent(true);
 }
 
 function setModeButtons() {
     let sd = data.SystemData;
-    let capMode = sd["captureMode"];
-    let streamMode = sd["streamMode"];
+    let capMode = sd["CaptureMode"];
+    let streamMode = sd["StreamMode"];
     let videoBtns = document.querySelectorAll(".videoBtn");
     let streamBtns = document.querySelectorAll(".streamBtn");
     let vString = "tv";
@@ -1172,7 +1119,7 @@ function setModeButtons() {
         streamBtn.firstElementChild.classList.remove("material-icons");
         streamBtn.firstElementChild.classList.remove("appz-glimmr");
         streamBtn.firstElementChild.classList.remove("appz-dreamscreen");
-        switch (streamMode) {
+        switch(streamMode) {
             case 0:
                 streamBtn.firstElementChild.classList.add("appz-dreamscreen");
                 break;
@@ -1192,19 +1139,20 @@ function loadUi() {
     loadCounts();
     setModeButtons();
     getDevices();
-
+    
     if (isValid(data.audioDevices)) {
         let recList = document.getElementById("RecDev");
-        let options = document.querySelectorAll('#recDev option');
-        options.forEach(o => o.remove());
+        for (let i = 0; i < recList.options.length; i++) {
+            recList.options[i] = null;
+        }
         let recDevs = data.audioDevices;
-        let recDev = data.getProp("recDev");
+        let recDev = data.getProp("RecDev");
         if (isValid(recDevs)) {
             for (let i = 0; i < recDevs.length; i++) {
                 let dev = recDevs[i];
                 let opt = document.createElement("option");
-                opt.value = dev["id"];
-                opt.innerText = dev["id"];
+                opt.value = dev["Id"];
+                opt.innerText = dev["Id"];
                 if (opt.value === recDev) opt.selected = true;
                 recList.options.add(opt);
             }
@@ -1213,70 +1161,66 @@ function loadUi() {
         console.log("No recording devices found.");
     }
 
-    let mode = data.getProp("deviceMode");
-    let autoDisabled = data.getProp("autoDisabled");
+    let mode = data.getProp("DeviceMode");
+    let autoDisabled = data.getProp("AutoDisabled");
     if (autoDisabled) mode = 0;
     setMode(mode);
-
+    
     if (!listenersSet) {
         setListeners();
         let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl)
-        });
+        });        
     }
 
+    let version = data.version;
+    let vDiv = document.getElementById("versionDiv");
+    vDiv.innerHTML="Glimmr Version: " + version.toString();
     let sd = data.SystemData;
-
     if (isValid(sd)) {
-        let version = sd.version;
-        let vDiv = document.getElementById("versionDiv");
-        let hDiv = document.getElementById("hostDiv");
-        let utDiv = document.getElementById("utDiv");
-        let ipDiv = document.getElementById("ipDiv");
-        vDiv.innerHTML = version.toString();
-        hDiv.innerHTML = sd["deviceName"];
-        ipDiv.innerHTML = sd["ipAddress"];
-        utDiv.innerHTML = data.stats["uptime"];
-
         if (!isValid(pickr)) loadPickr();
-        let theme = sd["theme"];
+        let theme = sd["Theme"];
         loadTheme(theme);
+        mode = sd["DeviceMode"];
+        autoDisabled = sd["AutoDisabled"];
+        if (autoDisabled) mode = 0;
         if (isValid(data.ambientScenes)) {
             let scenes = data.ambientScenes;
-            let ambientScene = sd["ambientScene"];
-            scenes.sort((a, b) => (a["name"] > b["name"]) ? 1 : -1);
-            let sceneSelector = document.getElementById("AmbientScene");
+            let ambientMode = sd["AmbientShow"];
+            scenes.sort((a, b) => (a.Id > b.Id) ? 1 : -1);
+            let sceneSelector = document.getElementById("AmbientShow");
             sceneSelector.innerHTML = "";
-            for (let i = 0; i < Object.entries(scenes).length; i++) {
+            for(let i=0; i < scenes.length; i++) {
                 let opt = document.createElement("option");
-                opt.value = scenes[i]["id"].toString();
-                opt.innerText = scenes[i]["name"];
-                if (opt.key === ambientScene) opt.selected = true;
+                opt.value = scenes[i]["Id"];
+                opt.innerText = scenes[i]["Name"];
+                if (opt.value === ambientMode) opt.selected = true;
                 sceneSelector.appendChild(opt);
             }
-            sceneSelector.value = ambientScene;
+            sceneSelector.value = ambientMode;
         }
         if (isValid(data.audioScenes)) {
             let aScenes = data.audioScenes;
-            let audioMode = sd["audioMap"];
-            aScenes.sort((a, b) => (a["id"] > b["id"]) ? 1 : -1);
+            let audioMode = sd["AudioMap"];
+            aScenes.sort((a, b) => (a.Id > b.Id) ? 1 : -1);
             let sceneSelector = document.getElementById("AudioMap");
             sceneSelector.innerHTML = "";
-            for (let i = 0; i < aScenes.length; i++) {
+            for(let i=0; i < aScenes.length; i++) {
                 let opt = document.createElement("option");
-                opt.value = aScenes[i]["id"];
-                opt.innerText = aScenes[i]["name"];
+                opt.value = aScenes[i]["Id"];
+                opt.innerText = aScenes[i]["Name"];
                 if (opt.value === audioMode) opt.selected = true;
                 sceneSelector.appendChild(opt);
             }
             sceneSelector.value = audioMode;
         }
-        let color = "#" + sd["ambientColor"];
+        let color ="#" + sd["AmbientColor"];
+        console.log("Pickr color should be: " + color);
         pickr.setColor(color);
     }
 
-    sizeContent();
+    sizeContent(false);
     document.getElementById("cardRow").click();
 }
 
@@ -1287,14 +1231,16 @@ function showIntro() {
             backdropPadding: 5,
             backdrop: true,
             orphan: true,
-            storage: false,
-            onStart: function () {
+            storage:false,
+            onStart: function(){
+                console.log("Creating demo device card.");
                 let ledObj = JSON.parse(ledData);
-                let newCard = createDeviceCard(ledObj, true);
+                let newCard = createDeviceCard(ledObj,true);
                 document.getElementById("cardRow").prepend(newCard);
                 if (settingsShown) toggleSettingsDiv().then();
             },
-            onEnd: function () {
+            onEnd: function(){
+                console.log("Removing demo device card.");
                 let devCard = document.querySelector('.devCard[data-id="-1"]');
                 if (expanded) {
                     closeCard().then(function () {
@@ -1304,8 +1250,8 @@ function showIntro() {
                     devCard.remove();
                 }
                 let sd = data.SystemData;
-                sd.skipTour = true;
-                sendMessage("SystemData", sd);
+                sd.SkipTour = true;
+                sendMessage("SystemData",sd);
             },
             steps: [
                 {
@@ -1339,7 +1285,7 @@ function showIntro() {
                     smartPlacement: false,
                     content: 'You can access system settings by clicking this button. Let\'s take a look!',
                     reflex: true,
-                    onNext: function () {
+                    onNext: function() {
                         if (!settingsShown) toggleSettingsDiv().then();
                         document.getElementById("system-tab").click();
                     }
@@ -1350,7 +1296,7 @@ function showIntro() {
                     container: '#mainContent',
                     backdropContainer: '#mainContent',
                     content: 'Shutdown or reboot your computer, restart Glimmr, or manually trigger an update.',
-                    onNext: function () {
+                    onNext: function(){
                         document.getElementById("system-tab").click();
                         scrollSetting(myTour.getStep(myTour.getCurrentStep() + 1));
                     }
@@ -1362,11 +1308,11 @@ function showIntro() {
                     backdropContainer: '#mainContent',
                     placement: 'bottom',
                     content: 'Select if and when to automatically install Glimmr updates.',
-                    onNext: function () {
+                    onNext: function(){
                         document.getElementById("system-tab").click();
                         scrollSetting(myTour.getStep(myTour.getCurrentStep() + 1));
                     },
-                    onPrev: function () {
+                    onPrev: function() {
                         document.getElementById("system-tab").click();
                         scrollSetting(myTour.getStep(myTour.getCurrentStep() - 1));
                     }
@@ -1378,11 +1324,11 @@ function showIntro() {
                     backdropContainer: '#mainContent',
                     placement: 'top',
                     content: 'With OpenRGB, you can control a massive array of RGB PC Peripherals. Enter the IP and port here to enable.',
-                    onNext: function () {
+                    onNext: function(){
                         document.getElementById("capture-tab").click();
                         scrollSetting(myTour.getStep(myTour.getCurrentStep() + 1));
                     },
-                    onPrev: function () {
+                    onPrev: function() {
                         document.getElementById("system-tab").click();
                         scrollSetting(myTour.getStep(myTour.getCurrentStep() - 1));
                     }
@@ -1394,11 +1340,11 @@ function showIntro() {
                     backdropContainer: '#mainContent',
                     placement: 'bottom',
                     content: 'Here, you can select the capture source/mode, as well as other settings related to each mode.',
-                    onNext: function () {
+                    onNext: function(){
                         document.getElementById("capture-tab").click();
                         scrollSetting(myTour.getStep(myTour.getCurrentStep() + 1));
                     },
-                    onPrev: function () {
+                    onPrev: function() {
                         document.getElementById("system-tab").click();
                         scrollSetting(myTour.getStep(myTour.getCurrentStep() - 1));
                     }
@@ -1410,11 +1356,11 @@ function showIntro() {
                     backdropContainer: '#mainContent',
                     placement: 'bottom',
                     content: 'Similarly, you can select the stream source/mode here, as well as other settings related to each mode, if applicable.',
-                    onNext: function () {
+                    onNext: function(){
                         document.getElementById("capture-tab").click();
                         scrollSetting(myTour.getStep(myTour.getCurrentStep() + 1));
                     },
-                    onPrev: function () {
+                    onPrev: function() {
                         document.getElementById("capture-tab").click();
                         scrollSetting(myTour.getStep(myTour.getCurrentStep() - 1));
                     }
@@ -1425,11 +1371,11 @@ function showIntro() {
                     container: '#mainContent',
                     backdropContainer: '#mainContent',
                     content: 'The values set here determine the overall size of the "master grid" used to divide up the screen edges for LED strips.',
-                    onNext: function () {
+                    onNext: function(){
                         document.getElementById("capture-tab").click();
                         scrollSetting(myTour.getStep(myTour.getCurrentStep() + 1));
                     },
-                    onPrev: function () {
+                    onPrev: function() {
                         document.getElementById("capturem-tab").click();
                         scrollSetting(myTour.getStep(myTour.getCurrentStep() - 1));
                     }
@@ -1440,10 +1386,10 @@ function showIntro() {
                     container: '#mainContent',
                     backdropContainer: '#mainContent',
                     content: 'The values set here determine the overall size of the "master grid" used to divide up the screen edges for single-color devices, like Hue bulbs or a single Nanoleaf panel.',
-                    onNext: function () {
+                    onNext: function(){
                         scrollElement(myTour.getStep(myTour.getCurrentStep() + 1));
                     },
-                    onPrev: function () {
+                    onPrev: function() {
                         document.getElementById("capture-tab").click();
                         scrollSetting(myTour.getStep(myTour.getCurrentStep() - 1));
                     }
@@ -1452,11 +1398,11 @@ function showIntro() {
                     element: "#devCard",
                     title: 'This is a device',
                     content: 'Here you can enable and configure various settings for each device discovered by Glimmr.',
-                    onPrev: function () {
+                    onPrev: function() {
                         document.getElementById("capture-tab").click();
                         scrollSetting(myTour.getStep(myTour.getCurrentStep() - 1));
                     },
-                    onNext: function () {
+                    onNext: function() {
                         scrollElement(myTour.getStep(myTour.getCurrentStep() + 1));
                     }
                 },
@@ -1474,20 +1420,20 @@ function showIntro() {
                     element: "#devPrefBtn",
                     title: 'Device Settings',
                     content: 'Each device has a unique group of settings depending on what it does. Clicking here will open the device settings.',
-                    onNext: function () {
+                    onNext: function(){
                         deviceData = JSON.parse(ledData);
                         if (!expanded) showDeviceCard(document.getElementById("devPrefBtn")).then();
                     }
-
+                
                 },
                 {
                     element: "#mapWrap",
                     title: 'Element mapping',
                     content: 'Every device in Glimmr has a mapping section where you can preview the light data in relation to the screen.',
-                    onNext: function () {
+                    onNext: function() {
                         scrollDevPref(myTour.getStep(myTour.getCurrentStep() + 1))
                     },
-                    onPrev: function () {
+                    onPrev: function() {
                         closeCard().then();
                     }
                 },
@@ -1495,10 +1441,10 @@ function showIntro() {
                     element: '.devSetting[data-property="LedCount"]',
                     title: 'LED Count',
                     content: 'This is the total number of leds in your strip. It can be less than the total number in the grid.',
-                    onNext: function () {
+                    onNext: function() {
                         scrollDevPref(myTour.getStep(myTour.getCurrentStep() + 1))
                     },
-                    onPrev: function () {
+                    onPrev: function() {
                         scrollDevPref(myTour.getStep(myTour.getCurrentStep() - 1))
                     }
                 },
@@ -1506,10 +1452,10 @@ function showIntro() {
                     element: '.devSetting[data-property="Offset"]',
                     title: 'LED Offset',
                     content: 'The offset controls how many leds to skip from the start of the strip, allowing you to segment strips as need.',
-                    onNext: function () {
+                    onNext: function() {
                         scrollDevPref(myTour.getStep(myTour.getCurrentStep() + 1))
                     },
-                    onPrev: function () {
+                    onPrev: function() {
                         scrollDevPref(myTour.getStep(myTour.getCurrentStep() - 1))
                     }
                 },
@@ -1521,21 +1467,21 @@ function showIntro() {
                         'the strip will use every N colors from the main color array.' +
                         '' +
                         'If set to a negative value, then each color from the main array will be repeated that many times.',
-                    onNext: function () {
+                    onNext: function() {
                         closeCard().then();
                     },
-                    onPrev: function () {
+                    onPrev: function() {
                         scrollDevPref(myTour.getStep(myTour.getCurrentStep() - 1));
                     }
                 },
                 {
-                    element: '',
+                    element:'',
                     title: 'Tour Complete',
                     content: 'This completes the tour. Other devices have other settings, but if I were to try covering' +
                         'everything, you would be sitting here all day. Feel free to play around and look at everything,' +
                         'and head on over to <a href="https://github.com/d8ahazard/glimmr" target="_blank">the project page</a> to submit' +
                         'an issue or feature request.',
-                    onPrev: function () {
+                    onPrev: function(){
                         deviceData = JSON.parse(ledData);
                         if (!expanded) showDeviceCard(document.getElementById("devPrefBtn")).then(function () {
                             scrollDevPref(myTour.getStep(myTour.getCurrentStep() - 1));
@@ -1543,31 +1489,40 @@ function showIntro() {
                     }
                 }
             ]
-        });
+    });
     myTour.init();
 
     // Start the tour
     myTour.start();
 }
 
-function scrollSetting(step) {
-    if (!settingsShown) toggleSettingsDiv().then();
+function scrollSetting(step){
+    if (!settingsShown) toggleSettingsDiv().then();    
     let elem = document.querySelector(step.element);
     let parent = document.getElementById("mainContent");
-    parent.scrollTop = elem.offsetTop;
+    let topPos = elem.offsetTop;
+    console.log("ELEMN", elem);
+    console.log("PARENT: ", parent);
+    console.log("TOP: ", topPos);
+    parent.scrollTop = topPos;
 }
 
 function scrollElement(step) {
     if (settingsShown) toggleSettingsDiv().then();
     let elem = document.querySelector(step.element);
     let parent = document.getElementById("mainContent");
-    parent.scrollTop = elem.offsetTop;
+    let topPos = elem.offsetTop;
+    console.log("ELEMN", elem);
+    console.log("PARENT: ", parent);
+    console.log("TOP: ", topPos);
+    parent.scrollTop = topPos;
 }
 
 function scrollDevPref(step) {
     let elem = document.querySelector(step.element);
     let parent = document.querySelector("#devCard");
-    parent.scrollTop = elem.offsetTop;
+    let topPos = elem.offsetTop;
+    parent.scrollTop = topPos;
 }
 
 
@@ -1579,31 +1534,32 @@ function loadTheme(theme) {
             if (last.href.includes("dark.css")) {
                 last.parentNode.removeChild(last);
             }
-        }
+        }        
     } else {
-        let newSS = document.createElement('link');
-        newSS.rel = 'stylesheet';
-        newSS.href = '/css/' + theme + '.css';
+        let newSS=document.createElement('link');
+        newSS.rel='stylesheet';
+        newSS.href='/css/' + theme + '.css';
         document.getElementsByTagName("head")[0].appendChild(newSS);
     }
-
-
+    
+    
 }
 
 function loadSettings() {
     let systemData = data.SystemData;
-    let updateTime = systemData["autoUpdateTime"].toString();
+    console.log("No, really, loading sd: ", systemData);
+    let updateTime = systemData["AutoUpdateTime"].toString();
     let timeSelect = document.getElementById("AutoUpdateTime");
     if (isValid(timeSelect)) {
         let length = timeSelect.options.length;
-        for (let i = length - 1; i >= 0; i--) {
+        for (let i = length-1; i >= 0; i--) {
             timeSelect.options[i] = null;
         }
-
+        
         let hourval = 0;
         let timeText = document.getElementById("updateTime");
         for (let ampm = 0; ampm < 2; ampm++) {
-            for (let hour = 0; hour < 12; hour++) {
+            for (let hour=0; hour < 12; hour++) {
                 let string = (ampm === 0) ? "AM" : "PM";
                 let opt = document.createElement("option");
                 opt.value = hourval.toString();
@@ -1621,7 +1577,7 @@ function loadSettings() {
             updateTime -= 12;
             ampm = "PM";
         }
-        timeText.innerHTML = "Updates will be installed at " + updateTime.toString() + ":00" + ampm + " every day when enabled.";
+        timeText.innerHTML = "Updates will be installed at "+updateTime.toString()+":00"+ampm+" every day when enabled.";
     }
     if (isValid(systemData)) {
         loadSettingObject(systemData);
@@ -1630,10 +1586,10 @@ function loadSettings() {
         loadCounts();
         let lPreview = document.getElementById("sLedWrap");
         let sPreview = document.getElementById("sectorWrap");
-        setTimeout(function () {
+        setTimeout(function(){
             createLedMap(lPreview);
-            createSectorMap(sPreview, "FlashSector");
-        }, 500);
+            createSectorMap(sPreview,"FlashSector");
+        },500);
     }
 }
 
@@ -1641,14 +1597,14 @@ function updateCaptureUi() {
     let systemData = data.SystemData;
     if (!isValid(systemData)) return;
     let capGroups = document.querySelectorAll(".capGroup");
-    let mode = systemData["captureMode"].toString();
-    let camMode = systemData["camType"].toString();
-    let usbIdx = systemData["usbSelection"].toString();
+    let mode = systemData["CaptureMode"].toString();
+    let camMode = systemData["CamType"].toString();
+    let usbIdx = systemData["UsbSelection"].toString();
     let usbRow = document.getElementById("UsbSelectRow");
     let usbSel = document.getElementById("UsbSelect");
-    let streamMode = systemData["streamMode"].toString();
+    let streamMode = systemData["StreamMode"].toString();
     let streamGroups = document.querySelectorAll(".streamGroup");
-    for (let i = 0; i < streamGroups.length; i++) {
+    for (let i=0; i < streamGroups.length; i++) {
         let group = streamGroups[i];
         if (group.getAttribute("data-stream") === streamMode) {
             group.classList.remove("d-none");
@@ -1656,19 +1612,22 @@ function updateCaptureUi() {
             group.classList.add("d-none");
         }
     }
-
-    for (let i = 0; i < capGroups.length; i++) {
+    
+    for (let i=0; i < capGroups.length; i++) {
         let group = capGroups[i];
         let groupMode = group.getAttribute("data-mode");
         if (groupMode === mode) {
-            group.classList.remove("d-none");
+            group.classList.remove("d-none");            
         } else {
             group.classList.add("d-none");
         }
     }
 
-    let options = document.querySelectorAll('#UsbSelect option');
-    options.forEach(o => o.remove());
+    if (isValid(usbSel.options)) {
+        for (let i = 0; i < usbSel.options.length; i++) {
+            usbSel.options[i] = null;
+        }
+    }
     let usbDevs = data.usbDevices;
 
     let opt = document.createElement("option");
@@ -1676,16 +1635,15 @@ function updateCaptureUi() {
     opt.innerText = "";
     if (opt.value === usbIdx) opt.selected = true;
     usbSel.appendChild(opt);
-
+    
     for (const [key, value] of Object.entries(usbDevs)) {
-        if (!isValid(key) || !isValid(value)) continue;
         let opt = document.createElement("option");
         opt.value = key.toString();
         opt.innerText = value.toString();
         if (opt.value === usbIdx) opt.selected = true;
         usbSel.appendChild(opt);
     }
-
+    
     if (mode === "2" || (mode === "1" && camMode === "1")) {
         usbRow.classList.remove("d-none");
     } else {
@@ -1698,34 +1656,34 @@ function loadSettingObject(obj) {
         return;
     }
     let dataProp = obj;
-    let id = obj["id"];
+    let id = obj["Id"];
     let name = "SystemData";
-    for (let prop in dataProp) {
+    for(let prop in dataProp) {
         if (dataProp.hasOwnProperty(prop)) {
             let value = dataProp[prop];
-            let target = document.querySelector('[data-property=' + prop + '][data-object="' + name + '"]');
+            let target = document.querySelector('[data-property='+prop+'][data-object="'+name+'"]');
             if (obj.hasOwnProperty("GpioNumber")) {
-                target = document.querySelector('[data-property=' + prop + '][data-object="' + name + '"][data-id="' + id + '"]');
+                target = document.querySelector('[data-property='+prop+'][data-object="'+name+'"][data-id="'+id+'"]');
             }
 
             if (prop === "Enable") {
                 if (value) {
-                    target = document.querySelector('[data-id="' + id + '"][data-function="enable"]');
-                    if (isValid(target)) target.classList.add("active");
+                    target = document.querySelector('[data-id="'+id+'"][data-function="enable"]');
+                    if (isValid(target))target.classList.add("active");
                 } else {
-                    target = document.querySelector('[data-id="' + id + '"][data-function="disable"]');
-                    if (isValid(target)) target.classList.add("active");
+                    target = document.querySelector('[data-id="'+id+'"][data-function="disable"]');
+                    if (isValid(target))target.classList.add("active");
                 }
             }
-
-            if (isValid(target) && prop !== "selectedMonitors" && prop !== "screenCapMode") {
+            
+            if (isValid(target) && prop !== "SelectedMonitors" && prop !== "ScreenCapMode") {
                 if (value === true) {
                     target.setAttribute('checked', "true");
                 } else {
-                    target.value = dataProp[prop];
-                }
-            }
-        }
+                    target.value = dataProp[prop];    
+                }         
+            }            
+        }        
     }
 }
 
@@ -1734,13 +1692,13 @@ function expandCards() {
     if (devCards.length >= 1) {
         devCards[0].classList.remove("min");
         setTimeout(expandCards, 50);
-    }
+    }   
 }
 
-function loadDevices() {
+function loadDevices() {   
     if (demoLoaded) return;
     let blankCard = $("#blankCard");
-    if (isValid(blankCard)) {
+    if (isValid(blankCard)) {        
         blankCard.remove();
     }
     let devs = data.Devices;
@@ -1748,7 +1706,7 @@ function loadDevices() {
     let cards = container.querySelectorAll(".card.devCard");
     let empty = (cards.length === 0);
     setTimeout(expandCards, 250);
-    for (let i = 0; i < devs.length; i++) {
+    for (let i = 0; i< devs.length; i++) {
         let pos = i - 1;
         let card = null;
         let expand = false;
@@ -1759,15 +1717,15 @@ function loadDevices() {
                 if (empty) {
                     container.append(card);
                     expand = true;
-                } else {
-                    let exCard = document.querySelector(".devCard[data-id='" + devData.id + "']");
+                } else {                
+                    let exCard = document.querySelector(".devCard[data-id='"+devData.Id+"']");
                     if (isObject(exCard)) {
                         card.classList.remove("min");
                         container.replaceChild(card, exCard);
-                        if (expanded && devData["id"] === deviceData["id"]) {
-                            let sub = document.querySelector(".card.container-fluid > .card-body > .titleRow > .titleCol > .card-subtitle");
+                        if (expanded && devData.Id === deviceData.Id) {
+                            let sub = document.querySelector(".card.container-fluid > .card-body > .titleRow > .titleCol > .card-subtitle")
                             if (isValid(sub)) sub.innerHTML = getSubtitle(devData).innerHTML;
-                        }
+                        } 
                     } else if (pos !== -1 && container.children.length >= i + 1) {
                         container.insertBefore(card, container.children[i]);
                         expand = true;
@@ -1780,26 +1738,26 @@ function loadDevices() {
                             expand = true;
                         }
                     }
-                }
-            }
-        }
+                }                
+            }            
+        } 
     }
 }
 
 function getSubtitle(device) {
     let subTitle = document.createElement("div");
-    if (device["tag"] === "Wled" || device["tag"] === "Glimmr") {
+    if (device["Tag"] === "Wled" || device["Tag"] === "Glimmr") {
         let a = document.createElement("a");
-        a.href = "http://" + device["ipAddress"];
-        a.innerText = device["ipAddress"];
+        a.href = "http://" + device["IpAddress"];
+        a.innerText = device["IpAddress"];
         a.target = "_blank";
         subTitle.appendChild(a);
     } else {
-        subTitle.textContent = device["ipAddress"];
+        subTitle.textContent = device["IpAddress"];
     }
 
-    if ((device.hasOwnProperty("multiZoneCount") || device.hasOwnProperty("ledCount")) && device["deviceTag"] !== "Lifx Bulb") {
-        let val = (device.hasOwnProperty("multiZoneCount")) ? device["multiZoneCount"] : device["ledCount"];
+    if ((device.hasOwnProperty("MultiZoneCount") || device.hasOwnProperty("LedCount")) && device["DeviceTag"] !== "Lifx Bulb") {
+        let val = (device.hasOwnProperty("MultiZoneCount")) ? device["MultiZoneCount"] : device["LedCount"];
         let count = document.createElement("span");
         count.innerText = " (" + val + ")";
         subTitle.appendChild(count);
@@ -1808,14 +1766,14 @@ function getSubtitle(device) {
 }
 
 function createDeviceCard(device, addDemoText) {
-    if (device["tag"] === "DreamScreen" && device["deviceTag"].includes("DreamScreen")) return;
+    if (device.Tag === "DreamScreen" && device["DeviceTag"].includes("DreamScreen")) return;
     // Create main card
     let card = document.createElement("div");
     if (addDemoText) {
-        card.id = "devCard";
+        card.id = "devCard";        
     }
     card.classList.add("card", "m-4", "devCard");
-    card.setAttribute("data-id", device["id"]);
+    card.setAttribute("data-id",device.Id);
     // Create card body
     let cardBody = document.createElement("div");
     cardBody.classList.add("card-body");
@@ -1824,7 +1782,7 @@ function createDeviceCard(device, addDemoText) {
     let subTitle = document.createElement("h6");
     title.classList.add("card-title");
     subTitle.classList.add("card-subtitle", "mb2", "text-muted", "ledCount");
-    title.textContent = device["name"];
+    title.textContent = device.Name;    
     subTitle.innerHTML = getSubtitle(device).innerHTML;
     // Create title row
     let titleRow = document.createElement("div");
@@ -1841,29 +1799,29 @@ function createDeviceCard(device, addDemoText) {
     image.setAttribute("data-bs-toggle", "tooltip");
     image.setAttribute("data-bs-placement", "top");
     image.setAttribute("data-title", "Flash/locate device");
-    image.setAttribute("data-device", device["id"]);
-    let tag = device["tag"];
+    image.setAttribute("data-device", device["Id"]);
+    let tag = device.Tag;
     if (isValid(tag)) {
-        if (isValid(device["deviceTag"]) && (tag === "Dreamscreen" || tag === "Lifx")) tag = device["deviceTag"];
-        image.setAttribute("src", baseUrl + "/img/" + tag.toLowerCase().replace(" ", "") + "_icon.png");
+        if (isValid(device["DeviceTag"]) && (tag === "Dreamscreen" || tag === "Lifx")) tag = device["DeviceTag"];
+        image.setAttribute("src", baseUrl + "/img/" + tag.toLowerCase().replace(" ","") + "_icon.png");
     }
 
     // Settings column
     let settingsRow = document.createElement("div");
-    settingsRow.classList.add("row", "align-items-end", "settingsCol", "pb-2", "justify-content-center", "exp");
+    settingsRow.classList.add("row", "align-items-end","settingsCol", "pb-2", "justify-content-center", "exp");
     // Create enabled checkbox
-
+    
     let enableButton = document.createElement("div");
     enableButton.classList.add("btn", "btn-outline-secondary", "btn-clear", "enableBtn", "pt-2");
-    enableButton.setAttribute("data-target", device["id"]);
-    enableButton.setAttribute("data-enabled", device["enable"]);
+    enableButton.setAttribute("data-target", device["Id"]);
+    enableButton.setAttribute("data-enabled", device["Enable"]);
     if (addDemoText) {
         enableButton.id = "devEnableBtn";
     }
     // And the icon
     let eIcon = document.createElement("span");
     eIcon.classList.add("material-icons");
-    if (device["enable"]) {
+    if (device["Enable"]) {
         enableButton.classList.add("active");
         eIcon.textContent = "cast_connected";
     } else {
@@ -1877,9 +1835,9 @@ function createDeviceCard(device, addDemoText) {
 
     let settingsButton = document.createElement("div");
     settingsButton.classList.add("btn", "btn-outline-secondary", "btn-clear", "settingBtn", "pt-2");
-    settingsButton.setAttribute("data-target", device["id"]);
+    settingsButton.setAttribute("data-target",device["Id"]);
     if (addDemoText) {
-        settingsButton.id = "devPrefBtn";
+        settingsButton.id = "devPrefBtn";        
     }
     let sIcon = document.createElement("span");
     sIcon.classList.add("material-icons");
@@ -1889,57 +1847,57 @@ function createDeviceCard(device, addDemoText) {
     settingsRow.appendChild(enableCol);
     // Create settings button
     //Brightness slider
-
+    
     // Slider
     let brightnessSlide = document.createElement("input");
-    brightnessSlide.setAttribute("type", "range");
-    brightnessSlide.setAttribute("data-target", device["id"]);
-    brightnessSlide.setAttribute("data-attribute", "brightness");
-    brightnessSlide.setAttribute("data-toggle", "tooltip");
-    brightnessSlide.setAttribute("data-placement", "top");
-    brightnessSlide.setAttribute("title", "Device brightness");
+    brightnessSlide.setAttribute("type","range");
+    brightnessSlide.setAttribute("data-target",device["Id"]);
+    brightnessSlide.setAttribute("data-attribute","Brightness");
+    brightnessSlide.setAttribute("data-toggle","tooltip");
+    brightnessSlide.setAttribute("data-placement","top");
+    brightnessSlide.setAttribute("title","Device brightness");
     let max = "100";
-    if (isValid(device["maxBrightness"])) max = device["maxBrightness"].toString;
+    if (isValid(device["MaxBrightness"])) max = device["MaxBrightness"].toString;
     brightnessSlide.setAttribute("min", "0");
     brightnessSlide.setAttribute("max", max);
-    brightnessSlide.value = device["brightness"];
+    brightnessSlide.value = device["Brightness"];
     brightnessSlide.classList.add("form-control", "w-100", 'custom-range');
 
     // Brightness column
     let brightnessRow = document.createElement("div");
-    brightnessRow.classList.add("row", "pt-3", "brightRow", "brightSlider", "justify-content-center");
+    brightnessRow.classList.add("row","pt-3", "brightRow", "brightSlider", "justify-content-center");
     if (addDemoText) brightnessRow.id = "devPrefBrightness";
     let brightCol = document.createElement("div");
     brightCol.classList.add("col-12", "brightCol");
     brightCol.appendChild(brightnessSlide);
     brightnessRow.appendChild(brightCol);
-
+    
     // Put it all together
     iconCol.appendChild(image);
     titleCol.appendChild(title);
     titleCol.appendChild(subTitle);
-
+    
     titleRow.appendChild(iconCol);
     titleRow.appendChild(titleCol);
-
+    
     cardBody.appendChild(titleRow);
     cardBody.appendChild(settingsRow);
     cardBody.appendChild(brightnessRow);
     card.appendChild(cardBody);
-    card.classList.add("min");
+    card.classList.add("min");    
     return card;
 }
 
 function isValid(toCheck) {
     if (toCheck == null) return false;
-    return toCheck !== "";
+    return toCheck !== "";       
 }
 
 const isObject = (value) => typeof value === "object" && value !== null;
 
 function getObj(group, key, val) {
     if (isValid(group)) {
-        for (let i = 0; i < group.length; i++) {
+        for(let i=0; i < group.length; i++) {
             let obj = group[i];
             if (obj.hasOwnProperty(key)) {
                 if (obj[key] === val) {
@@ -1953,7 +1911,7 @@ function getObj(group, key, val) {
 
 function setObj(group, key, val, obj) {
     if (isValid(group)) {
-        for (let i = 0; i < group.length; i++) {
+        for(let i=0; i < group.length; i++) {
             let ex = group[i];
             if (ex.hasOwnProperty(key)) {
                 if (ex[key] === val) {
@@ -1967,15 +1925,15 @@ function setObj(group, key, val, obj) {
 
 function getDevices() {
     if (!isValid(data.Devices)) {
-        sendMessage("scanDevices");
+        sendMessage("ScanDevices");
     }
 }
 
 function updateDevice(id, property, value) {
     let dev;
     let isLoaded = false;
-    if (property === "stripMode") value = parseInt(value);
-    if (isValid(deviceData) && deviceData["id"] === id) {
+    if (property === "StripMode") value = parseInt(value);    
+    if (isValid(deviceData) && deviceData["Id"] === id) {
         dev = deviceData;
         isLoaded = true;
     } else {
@@ -1983,28 +1941,29 @@ function updateDevice(id, property, value) {
     }
     if (property.includes("segmentOffset")) {
         let segmentId = parseInt(property.replace("segmentOffset", ""));
-        let segments = dev["segments"];
-        segments[segmentId]["offset"] = parseInt(value);
+        let segments = dev["Segments"];
+        console.log("Grabbing ", segmentId, segments);
+        segments[segmentId]["Offset"] = parseInt(value);
         value = segments;
-        property = "segments";
+        property = "Segments";
     }
     if (isValid(dev) && dev.hasOwnProperty(property)) {
         dev[property] = value;
         data.setDevice(dev);
         sendMessage("updateDevice", dev, true);
-    }
+    }    
     if (isLoaded) {
         deviceData = dev;
-        let ledProps = ["offset", "ledCount", "stripMode", "ledMultiplier"];
+        let ledProps = ["Offset", "LedCount", "StripMode", "LedMultiplier"];
         if (ledProps.includes(property)) {
             appendLedMap();
         }
     }
-
+    
 }
 
 function loadData() {
-    sendMessage("store");
+    sendMessage("LoadData");
 }
 
 
@@ -2017,6 +1976,14 @@ function $(elem) {
 function create(tag) {
     return document.createElement(tag);
 }
+
+function setCookie(cname, cvalue, exdays) {
+    let d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    let expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
 
 
 const toggleExpansion = (element, to, duration = 350) => {
@@ -2039,10 +2006,10 @@ const toggleExpansion = (element, to, duration = 350) => {
             element.style.width = to.width;
             element.style.height = to.height;
             element.style.padding = to.padding;
-
-
+            
+            
         });
-        setTimeout(function () {
+        setTimeout(function(){
             let body = element.querySelector(".card-body");
             if (isValid(body)) {
 
@@ -2058,31 +2025,31 @@ const toggleExpansion = (element, to, duration = 350) => {
                 order ${duration}ms ease-in-out
             `;
 
-                    if (row.classList.contains("iconCol")) {
-                        if (expanded) {
-                            row.classList.add("col-md-2", "col-lg-1")
-                        } else {
-                            row.classList.remove("col-md-2", "col-lg-1")
-                        }
+                if (row.classList.contains("iconCol")) {
+                    if (expanded) {
+                        row.classList.add("col-md-2", "col-lg-1")
+                    } else {
+                        row.classList.remove("col-md-2", "col-lg-1")
                     }
+                }
 
-                    if (row.classList.contains("titleCol")) {
-                        if (expanded) {
-                            row.classList.add("col-md-4", "col-lg-5")
-                        } else {
-                            row.classList.remove("col-md-4", "col-lg-5")
-                        }
+                if (row.classList.contains("titleCol")) {
+                    if (expanded) {
+                        row.classList.add("col-md-4", "col-lg-5")
+                    } else {
+                        row.classList.remove("col-md-4", "col-lg-5")
                     }
+                }
                 });
-            }
-        }, duration / 2);
-
+            }   
+        }, duration/2);
+    
         setTimeout(res, duration);
     })
 };
 
 
-const showSettingsCard = async () => {
+const showSettingsCard = async (e) => {
     settingsShown = true;
     const card = document.getElementById("mainSettingsCard");
     let mainContent = document.getElementById("mainContent");
@@ -2093,9 +2060,8 @@ const showSettingsCard = async () => {
     let fh = document.getElementById("footer").offsetHeight;
     // This is the proper height for the dev card
     fh += oh;
-    let rect = btn.getBoundingClientRect();
-    let left = rect.left;
-    let width = rect.width;
+
+    const {top, left, width, height} = btn.getBoundingClientRect();
     let h = 'calc(100% - ' + fh + 'px)';
     card.style.position = 'fixed';
     card.style.top = oh + 'px';
@@ -2106,7 +2072,7 @@ const showSettingsCard = async () => {
     await toggleExpansion(card, {top: oh + 'px', left: 0, width: '100%', height: h, opacity: "100%"}, 250);
 };
 
-const hideSettingsCard = async () => {
+const hideSettingsCard = async (e) => {
     settingsShown = false;
     const card = document.getElementById("mainSettingsCard");
     let mainContent = document.getElementById("mainContent");
@@ -2116,18 +2082,10 @@ const hideSettingsCard = async () => {
     if (x.matches) btn = document.querySelector(".mainSettings.mainSettings-sm span");
     let fh = document.getElementById("footer").offsetHeight;
     fh += oh;
-    let rect = btn.getBoundingClientRect();
-    let left = rect.left;
-    let width = rect.width;
+    const {top, left, width, height} = btn.getBoundingClientRect();
     let h = 'calc(100% - ' + fh + 'px)';
     card.style.display = 'block';
-    await toggleExpansion(card, {
-        top: oh + "px",
-        left: left + "px",
-        width: width + "px",
-        height: h + 'px',
-        opacity: "0"
-    }, 250);
+    await toggleExpansion(card, {top: oh + "px", left: left + "px", width: width + "px", height: h + 'px', opacity:"0"}, 250);
 };
 
 const showDeviceCard = async (e) => {
@@ -2167,7 +2125,7 @@ const showDeviceCard = async (e) => {
     let sepDiv = document.createElement("div");
     sepDiv.classList.add("dropdown-divider", "row");
 
-    body.appendChild(sepDiv);
+    body.appendChild(sepDiv);    
     // Create settings for our card
     let settingsButtons = document.querySelectorAll(".mainSettings");
     for (let i = 0; i < settingsButtons.length; ++i) {
@@ -2177,53 +2135,50 @@ const showDeviceCard = async (e) => {
         closeButton[i].classList.remove('d-none');
     }
     // Expand that bish
-    await toggleExpansion(cardClone, {
-        top: oh + "px",
-        left: 0,
-        width: '100%',
-        height: 'calc(100% - ' + fh + 'px)'
-    }, 250).then(function () {
+    await toggleExpansion(cardClone, {top: oh + "px", left: 0, width: '100%', height: 'calc(100% - ' + fh + 'px)'}, 250).then(function(){
         let bCol = cardClone.querySelector(".brightCol");
         bCol.classList.add("col-md-8", "col-lg-6");
     });
     createDeviceSettings();
 
 
+
 };
 
 function createDeviceSettings() {
+    console.log("Creating dev settings...");
     let card = document.querySelector("div.card.container-fluid");
     let st = card.scrollTop;
     let container = document.querySelector("div.card.container-fluid > div");
     if (deviceData === undefined) deviceData = JSON.parse(ledData);
     console.log("Loading device data: ", deviceData);
     document.querySelectorAll(".delSetting").forEach(e => e.remove());
-    let props = deviceData["keyProperties"];
+    let props = deviceData["KeyProperties"];
     if (isValid(props)) {
-        let id = deviceData["id"];
+        let id = deviceData["Id"];
         let keys = [];
         for (let i = 0; i < props.length; i++) {
-            keys.push(props[i]["valueType"]);
+            keys.push(props[i]["ValueType"]);
         }
         let mapProps = ["ledmap", "beamMap", "nanoleaf", "hue", "sectormap", "sectorLedMap"];
         let addLink = false;
-
+        
         if (keys.includes("nanoleaf") || keys.includes("hue")) {
             addLink = true;
         }
-
+        
         if (addLink) {
             let linkRow = document.createElement("div");
-            linkRow.classList.add("row", "justify-content-center", "delSetting", "pb-3", "pt-3");
+            linkRow.classList.add("row", "justify-content-center","delSetting", "pb-3", "pt-3");
             linkRow.id = "linkCol";
             container.appendChild(linkRow);
         }
-
+        
         let addMap = false;
         for (let i = 0; i < mapProps.length; i++) {
-            if (keys.includes(mapProps[i])) addMap = true;
+            if (keys.includes(mapProps[i])) addMap = true;     
         }
-
+        
         if (addMap) {
             let mapRow = document.createElement("div");
             let mapWrap = document.createElement("div");
@@ -2234,36 +2189,35 @@ function createDeviceSettings() {
             mapRow.appendChild(mapWrap);
             container.appendChild(mapRow);
         }
-
+        
         let devPrefRow = document.createElement("div");
         devPrefRow.classList.add("row", "justify-content-center", "pb-3", "pt-3", "delSetting", "devPrefs");
-
+        
         let devPrefCol = document.createElement("div");
         devPrefCol.classList.add("col-12", "col-md-8", "col-lg-6", "border");
-
+        
         let addRow = false;
-        for (let i = 0; i < props.length; i++) {
+        for (let i =0; i < props.length; i++) {            
             let prop = props[i];
-            let propertyName = prop["valueName"];
-            propertyName = propertyName.charAt(0).toLowerCase() + propertyName.slice(1);
+            let propertyName = prop["ValueName"];
             let elem, se;
             let value = deviceData[propertyName];
             if (propertyName.includes("segmentOffset")) {
-                let segments = deviceData["segments"];
-                let segmentId = parseInt(propertyName.replace("segmentOffset", ""));
-                value = segments[segmentId]["offset"];
+                let segments = deviceData["Segments"];
+                let segmentId = parseInt(propertyName.replace("segmentOffset",""));
+                value = segments[segmentId]["Offset"];
             }
             let dirCol = document.createElement("div");
             dirCol.classList.add("row", "justify-content-center", "delSetting");
-            switch (prop["valueType"]) {
+            switch(prop["ValueType"]) {
                 case "text":
                 case "check":
                 case "ledMultiplier":
-                    elem = new SettingElement(prop["valueLabel"], prop["valueType"], id, propertyName, value, prop["valueHint"]);
+                    elem = new SettingElement(prop["ValueLabel"], prop["ValueType"], id, propertyName, value, prop["ValueHint"]);
                     elem.isDevice = true;
                     break;
                 case "number":
-                    elem = new SettingElement(prop["valueLabel"], "number", id, propertyName, value, prop["valueHint"], prop["valueMin"], prop["valueMax"], prop["valueStep"]);
+                    elem = new SettingElement(prop["ValueLabel"], "number", id, propertyName, value,prop["ValueHint"],prop["ValueMin"], prop["ValueMax"],prop["ValueStep"]);
                     elem.isDevice = true;
                     break;
                 case "ledmap":
@@ -2280,38 +2234,38 @@ function createDeviceSettings() {
                     appendSectorLedMap();
                     break;
                 case "select":
-                    elem = new SettingElement(prop["valueLabel"], "select", id, propertyName, value, prop["valueHint"]);
-                    elem.options = prop["options"];
+                    elem = new SettingElement(prop["ValueLabel"], "select", id, propertyName, value, prop["ValueHint"]);
+                    elem.options = prop["Options"];
                     break;
                 case "sectormap":
                     let region = "flashSector";
-                    let dirString = "Click a sector above to assign it to your " + deviceData["tag"] + " device.";
+                    let dirString = "Click a sector above to assign it to your " + deviceData.Tag + " device.";                    
 
-                    if (deviceData["tag"] === "Wled" && deviceData["stripMode"] === 3) {
+                    if (deviceData.Tag === "Wled" && deviceData["StripMode"] === 3) {
                         region = "wledSector";
                     }
-                    if (deviceData["tag"] === "Lifx" && !deviceData["hasMultiZone"]) {
+                    if (deviceData.Tag === "Lifx" && !deviceData["HasMultiZone"]) {
                         region = "lifxSector";
                     }
-                    if (deviceData["tag"] === "dreamScreen") {
+                    if (deviceData.Tag === "DreamScreen") {
                         region = "dreamSector";
                     }
                     if (region === "flashSector") {
                         dirString = "Click a tile to select it's target sector.";
                     }
                     let mapDiv = document.getElementById("mapWrap");
-                    createSectorMap(mapDiv, region);
+                    createSectorMap(mapDiv,region);
                     dirCol.innerHTML = dirString;
                     container.appendChild(dirCol);
                     break;
                 case "nanoleaf":
-                    if (isValid(deviceData["token"]) && isValid(deviceData["layout"]["positionData"])) {
+                    if (isValid(deviceData["Token"]) && isValid(deviceData["Layout"]["PositionData"])) {
                         let linkPane = createLinkPane("nanoleaf", true);
                         let mapCol = document.getElementById("mapWrap");
                         createSectorMap(mapCol, "flashSector");
                         document.getElementById("linkCol").append(linkPane);
                         let stageRow = document.createElement("div");
-                        stageRow.id = "stageRow";
+                        stageRow.id="stageRow";
                         stageRow.classList.add("row", "justify-content-center", "delSetting");
                         let stageCol = document.createElement("div");
                         stageCol.id = "stageCol";
@@ -2319,7 +2273,7 @@ function createDeviceSettings() {
                         stageRow.appendChild(stageCol);
                         dirCol.innerHTML = "Click a tile to select a target sector.";
                         container.appendChild(dirCol);
-                        container.appendChild(stageRow);
+                        container.appendChild(stageRow);                        
                         drawNanoShapes(deviceData);
                     } else {
                         let linkPane = createLinkPane("nanoleaf", false);
@@ -2327,7 +2281,7 @@ function createDeviceSettings() {
                     }
                     break;
                 case "hue":
-                    if (isValid(deviceData["token"])) {
+                    if (isValid(deviceData["Token"])) {
                         let linkPane = createLinkPane("hue", true);
                         let mapCol = document.getElementById("mapWrap");
                         let hueMap = createHueMap();
@@ -2339,12 +2293,12 @@ function createDeviceSettings() {
                         container.append(hueMap);
                     } else {
                         let linkPane = createLinkPane("hue", false);
-                        document.getElementById("linkCol").append(linkPane);
+                        document.getElementById("linkCol").append(linkPane);                        
                     }
                     //addRow = true;
                     break;
             }
-
+            
             if (isValid(elem)) {
                 elem.isDevice = true;
                 se = createSettingElement(elem);
@@ -2354,8 +2308,8 @@ function createDeviceSettings() {
                 devPrefRow.appendChild(devPrefCol);
             }
         }
-
-        if (deviceData["tag"] !== "Led") {
+        
+        if (deviceData.Tag !== "Led") {
             let removeBtn = new SettingElement("Remove device", "button", id, "removeDevice", id);
             devPrefCol.appendChild(createSettingElement(removeBtn));
             devPrefRow.appendChild(devPrefCol);
@@ -2371,10 +2325,11 @@ function createDeviceSettings() {
 function createSettingElement(settingElement) {
     let group = document.createElement("div");
     group.classList.add("col-12", "align-self-top", "form-group", "custom-control");
-    let label = document.createElement("label");
+    let label = document.createElement("label");   
     label.innerText = settingElement.descrption;
     let element;
-    switch (settingElement.type) {
+    
+    switch(settingElement.type) {
         case "check":
             element = document.createElement("input");
             label.classList.add("custom-control-label");
@@ -2383,7 +2338,7 @@ function createSettingElement(settingElement) {
             group.classList.add("form-check-dev");
             element.classList.add("custom-control-input");
             element.type = "checkbox";
-            element.id = "customSwitch" + deviceData.id;
+            element.id = "customSwitch" + deviceData.Id;
             element.checked = settingElement.value;
             break;
         case "select":
@@ -2427,7 +2382,7 @@ function createSettingElement(settingElement) {
             element.type = "number";
             element.min = "0.125";
             element.max = "5";
-            element.step = "0.025";
+            element.step = "0.025";            
             element.value = settingElement.value;
             settingElement.hint = "Multiply or divide the number of LEDs that are pulled from the grid.";
     }
@@ -2438,10 +2393,10 @@ function createSettingElement(settingElement) {
         }
         group.appendChild(label);
     }
-
-
-    if (isValid(element)) {
-        if (settingElement.isDevice) {
+    
+    
+    if (isValid(element)) {       
+        if (settingElement.isDevice) { 
             element.classList.add("devSetting");
         }
         element.setAttribute("data-property", settingElement.property);
@@ -2467,7 +2422,6 @@ function createSettingElement(settingElement) {
 }
 
 function SettingElement(description, type, object, property, value, hint, minLimit, maxLimit, increment, options, id, isDevice) {
-    property = property.charAt(0).toLowerCase() + property.slice(1);
     this.descrption = description;
     this.type = type;
     this.object = object;
@@ -2489,9 +2443,9 @@ function createLinkPane(type, linked) {
     statusText.innerText = linked ? "Device is linked" : "Click here to link";
     let linkCol = document.createElement("div");
     linkCol.classList.add("col-8", "col-sm-6", "col-md-4", "col-lg-3", "col-xl-2", "linkDiv");
-    linkCol.setAttribute("data-type", type);
-    linkCol.setAttribute("data-id", deviceData["id"]);
-    linkCol.setAttribute("data-linked", linked);
+    linkCol.setAttribute("data-type",type);
+    linkCol.setAttribute("data-id", deviceData["Id"]);
+    linkCol.setAttribute("data-linked",linked);
     let deviceIcon = document.createElement("img");
     deviceIcon.classList.add("img-fluid");
     deviceIcon.src = "./img/" + type + "_icon.png";
@@ -2509,74 +2463,74 @@ function createLinkPane(type, linked) {
 }
 
 function updateBeamLayout(items) {
-    let beamLayout = deviceData["beamLayout"];
+    let beamLayout = deviceData["BeamLayout"];
     if (isValid(beamLayout)) {
-        let existing = beamLayout["segments"];
+        let existing = beamLayout["Segments"];
         let sorted = [];
-        for (let i = 0; i < items.length; i++) {
+        for (let i=0; i < items.length; i++) {
             let pos = parseInt(items[i].getAttribute("data-position"));
-            for (let ex = 0; ex < existing.length; ex++) {
-                if (existing[ex]["position"] === pos) {
+            for(let ex = 0; ex < existing.length; ex++) {
+                if (existing[ex]["Position"] === pos) {
                     sorted.push(existing[ex]);
                 }
             }
         }
-        beamLayout["segments"] = [];
+        beamLayout["Segments"] = [];
         for (let i = 0; i < sorted.length; i++) {
             let seg = sorted[i];
-            seg["position"] = i;
-            beamLayout["segments"].push(seg);
-        }
-        updateDevice(deviceData["id"], "beamLayout", beamLayout);
+            seg["Position"] = i;
+            beamLayout["Segments"].push(seg);
+        }        
+        updateDevice(deviceData["Id"], "BeamLayout", beamLayout);
     }
 }
 
 function appendBeamMap() {
     let settingsDiv = document.querySelector(".card.container-fluid > .card-body");
-
-    if (deviceData.hasOwnProperty("beamLayout")) {
-        let beamLayout = deviceData["beamLayout"];
+    
+    if (deviceData.hasOwnProperty("BeamLayout")) {
+        let beamLayout = deviceData["BeamLayout"];
         if (isValid(beamLayout)) {
-            let items = beamLayout["segments"];
+            let items = beamLayout["Segments"];
             if (items.length > 0) {
                 let beamRow = document.createElement("div", "delSetting");
                 beamRow.id = "BeamDiv";
                 beamRow.classList.add("row", "justify-content-center", "delSetting", "pt-2");
-
+                
                 let beamCol = document.createElement("div");
                 beamCol.classList.add("sortable", "col-12", "col-md-8", "col-lg-6");
-
-                items.sort((a, b) => (a["position"] > b["position"]) ? 1 : -1);
+                
+                items.sort((a, b) => (a["Position"] > b["Position"]) ? 1 : -1);
                 for (let i = 0; i < items.length; i++) {
                     let item = items[i];
-                    let position = item["position"];
-                    let offset = item["offset"];
-                    let repeat = item["repeat"];
-                    let reverse = item["reverse"];
-                    let count = item["ledCount"];
+                    let position = item["Position"];
+                    let offset = item["Offset"];
+                    let repeat = item["Repeat"];
+                    let reverse = item["Reverse"];
+                    let count = item["LedCount"];
                     let itemDiv = document.createElement("div");
                     itemDiv.classList.add("beamItem", "form-inline");
-                    itemDiv.setAttribute("data-position", position);
+                    itemDiv.setAttribute("data-position",position);
                     if (count === 1) {
                         itemDiv.setAttribute("data-type", "corner");
                     } else {
                         itemDiv.setAttribute("data-type", "beam");
-                    }
-
+                    }                    
+                    
                     // drag handle
                     let dragHandle = document.createElement("span");
                     dragHandle.classList.add("material-icons", "dragHandle");
                     dragHandle.innerText = "drag_handle";
                     itemDiv.appendChild(dragHandle);
-
+                    
                     let nameLabel = document.createElement("div");
                     nameLabel.classList.add("col-12", "headerCol", "text-center");
                     nameLabel.innerText = (count === 1 ? "Corner" : "Beam") + " " + position;
                     itemDiv.appendChild(nameLabel);
-
+                    
                     let oGroup = document.createElement("div");
                     oGroup.classList.add("form-group");
-
+                    
                     // Offset
                     let label2 = document.createElement("label");
                     label2.innerText = "Offset";
@@ -2585,8 +2539,8 @@ function appendBeamMap() {
                     offsetText.type = "number";
                     offsetText.value = offset;
                     offsetText.classList.add("custom-select", "beam-control");
-                    offsetText.setAttribute("data-position", position);
-                    offsetText.setAttribute("data-beamProperty", "Offset");
+                    offsetText.setAttribute("data-position",position);
+                    offsetText.setAttribute("data-beamProperty","Offset");
 
                     oGroup.appendChild(label2);
                     oGroup.appendChild(offsetText);
@@ -2595,7 +2549,7 @@ function appendBeamMap() {
                     // Repeat
                     let rGroup = document.createElement("div");
                     rGroup.classList.add("form-group", "custom-control", "custom-switch");
-
+                    
                     let checkDiv1 = document.createElement("div");
                     checkDiv1.classList.add("form-check");
                     let label3 = document.createElement("label");
@@ -2605,17 +2559,17 @@ function appendBeamMap() {
                     rCheck.type = "checkbox";
                     if (repeat) rCheck.checked = true;
                     rCheck.classList.add("custom-control-input", "beam-control");
-                    rCheck.setAttribute("data-position", position);
-                    rCheck.setAttribute("data-beamProperty", "Repeat");
+                    rCheck.setAttribute("data-position",position);
+                    rCheck.setAttribute("data-beamProperty","Repeat");
                     checkDiv1.appendChild(rCheck);
                     checkDiv1.appendChild(label3);
-
+                    
                     rGroup.appendChild(checkDiv1);
                     itemDiv.appendChild(rGroup);
 
                     // Reverse
                     let rGroup2 = document.createElement("div");
-                    rGroup2.classList.add("form-group", "custom-control", "custom-switch");
+                    rGroup2.classList.add("form-group","custom-control", "custom-switch");                    
                     let checkDiv2 = document.createElement("div");
                     checkDiv2.classList.add("form-check");
                     let label4 = document.createElement("label");
@@ -2625,8 +2579,8 @@ function appendBeamMap() {
                     rCheck2.classList.add("custom-control-input", "beam-control");
                     rCheck2.type = "checkbox";
                     if (reverse) rCheck2.checked = true;
-                    rCheck2.setAttribute("data-position", position);
-                    rCheck2.setAttribute("data-beamProperty", "Reverse");
+                    rCheck2.setAttribute("data-position",position);
+                    rCheck2.setAttribute("data-beamProperty","Reverse");
                     checkDiv2.appendChild(rCheck2);
                     checkDiv2.appendChild(label4);
 
@@ -2638,19 +2592,19 @@ function appendBeamMap() {
                 settingsDiv.appendChild(beamRow);
 
                 sortable(".sortable");
-                sortable('.sortable')[0].addEventListener('sortupdate', function (e) {
+                sortable('.sortable')[0].addEventListener('sortupdate', function(e) {
                     let items = e.detail.destination.items;
                     updateBeamLayout(items);
                 });
             }
-
+            
         }
     }
 }
 
 function appendLedMap() {
     let mapDiv = document.getElementById("mapWrap");
-    createLedMap(mapDiv);
+    createLedMap(mapDiv);    
 }
 
 function appendSectorLedMap() {
@@ -2678,12 +2632,12 @@ function appendSectorLedMap() {
         return;
     }
 
-    let segments = deviceData["segments"];
-    let total = sd["ledCount"];
+    let segments = deviceData["Segments"];
+    let total = sd["LedCount"];
     let rangeList = [];
     for (let s = 0; s < segments.length; s++) {
-        let offset = segments[s]["offset"];
-        let len = segments[s]["len"];
+        let offset = segments[s]["Offset"];
+        let len = segments[s]["len"];        
         rangeList.push(ranges(total, offset, len));
     }
     let tgt = targetElement;
@@ -2692,7 +2646,9 @@ function appendSectorLedMap() {
     let borderX = parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth);
     let w = tgt.offsetWidth - paddingX - borderX;
     let h = (w / 16) * 9;
+    let imgL = tgt.offsetLeft;
     let imgT = tgt.offsetTop;
+    console.log("Left is ", imgL);
     let exMap = targetElement.querySelector("#ledMap");
     if (isValid(exMap)) exMap.remove();
     let wFactor = w / 1920;
@@ -2709,6 +2665,7 @@ function appendSectorLedMap() {
     map.id = "ledMap";
     map.classList.add("ledMap", "delSetting");
     map.style.top = imgT + "px";
+    //map.style.left = imgL + "px";
     map.style.width = w + "px";
     map.style.height = h + "px";
     map.style.position = "relative";
@@ -2725,7 +2682,7 @@ function appendSectorLedMap() {
         r = l + dWidth;
         let s1 = document.createElement("div");
         s1.classList.add("led");
-        for (let r = 0; r < rangeList.length; r++) {
+        for(let r=0; r < rangeList.length; r++) {
             let colClass = colorClasses[r];
             let range = rangeList[r];
             if (range.includes(ledCount)) s1.classList.add(colClass);
@@ -2739,7 +2696,7 @@ function appendSectorLedMap() {
         s1.setAttribute("data-bs-toggle", "tooltip");
         s1.setAttribute("data-bs-placement", "top");
         if (i === 0) {
-            s1.setAttribute("title", sd["ledCount"].toString() + "/" + (ledCount).toString());
+            s1.setAttribute("title", sd["LedCount"].toString() + "/" + (ledCount).toString());
         } else {
             s1.setAttribute("title", ledCount.toString());
         }
@@ -2752,7 +2709,7 @@ function appendSectorLedMap() {
         r = l - ftWidth;
         let s1 = document.createElement("div");
         s1.classList.add("led");
-        for (let r = 0; r < rangeList.length; r++) {
+        for(let r=0; r < rangeList.length; r++) {
             let colClass = colorClasses[r];
             let range = rangeList[r];
             if (range.includes(ledCount)) s1.classList.add(colClass);
@@ -2782,7 +2739,7 @@ function appendSectorLedMap() {
         r = l + dWidth;
         let s1 = document.createElement("div");
         s1.classList.add("led");
-        for (let r = 0; r < rangeList.length; r++) {
+        for(let r=0; r < rangeList.length; r++) {
             let colClass = colorClasses[r];
             let range = rangeList[r];
             if (range.includes(ledCount)) s1.classList.add(colClass);
@@ -2812,7 +2769,7 @@ function appendSectorLedMap() {
         r = l + fbWidth;
         let s1 = document.createElement("div");
         s1.classList.add("led");
-        for (let r = 0; r < rangeList.length; r++) {
+        for(let r=0; r < rangeList.length; r++) {
             let colClass = colorClasses[r];
             let range = rangeList[r];
             if (range.includes(ledCount)) s1.classList.add(colClass);
@@ -2834,13 +2791,19 @@ function appendSectorLedMap() {
         ledCount++;
     }
     targetElement.appendChild(map);
+
+    for (let s = 0; s < segments.length; s++) {
+        let offset = segments[s]["Offset"];
+        let len = segments[s]["LedCount"];
+        
+    }
 }
 
 function appendBeamLedMap() {
     let cardBody = document.querySelector("div.card.container-fluid > .card-body");
     let dirCol = document.createElement("div");
     dirCol.classList.add("row", "justify-content-center", "delSetting");
-    dirCol.innerHTML = "Note: Lifx beams are spaced so that 10 LEDs/beam equal 20 LEDs within Glimmr.";
+    dirCol.innerHTML = "Note: Lifx beams are spaced so that 10 LEDs/beam equal 20 LEDs within Glimmr.";    
     cardBody.appendChild(dirCol);
     createBeamLedMap();
 }
@@ -2857,7 +2820,7 @@ function createSectorCenter(targetElement, regionName) {
     let imgL = tgt.offsetLeft;
     let imgT = tgt.offsetTop;
     let selected = -1;
-    if (isValid(deviceData)) selected = deviceData["targetSector"];
+    if (isValid(deviceData)) selected = deviceData["TargetSector"];
     if (!isValid(selected)) selected = -1;
     let wFactor = w / 1920;
     let hFactor = h / 1080;
@@ -2898,14 +2861,14 @@ function createSectorCenter(targetElement, regionName) {
     targetElement.appendChild(map);
     if (isValid(deviceData) && expanded) {
         let mappedLights;
-        if (isValid(deviceData["mappedLights"])) {
-            mappedLights = deviceData["mappedLights"];
+        if (isValid(deviceData["MappedLights"])) {
+            mappedLights = deviceData["MappedLights"];
         }
         if (isValid(mappedLights)) {
-            for (let i = 0; i < mappedLights.length; i++) {
+            for(let i =0; i < mappedLights.length; i++) {
                 let lMap = mappedLights[i];
-                let target = lMap["targetSector"];
-                let targetDiv = document.querySelector('.sector[data-sector="' + target + '"]');
+                let target = lMap["TargetSector"];
+                let targetDiv = document.querySelector('.sector[data-sector="'+target+'"]');
                 if (isValid(targetDiv)) {
                     targetDiv.classList.add("checked");
                 }
@@ -2927,9 +2890,11 @@ function createSectorMap(targetElement, regionName) {
     let paddingX = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
     let borderX = parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth);
     let w = tgt.offsetWidth - paddingX - borderX;
-    let h = (w / 16) * 9;
+    let h = (w / 16) * 9; 
+    let imgL = tgt.offsetLeft;
+    let imgT = tgt.offsetTop;
     let selected = -1;
-    if (isValid(deviceData)) selected = deviceData["targetSector"];
+    if (isValid(deviceData)) selected = deviceData["TargetSector"];
     if (!isValid(selected)) selected = -1;
     let wFactor = w / 1920;
     let hFactor = h / 1080;
@@ -3032,14 +2997,14 @@ function createSectorMap(targetElement, regionName) {
     targetElement.appendChild(map);
     if (isValid(deviceData) && expanded) {
         let mappedLights;
-        if (isValid(deviceData["mappedLights"])) {
-            mappedLights = deviceData["mappedLights"];
+        if (isValid(deviceData["MappedLights"])) {
+            mappedLights = deviceData["MappedLights"];            
         }
         if (isValid(mappedLights)) {
-            for (let i = 0; i < mappedLights.length; i++) {
+            for(let i =0; i < mappedLights.length; i++) {
                 let lMap = mappedLights[i];
-                let target = lMap["targetSector"];
-                let targetDiv = document.querySelector('.sector[data-sector="' + target + '"]');
+                let target = lMap["TargetSector"];
+                let targetDiv = document.querySelector('.sector[data-sector="'+target+'"]');
                 if (isValid(targetDiv)) {
                     targetDiv.classList.add("checked");
                 }
@@ -3050,15 +3015,15 @@ function createSectorMap(targetElement, regionName) {
             let positionData = tileLayout.PositionData;
             if (isValid(positionData)) {
                 for (let i = 0; i < positionData.length; i++) {
-                    let target = positionData[i]["targetSector"];
-                    let targetDiv = document.querySelector('.sector[data-sector="' + target + '"]');
+                    let target = positionData[i]["TargetSector"];
+                    let targetDiv = document.querySelector('.sector[data-sector="'+target+'"]');
                     if (isValid(targetDiv)) {
                         targetDiv.classList.add("checked");
                     }
-                }
+                }                
             }
         }
-
+        
     }
 }
 
@@ -3087,14 +3052,14 @@ function createBeamLedMap() {
         return;
     }
 
-    let beamLayout = deviceData["beamLayout"];
-    let segments = beamLayout["segments"];
-    let total = sd["ledCount"];
+    let beamLayout = deviceData["BeamLayout"];
+    let segments = beamLayout["Segments"];
+    let total = sd["LedCount"];
     let rangeList = [];
     for (let s = 0; s < segments.length; s++) {
-        let offset = segments[s]["offset"];
-        let len = segments[s]["ledCount"];
-        if (segments[s]["repeat"]) len = 1;
+        let offset = segments[s]["Offset"];
+        let len = segments[s]["LedCount"];
+        if (segments[s]["Repeat"]) len = 1;
         len *= 2;
         rangeList.push(ranges(total, offset, len));
     }
@@ -3104,7 +3069,9 @@ function createBeamLedMap() {
     let borderX = parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth);
     let w = tgt.offsetWidth - paddingX - borderX;
     let h = (w / 16) * 9;
+    let imgL = tgt.offsetLeft;
     let imgT = tgt.offsetTop;
+    console.log("Left is ", imgL);
     let exMap = targetElement.querySelector("#ledMap");
     if (isValid(exMap)) exMap.remove();
     let wFactor = w / 1920;
@@ -3121,6 +3088,7 @@ function createBeamLedMap() {
     map.id = "ledMap";
     map.classList.add("ledMap", "delSetting");
     map.style.top = imgT + "px";
+    //map.style.left = imgL + "px";
     map.style.width = w + "px";
     map.style.height = h + "px";
     map.style.position = "relative";
@@ -3137,7 +3105,7 @@ function createBeamLedMap() {
         r = l + dWidth;
         let s1 = document.createElement("div");
         s1.classList.add("led");
-        for (let r = 0; r < rangeList.length; r++) {
+        for(let r=0; r < rangeList.length; r++) {
             let colClass = colorClasses[r];
             let range = rangeList[r];
             if (range.includes(ledCount)) s1.classList.add(colClass);
@@ -3151,7 +3119,7 @@ function createBeamLedMap() {
         s1.setAttribute("data-bs-toggle", "tooltip");
         s1.setAttribute("data-bs-placement", "top");
         if (i === 0) {
-            s1.setAttribute("title", sd["ledCount"].toString() + "/" + (ledCount).toString());
+            s1.setAttribute("title", sd["LedCount"].toString() + "/" + (ledCount).toString());
         } else {
             s1.setAttribute("title", ledCount.toString());
         }
@@ -3164,7 +3132,7 @@ function createBeamLedMap() {
         r = l - ftWidth;
         let s1 = document.createElement("div");
         s1.classList.add("led");
-        for (let r = 0; r < rangeList.length; r++) {
+        for(let r=0; r < rangeList.length; r++) {
             let colClass = colorClasses[r];
             let range = rangeList[r];
             if (range.includes(ledCount)) s1.classList.add(colClass);
@@ -3194,7 +3162,7 @@ function createBeamLedMap() {
         r = l + dWidth;
         let s1 = document.createElement("div");
         s1.classList.add("led");
-        for (let r = 0; r < rangeList.length; r++) {
+        for(let r=0; r < rangeList.length; r++) {
             let colClass = colorClasses[r];
             let range = rangeList[r];
             if (range.includes(ledCount)) s1.classList.add(colClass);
@@ -3224,7 +3192,7 @@ function createBeamLedMap() {
         r = l + fbWidth;
         let s1 = document.createElement("div");
         s1.classList.add("led");
-        for (let r = 0; r < rangeList.length; r++) {
+        for(let r=0; r < rangeList.length; r++) {
             let colClass = colorClasses[r];
             let range = rangeList[r];
             if (range.includes(ledCount)) s1.classList.add(colClass);
@@ -3249,32 +3217,33 @@ function createBeamLedMap() {
 }
 
 function createLedMap(targetElement) {
-    let range;
+    let range1;
     let sd = data.SystemData;
     let count = 0;
     if (isValid(deviceData)) {
-        count = deviceData["ledCount"];
-        let offset = deviceData["offset"];
-        let mode = deviceData["stripMode"];
-        let total = sd["ledCount"];
-        if (isValid(mode) && mode === 2) count /= 2;
-        if (isValid(deviceData["ledMultiplier"])) {
-            let mult = deviceData["ledMultiplier"];
+        count = deviceData["LedCount"];
+        let offset = deviceData["Offset"];
+        let mode = deviceData["StripMode"];
+        let total = sd["LedCount"];
+        if (isValid(mode) && mode === 2) count /=2;
+        if (isValid(deviceData["LedMultiplier"])) {
+            let mult = deviceData["LedMultiplier"];
             if (mult === 0) mult = 1;
             count *= mult;
         }
-        range = ranges(total, offset, count);
-        console.log("Range created: ", range);
+        range1 = ranges(total, offset, count);
     }
-
+    
     let tgt = targetElement;
     let cs = getComputedStyle(tgt);
     let paddingX = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
     let borderX = parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth);
     let w = tgt.offsetWidth - paddingX - borderX;
-
+    
     let h = (w / 16) * 9;
+    let imgL = tgt.offsetLeft;
     let imgT = tgt.offsetTop;
+    console.log("Left is ", imgL);
     let exMap = targetElement.querySelector("#ledMap");
     if (isValid(exMap)) exMap.remove();
     let wFactor = w / 1920;
@@ -3291,6 +3260,7 @@ function createLedMap(targetElement) {
     map.id = "ledMap";
     map.classList.add("ledMap", "delSetting");
     if (targetElement.id !== "sLedWrap") map.style.top = imgT + "px";
+    //map.style.left = imgL + "px";
     map.style.width = w + "px";
     map.style.height = h + "px";
     map.style.position = "relative";
@@ -3299,21 +3269,24 @@ function createLedMap(targetElement) {
     let b = 0;
     let l = 0;
     let r = 0;
-    let index = 0;
-    let reverse = isValid(deviceData && deviceData["reverseStrip"]) ? deviceData["reverseStrip"] : false;
-    console.log("Reversed? ", reverse);
+    let ledCount = 0;
+    let started = false;
     for (let i = 0; i < rightCount; i++) {
         t = h - hMargin - ((i + 1) * frHeight);
         b = t + frHeight;
         l = w - wMargin - dWidth;
-        r = l + dWidth;
+        r = l + dWidth;        
         let s1 = document.createElement("div");
         s1.classList.add("led");
-        if (isValid(range) && range.includes(index)) {
+        if (isValid(range1) && range1.includes(ledCount)) {
             s1.classList.add("highLed");
+            if (!started) {
+                started = true;
+                s1.classList.add("firstLed");
+            }
         }
-
-        s1.setAttribute("data-sector", index.toString());
+        
+        s1.setAttribute("data-sector", ledCount.toString());
         s1.style.position = "absolute";
         s1.style.top = t.toString() + "px";
         s1.style.left = l.toString() + "px";
@@ -3322,12 +3295,12 @@ function createLedMap(targetElement) {
         s1.setAttribute("data-bs-toggle", "tooltip");
         s1.setAttribute("data-bs-placement", "top");
         if (i === 0) {
-            s1.setAttribute("title", sd["ledCount"].toString() + "/" + (index).toString());
+            s1.setAttribute("title", sd["LedCount"].toString() + "/" + (ledCount).toString());
         } else {
-            s1.setAttribute("title", index.toString());
-        }
+            s1.setAttribute("title", ledCount.toString());    
+        }        
         map.appendChild(s1);
-        index++;
+        ledCount++;
     }
 
     for (let i = 0; i < topCount - 1; i++) {
@@ -3335,10 +3308,14 @@ function createLedMap(targetElement) {
         r = l - ftWidth;
         let s1 = document.createElement("div");
         s1.classList.add("led");
-        if (isValid(range) && range.includes(index)) {
+        if (isValid(range1) && range1.includes(ledCount)) {
             s1.classList.add("highLed");
+            if (!started) {
+                started = true;
+                s1.classList.add("firstLed");
+            }
         }
-        s1.setAttribute("data-sector", index.toString());
+        s1.setAttribute("data-sector", ledCount.toString());
         s1.style.position = "absolute";
         s1.style.top = t.toString() + "px";
         s1.style.left = l.toString() + "px";
@@ -3347,16 +3324,13 @@ function createLedMap(targetElement) {
         s1.setAttribute("data-bs-toggle", "tooltip");
         s1.setAttribute("data-bs-placement", "top");
         if (i === 0) {
-            s1.setAttribute("title", index.toString() + "/" + (index + 1).toString());
-            index++;
-            let clone = s1.cloneNode();
-            clone.setAttribute("data-sector", index);
-            map.appendChild(clone);
+            s1.setAttribute("title", ledCount.toString() + "/" + (ledCount + 1).toString());
+            ledCount++;
         } else {
-            s1.setAttribute("title", index.toString());
+            s1.setAttribute("title", ledCount.toString());
         }
         map.appendChild(s1);
-        index++;
+        ledCount++;
     }
 
     // Left, top-bottom
@@ -3367,10 +3341,14 @@ function createLedMap(targetElement) {
         r = l + dWidth;
         let s1 = document.createElement("div");
         s1.classList.add("led");
-        if (isValid(range) && range.includes(index)) {
+        if (isValid(range1) && range1.includes(ledCount)) {
             s1.classList.add("highLed");
+            if (!started) {
+                started = true;
+                s1.classList.add("firstLed");
+            }
         }
-        s1.setAttribute("data-sector", index.toString());
+        s1.setAttribute("data-sector", ledCount.toString());
         s1.style.position = "absolute";
         s1.style.top = t.toString() + "px";
         s1.style.left = l.toString() + "px";
@@ -3379,16 +3357,13 @@ function createLedMap(targetElement) {
         s1.setAttribute("data-bs-toggle", "tooltip");
         s1.setAttribute("data-bs-placement", "top");
         if (i === 0) {
-            s1.setAttribute("title", index.toString() + "/" + (index + 1).toString());
-            index++;
-            let clone = s1.cloneNode();
-            clone.setAttribute("data-sector", index);
-            map.appendChild(clone);
+            s1.setAttribute("title", ledCount.toString() + "/" + (ledCount + 1).toString());
+            ledCount++;
         } else {
-            s1.setAttribute("title", index.toString());
+            s1.setAttribute("title", ledCount.toString());
         }
         map.appendChild(s1);
-        index++;
+        ledCount++;
     }
 
     // This one, stupid
@@ -3399,10 +3374,14 @@ function createLedMap(targetElement) {
         r = l + fbWidth;
         let s1 = document.createElement("div");
         s1.classList.add("led");
-        if (isValid(range) && range.includes(index)) {
+        if (isValid(range1) && range1.includes(ledCount)) {
             s1.classList.add("highLed");
+            if (!started) {
+                started = true;
+                s1.classList.add("firstLed");
+            }
         }
-        s1.setAttribute("data-sector", index.toString());
+        s1.setAttribute("data-sector", ledCount.toString());
         s1.style.position = "absolute";
         s1.style.top = t.toString() + "px";
         s1.style.left = l.toString() + "px";
@@ -3411,42 +3390,29 @@ function createLedMap(targetElement) {
         s1.setAttribute("data-bs-toggle", "tooltip");
         s1.setAttribute("data-bs-placement", "top");
         if (i === 0) {
-            s1.setAttribute("title", index.toString() + "/" + (index + 1).toString());
-            index++;
-            let clone = s1.cloneNode();
-            clone.setAttribute("data-sector", index);
-            map.appendChild(clone);
+            s1.setAttribute("title", ledCount.toString() + "/" + (ledCount + 1).toString());
+            ledCount++;
         } else {
-            s1.setAttribute("title", index.toString());
+            s1.setAttribute("title", ledCount.toString());
         }
-        map.appendChild(s1);
-        index++;
+        map.appendChild(s1);        
+        ledCount++;
     }
     targetElement.appendChild(map);
-    if (isValid(range) && range.length) {
-        let target = range[0];
-        if (reverse) {
-            target = range[range.length - 1];
-        }
-        let tLed = document.querySelector('.led[data-sector="' + target + '"]');
-        if (isValid(tLed)) {
-            tLed.classList.add("firstLed");
-        }
-    }
 }
 
 function createHueMap() {
-    let selectedGroup = deviceData["selectedGroup"];
-    let groups = deviceData["groups"];
-    let group = deviceData["selectedGroup"];
-    let devBrightness = deviceData["brightness"];
-    for (let i = 0; i < groups.length; i++) {
+    let selectedGroup = deviceData["SelectedGroup"];
+    let groups = deviceData["Groups"];
+    let group = deviceData["SelectedGroup"];
+    let devBrightness = deviceData["Brightness"];
+    for(let i=0; i < groups.length; i++) {
         let sg = groups[i];
-        if (sg["id"] === selectedGroup) {
+            if (sg["Id"] === selectedGroup) {
             group = sg;
         }
     }
-
+    
     // Main container
     let hueMapRow = document.createElement("div");
     hueMapRow.classList.add("row", "justify-content-center");
@@ -3458,23 +3424,22 @@ function createHueMap() {
     gLabel.classList.add("form-label");
     gLabel.innerHTML = "Entertainment Group";
     let groupSelect = document.createElement("select");
-    groupSelect.setAttribute("data-property", "selectedGroup");
-    groupSelect.setAttribute("data-object", deviceData["id"]);
+    groupSelect.setAttribute("data-property", "SelectedGroup");
+    groupSelect.setAttribute("data-object", deviceData["Id"]);
     groupSelect.classList.add("devSetting", "form-control");
     let defaultOption = document.createElement("option");
     defaultOption.textContent = "";
     defaultOption.value = "-1";
     if (selectedGroup === -1) defaultOption.selected = true;
-
+    
     groupSelect.appendChild(defaultOption);
     groupSelect.id = "HueGroup";
-    for (let i = 0; i < groups.length; i++) {
-        if (groups[i]["type"] !== 4) continue;
+    for(let i = 0; i < groups.length; i++) {
+        if (groups[i]['type'] !== "Entertainment") continue;
         let opt = document.createElement("option");
-        opt.value = groups[i]["id"];
+        opt.value = groups[i]["Id"];
         opt.innerText = groups[i]["name"];
-        console.log("Checking:", selectedGroup, groups[i]["id"]);
-        if (selectedGroup === groups[i]["id"]) opt.selected = true;
+        if (selectedGroup.toString() === groups[i]["Id"]) opt.selected = true;
         groupSelect.appendChild(opt);
     }
     groupSelectCol.appendChild(gLabel);
@@ -3483,12 +3448,13 @@ function createHueMap() {
 
     if (!isValid(group) || !isValid(group["lights"])) {
         console.log("No group, returning: ", group);
-        return hueMapRow;
+        return hueMapRow;        
     }
 
-    let lights = deviceData["lights"];
-    let lightMap = deviceData["mappedLights"];
+    let lights = deviceData['Lights'];
+    let lightMap = deviceData['MappedLights'];
     if (!isValid(lights) || !isValid(lightMap)) {
+        console.log("No lights or lightmap, returning.")
         return hueMapRow;
     }
     // Get the main light group
@@ -3498,33 +3464,34 @@ function createHueMap() {
 
     // Sort our lights by name
     lights = lights.sort(function (a, b) {
-        if (!a.hasOwnProperty('name') || !b.hasOwnProperty('name')) return false;
-        return a["name"].localeCompare(b["name"]);
+        if (!a.hasOwnProperty('Name') || !b.hasOwnProperty('Name')) return false;
+        return a.Name.localeCompare(b.Name);
     });
     // Loop through our list of all lights
     for (let l in lights) {
         if (lights.hasOwnProperty(l)) {
             let light = lights[l];
-            let id = light["id"];
+            let id = light['_id'];
             let map;
             let brightness = 255;
             let override = false;
             let selection = -1;
 
-            for (let m in lightMap) {
+            for(let m in lightMap) {
                 if (lightMap.hasOwnProperty(m)) {
-                    if (lightMap[m]["id"] === id) {
+                    if (lightMap[m]['_id'] === id) {
                         map = lightMap[m];
-                        brightness = map["brightness"];
-                        override = map["override"];
+                        brightness = map["Brightness"];
+                        override = map["Override"];
                         if (!override) brightness = devBrightness;
-                        selection = map["targetSector"];
+                        selection = map["TargetSector"];                                           
                     }
                 }
             }
+            console.log("Checking for " + id + " in " , ids);
             if (ids.includes(id)) {
                 // Create the div for the other divs
-                let name = light["name"];
+                let name = light['Name'];
                 const lightCol = document.createElement('div');
                 lightCol.className += "delSel col-12 col-md-6 col-lg-3 justify-content-center form-group";
                 lightCol.id = id;
@@ -3532,11 +3499,11 @@ function createHueMap() {
                 lightCol.setAttribute('data-id', id);
 
                 // Light name
-
+                
                 let lightLabel = document.createElement("div");
                 lightLabel.classList.add("headerCol");
                 lightLabel.innerHTML = name;
-
+                
                 // Create the div to hold our select
                 let selDiv = document.createElement('div');
                 selDiv.className = "form-group";
@@ -3551,7 +3518,7 @@ function createHueMap() {
                 let targetSelect = document.createElement('select');
                 targetSelect.className = "lightProperty form-control text-dark bg-light";
                 targetSelect.setAttribute('data-id', id);
-                targetSelect.setAttribute('data-property', "TargetSector");
+                targetSelect.setAttribute('data-property',"TargetSector");
 
                 // Create the blank "unmapped" option
                 let opt = document.createElement("option");
@@ -3565,7 +3532,7 @@ function createHueMap() {
                 targetSelect.appendChild(opt);
 
                 // Add the options for our regions
-                let sectorCount = data.getProp("sectorCount");
+                let sectorCount = data.getProp("SectorCount");
                 for (let i = 1; i < sectorCount; i++) {
                     opt = document.createElement("option");
                     opt.value = (i).toString();
@@ -3588,13 +3555,13 @@ function createHueMap() {
                 newRange.className = "form-control lightProperty";
                 newRange.setAttribute("type", "range");
                 newRange.setAttribute('data-id', id);
-                newRange.setAttribute('data-property', "Brightness");
+                newRange.setAttribute('data-property',"Brightness");
                 newRange.setAttribute('name', 'brightness' + id);
                 newRange.setAttribute('min', "0");
                 newRange.setAttribute('max', "100");
                 newRange.setAttribute('value', brightness.toString());
                 newRange.setAttribute('data-id', id);
-                newRange.setAttribute('data-property', "Brightness");
+                newRange.setAttribute('data-property',"Brightness");
                 if (!override) newRange.disabled = true;
 
                 // Create container div for brightness slider
@@ -3613,7 +3580,7 @@ function createHueMap() {
                 const newCheck = document.createElement("input");
                 newCheck.className += "overrideBright custom-control-input lightProperty";
                 newCheck.setAttribute('data-id', id);
-                newCheck.setAttribute('data-property', "Override");
+                newCheck.setAttribute('data-property',"Override");
                 newCheck.setAttribute("type", "checkbox");
                 if (override) newCheck.setAttribute("checked", 'checked');
 
@@ -3636,45 +3603,52 @@ function createHueMap() {
     return hueMapRow;
 }
 
-function drawNanoShapes(panel) {
+function drawNanoShapes(panel) {    
     // Get window width
     let width = document.getElementById("stageCol").offsetWidth;
     let height = width * .5625;
     if (height > 800) height = 800;
-    let rotation = panel["rotation"];
+    let rotation = panel['Rotation'];
     if (!isValid(rotation)) rotation = 0;
     // Get layout data from panel
-    let mirrorX = panel["mirrorX"];
-    let mirrorY = panel["mirrorY"];
-    let layout = panel["layout"];
+    let mirrorX = panel['MirrorX'];
+    let mirrorY = panel['MirrorY'];
+    let layout = panel['Layout'];
     if (!isValid(layout)) return;
-
-    let sideLength = layout["sideLength"];
-    let positions = layout["positionData"];
+    
+    let sideLength = layout['SideLength'];
+    let positions = layout['PositionData'];
     let minX = 1000;
     let minY = 1000;
     let maxX = 0;
     let maxY = 0;
 
     // Calculate the min/max range for each tile
-    for (let i = 0; i < positions.length; i++) {
+    for (let i=0; i< positions.length; i++) {
         let data = positions[i];
-        if (data["x"] < minX) minX = data["x"];
-        if ((data["y"] * -1) < minY) minY = (data["y"] * -1);
-        if (data["x"] > maxX) maxX = data["x"];
-        if ((data["y"] * -1) > maxY) maxY = (data["y"] * -1);
+        if (data.X < minX) minX = data.X;
+        if ((data.Y * -1) < minY) minY = (data.Y * -1);
+        if (data.X > maxX) maxX = data.X;
+        if ((data.Y * -1) > maxY) maxY = (data.Y * -1);
     }
     let wX = maxX - minX;
     let wY = maxY - minY;
+    console.log("MimmaxY", maxY, minY);
     let scaleXY = 1;
     if (wX + 150 >= width) {
-        scaleXY = width / (wX + 150);
+        let newScale = width / (wX + 150);
+        console.log("Scaling canvas...", newScale);
+        scaleXY = newScale;
         maxX *= scaleXY;
         maxY *= scaleXY;
         minX *= scaleXY;
         minY *= scaleXY;
     }
     height = wY + 75;
+    console.log("Panel dims are", wX, wY);
+    console.log("ScaleXY is ", scaleXY);
+    console.log("Width is ", width);
+    console.log("Height is ", height);
 
     // Create our stage
     let stage = new Konva.Stage({
@@ -3686,10 +3660,10 @@ function drawNanoShapes(panel) {
     // Shape layer
     let cLayer = new Konva.Layer();
     stage.add(cLayer);
-
+    
     let x0 = (width - maxX - minX) / 2;
     let y0 = ((height - maxY - minY) / 2) + 30;
-
+    
     // Group for the shapes
     let shapeGroup = new Konva.Group({
         rotation: rotation,
@@ -3700,29 +3674,29 @@ function drawNanoShapes(panel) {
             x: scaleXY,
             y: scaleXY
         }
-    });
-
-    for (let i = 0; i < positions.length; i++) {
+    });    
+    
+    for (let i=0; i < positions.length; i++) {
         let shapeDrawing;
         let data = positions[i];
-        let shape = data["shapeType"];
-        sideLength = data["sideLength"];
-        let x = data["x"];
-        let y = data["y"];
+        let shape = data['ShapeType'];
+        sideLength = data["SideLength"];
+        let x = data.X;
+        let y = data.Y;
         if (mirrorX) x *= -1;
         if (!mirrorY) y *= -1;
         if (shape === 12) continue;
-
+        
         let sText = new Konva.Text({
             x: x,
             y: y,
-            text: data["panelId"],
+            text: data["PanelId"],
             fontSize: 30,
             listening: false,
             fontFamily: 'Calibri'
         });
 
-        let sectorText = data["targetSector"];
+        let sectorText = data['TargetSector'];
 
         let sText2 = new Konva.Text({
             x: x,
@@ -3732,7 +3706,7 @@ function drawNanoShapes(panel) {
             listening: false,
             fontFamily: 'Calibri'
         });
-        let o = data["o"];
+        let o = data['O'];
         // Draw each individual shape
         switch (shape) {
             // Hexagon
@@ -3752,8 +3726,8 @@ function drawNanoShapes(panel) {
                     stroke: 'black',
                     strokeWidth: 5,
                     closed: true,
-                    id: data["panelId"]
-                });
+                    id: data["PanelId"]
+                });                
                 break;
             // Triangles
             case 0:
@@ -3766,7 +3740,7 @@ function drawNanoShapes(panel) {
                     invert = true;
                 }
 
-                let angle = (2 * Math.PI) / 3;
+                let angle = (2*Math.PI)/3;
                 // Calculate our overall height based on side length
                 let h = sideLength;
                 //h *= 2;
@@ -3793,8 +3767,8 @@ function drawNanoShapes(panel) {
                     strokeWidth: 5,
                     closed: true,
                     rotation: rotation,
-                    id: data["panelId"]
-                });
+                    id: data["PanelId"]
+                });                
                 break;
             // Squares
             case 2:
@@ -3811,17 +3785,17 @@ function drawNanoShapes(panel) {
                     stroke: 'black',
                     strokeWidth: 4
                 });
-
+                
                 break;
             case 5:
                 break;
         }
         if (isValid(shapeDrawing)) {
             shapeDrawing.on('click', function () {
-                setNanoMap(data["panelId"], data["targetSector"]);
+                setNanoMap(data['PanelId'], data['TargetSector']);
             });
             shapeDrawing.on('tap', function () {
-                setNanoMap(data["panelId"], data["targetSector"]);
+                setNanoMap(data['PanelId'], data['TargetSector']);
             });
             shapeGroup.add(shapeDrawing);
         }
@@ -3829,7 +3803,7 @@ function drawNanoShapes(panel) {
         sText2.offsetX(sText2.width() / 2);
         sText.rotation(360 - rotation);
         sText2.rotation(360 - rotation);
-
+        
         shapeGroup.add(sText);
         shapeGroup.add(sText2);
     }
@@ -3842,12 +3816,12 @@ function drawNanoShapes(panel) {
     });
 
     shapeGroup.on('transformend', function () {
-        updateDevice(deviceData["id"], "rotation", shapeGroup.rotation());
+        updateDevice(deviceData["Id"], "Rotation", shapeGroup.rotation());
     });
     cLayer.add(tr);
     tr.nodes([shapeGroup]);
     cLayer.add(shapeGroup);
-
+    
     let container = document.getElementById('stageCol');
 
     // now we need to fit stage into parent
@@ -3857,12 +3831,12 @@ function drawNanoShapes(panel) {
 
     stage.width(width * scale);
     stage.height(height * scale);
-    stage.scale({x: scale, y: scale});
+    stage.scale({ x: scale, y: scale });
     //shapeGroup.scale = scale;
     stage.draw();
-
+    
     cLayer.draw();
-    cLayer.zIndex(0);
+    cLayer.zIndex(0);    
 }
 
 function setNanoMap(id, current) {
@@ -3874,14 +3848,13 @@ function setNanoMap(id, current) {
     createSectorMap(wrap, "nano");
 
     let nanoRegion = document.querySelectorAll(".nanoRegion");
-    for (let i = 0; i < nanoRegion.length; i++) {
+    for (let i=0; i < nanoRegion.length; i++) {
         let obj = nanoRegion[i];
         obj.classList.remove("checked");
     }
 
     if (current !== -1) {
-        console.log("Trying to check sector " + current);
-        document.querySelector('.sector[data-sector="' + current + '"]').classList.add("checked");
+        document.querySelector('.sector[data-sector="'+current+'"]').classList.add("checked");
     }
 
 }
@@ -3896,7 +3869,7 @@ function ranges(ledCount, offset, total) {
     return range.slice(offset, total + offset);
 }
 
-function sizeContent() {
+function sizeContent(force) {
     let navDiv = document.getElementById("mainNav");
     let footDiv = document.getElementById("footer");
     let cDiv = document.getElementById("mainContent");
@@ -3909,10 +3882,10 @@ function sizeContent() {
     let wWidth = window.innerWidth;
     winWidth = wWidth;
     winHeight = wHeight;
-
+    
     let ambientOffset = 0;
     if (mode === 3) {
-        ambientOffset = colorDiv.offsetHeight;
+        ambientOffset = colorDiv.offsetHeight; 
     }
     if (mode === 2 || mode === 4) {
         ambientOffset = audioDiv.offsetHeight;
@@ -3920,11 +3893,11 @@ function sizeContent() {
     let top = navDiv.offsetHeight + ambientOffset + "px";
     let height = wHeight - navDiv.offsetHeight - footDiv.offsetHeight - ambientOffset + "px";
     cDiv.style.position = "fixed";
-    cardRow.style.position = "fixed";
+    cardRow.style.position = "fixed";    
     cDiv.style.top = top;
     cardRow.style.top = top;
     cDiv.style.height = height;
-    cardRow.style.height = height;
+    cardRow.style.height = height;    
     cDiv.style.width = wWidth + "px";
     cardRow.style.width = wWidth + "px";
     colorDiv.style.width = wWidth + "px";
@@ -3943,11 +3916,12 @@ function sizeContent() {
 
 async function closeCard() {
     if (!expanded) {
+        console.log("Card not open, returning.");
         return;
     }
     deviceData = undefined;
     drawSectorMap = false;
-    drawLedMap = false;
+    drawLedMap = false;    
     expanded = false;
     cardClone.style.overflow = "hidden";
     await toggleExpansion(cardClone, {
@@ -3956,7 +3930,7 @@ async function closeCard() {
         width: `${toggleWidth}px`,
         height: `${toggleHeight}px`,
         padding: '1rem 1rem'
-    }, 300).then(function () {
+    }, 300).then(function(){
         cardClone.classList.add("devCard", "m-4");
         cardClone.classList.remove("container-fluid");
         cardClone.style.scrollY = "hidden";
@@ -3964,7 +3938,7 @@ async function closeCard() {
         // shrink the card back to the original position and size
         document.querySelectorAll(".delSetting").forEach(e => e.remove());
         cardClone.remove();
-
+        
         let settingsButtons = document.querySelectorAll(".mainSettings");
         for (let i = 0; i < settingsButtons.length; ++i) {
             settingsButtons[i].classList.remove('d-none');
@@ -3972,7 +3946,7 @@ async function closeCard() {
         let closeButtons = document.querySelectorAll(".closeBtn");
         for (let i = 0; i < closeButtons.length; ++i) {
             closeButtons[i].classList.add('d-none');
-        }
+        }            
     });
 }
 
