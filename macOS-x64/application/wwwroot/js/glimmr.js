@@ -239,6 +239,7 @@ data.registerDevicesListener(function () {
         devTimeout = null;
     }
     devTimeout = setTimeout(function () {
+        console.log("Reloading devices from listener.")
         loadDevices();
     }, 500);
 });
@@ -453,6 +454,12 @@ function setSocketListeners() {
         data.Stats = cpuData;
     });
 
+    websocket.on("frames", function (statData) {
+        let curStats = data.Stats;
+        curStats.Fps = statData;
+        data.Stats = curStats;
+    });
+
     websocket.on("ambientMode", function (mode) {
         console.log("Socket has set ambient mode to " + mode);
     });
@@ -590,8 +597,9 @@ function setSocketListeners() {
     });
 
     websocket.on('device', function (dData) {
+        console.log("DData: ", dData);
         let parsed = JSON.parse(dData);
-        if (parsed && typeof (parsed) === "object" && parsed.hasOwnProperty("Id") && parsed["Id"] !== undefined && parsed["Id"] !== "") {
+        if (parsed && typeof (parsed) === "object" && parsed.hasOwnProperty("id") && parsed["id"] !== undefined && parsed["id"] !== "") {
             console.log("Received device data from server: ", parsed);
         } else {
             console.log("Device data is invalid:", parsed);
@@ -796,9 +804,11 @@ function setListeners() {
         if (target.classList.contains("lightProperty")) {
             let id = target.getAttribute("data-id");
             let property = target.getAttribute("data-property");
+            let channel = parseInt(target.getAttribute("data-channel"));
+            console.log("LP: ", id, property, channel);
             let numVal = parseInt(val);
             if (!isNaN(numVal)) val = numVal;
-            updateLightProperty(id, property, val);
+            updateLightProperty(id, property, val, channel);
             return;
         }
 
@@ -1051,20 +1061,24 @@ function updateDeviceSector(sector, target) {
     sendMessage("flashSector", sector, false);
 }
 
-function updateLightProperty(myId, propertyName, value) {
-    let lm = getLightMap(myId);
-    lm[propertyName] = value;
-    setLightMap(lm);
-    let fGroup = deviceData["groups"];
-    let nGroup = [];
-    for (let g in fGroup) {
-        if (fGroup.hasOwnProperty(g)) {
-            fGroup[g]["id"] = fGroup[g]["id"];
-            nGroup.push(fGroup[g]);
+function updateLightProperty(myId, propertyName, value, channel) {
+    let groups = deviceData["groups"];
+    for (let i = 0; i < groups.length; i++) {
+        if (groups[i]["id"] === deviceData["selectedGroup"]) {
+            let group = groups[i];
+            console.log("Group: ", group);
+            for (let l = 0; l < group["services"].length; l++) {
+                if (group["services"][l]["channel"] === channel && group["services"][l]["svcId"] === myId) {
+                    let service = group["services"][l];
+                    service[propertyName] = value;
+                    group["services"][l] = service;
+                    groups[i] = group;
+                    break;
+                }
+            }            
         }
-
     }
-    updateDevice(deviceData["id"], "groups", nGroup);
+    updateDevice(deviceData["id"], "groups", groups);
 }
 
 function updateBeamProperty(beamPos, propertyName, value) {
@@ -1086,12 +1100,12 @@ function updateBeamProperty(beamPos, propertyName, value) {
     updateDevice(id, "beamLayout", beamLayout);
 }
 
-function getLightMap(id) {
-    let hueLightMap = deviceData["mappedLights"];
-    for (let l in hueLightMap) {
-        if (hueLightMap.hasOwnProperty(l)) {
-            if (hueLightMap[l]["id"] === id) {
-                return hueLightMap[l];
+function getLight(id) {
+    let lights = deviceData["lights"];
+    for (let light in lights) {
+        if (lights.hasOwnProperty(light)) {
+            if (lights[light]["id"] === id) {
+                return lights[light];
             }
         }
     }
@@ -1100,12 +1114,15 @@ function getLightMap(id) {
         TargetSector: -1,
         TargetSector2: -1,
         Brightness: 255,
-        Override: false
+        Override: false, 
+        Owner: "",
+        SvcId: "",
+        type: ""
     };
 }
 
-function setLightMap(map) {
-    let hueLightMap = deviceData["mappedLights"];
+function setLight(map) {
+    let hueLightMap = deviceData["lights"];
     for (let l in hueLightMap) {
         if (hueLightMap.hasOwnProperty(l)) {
             if (hueLightMap[l]["id"] === map["id"]) {
@@ -1115,7 +1132,7 @@ function setLightMap(map) {
         }
     }
     hueLightMap.push(map);
-    updateDevice(deviceData["id"], "mappedLights", hueLightMap);
+    updateDevice(deviceData["id"], "lights", hueLightMap);
 }
 
 
@@ -1259,9 +1276,9 @@ function loadUi() {
         }
         if (isValid(data.audioScenes)) {
             let aScenes = data.audioScenes;
-            let audioMode = sd["audioMap"];
+            let audioMode = sd["audioScene"];
             aScenes.sort((a, b) => (a["id"] > b["id"]) ? 1 : -1);
-            let sceneSelector = document.getElementById("AudioMap");
+            let sceneSelector = document.getElementById("audioScene");
             sceneSelector.innerHTML = "";
             for (let i = 0; i < aScenes.length; i++) {
                 let opt = document.createElement("option");
@@ -1808,6 +1825,8 @@ function getSubtitle(device) {
 }
 
 function createDeviceCard(device, addDemoText) {
+    console.log("Creating device card: ", device);
+    if (device["id"] === undefined) return null;
     if (device["tag"] === "DreamScreen" && device["deviceTag"].includes("DreamScreen")) return;
     // Create main card
     let card = document.createElement("div");
@@ -1974,7 +1993,7 @@ function getDevices() {
 function updateDevice(id, property, value) {
     let dev;
     let isLoaded = false;
-    if (property === "stripMode") value = parseInt(value);
+    if (property === "stripMode" || property === "offset") value = parseInt(value);
     if (isValid(deviceData) && deviceData["id"] === id) {
         dev = deviceData;
         isLoaded = true;
@@ -2897,13 +2916,13 @@ function createSectorCenter(targetElement, regionName) {
     }
     targetElement.appendChild(map);
     if (isValid(deviceData) && expanded) {
-        let mappedLights;
-        if (isValid(deviceData["mappedLights"])) {
-            mappedLights = deviceData["mappedLights"];
+        let lights;
+        if (isValid(deviceData["lights"])) {
+            lights = deviceData["lights"];
         }
-        if (isValid(mappedLights)) {
-            for (let i = 0; i < mappedLights.length; i++) {
-                let lMap = mappedLights[i];
+        if (isValid(lights)) {
+            for (let i = 0; i < lights.length; i++) {
+                let lMap = lights[i];
                 let target = lMap["targetSector"];
                 let targetDiv = document.querySelector('.sector[data-sector="' + target + '"]');
                 if (isValid(targetDiv)) {
@@ -3031,13 +3050,21 @@ function createSectorMap(targetElement, regionName) {
 
     targetElement.appendChild(map);
     if (isValid(deviceData) && expanded) {
-        let mappedLights;
-        if (isValid(deviceData["mappedLights"])) {
-            mappedLights = deviceData["mappedLights"];
+        let lights;
+        if (isValid(deviceData["lights"])) {
+            lights = deviceData["lights"];
         }
-        if (isValid(mappedLights)) {
-            for (let i = 0; i < mappedLights.length; i++) {
-                let lMap = mappedLights[i];
+        if (isValid(deviceData["groups"]) && isValid(deviceData["selectedGroup"])) {
+            for(let i = 0; i < deviceData["groups"].length; i++) {
+                if (deviceData["groups"][i]["id"] === deviceData["selectedGroup"]) {
+                    lights = deviceData["groups"][i]["services"];
+                    break;
+                }
+            }
+        }
+        if (isValid(lights)) {
+            for (let i = 0; i < lights.length; i++) {
+                let lMap = lights[i];
                 let target = lMap["targetSector"];
                 let targetDiv = document.querySelector('.sector[data-sector="' + target + '"]');
                 if (isValid(targetDiv)) {
@@ -3438,12 +3465,13 @@ function createLedMap(targetElement) {
 function createHueMap() {
     let selectedGroup = deviceData["selectedGroup"];
     let groups = deviceData["groups"];
-    let group = deviceData["selectedGroup"];
+    let groupId = deviceData["selectedGroup"];
     let devBrightness = deviceData["brightness"];
+    let groupData;
     for (let i = 0; i < groups.length; i++) {
         let sg = groups[i];
         if (sg["id"] === selectedGroup) {
-            group = sg;
+            groupData = sg;
         }
     }
 
@@ -3469,11 +3497,10 @@ function createHueMap() {
     groupSelect.appendChild(defaultOption);
     groupSelect.id = "HueGroup";
     for (let i = 0; i < groups.length; i++) {
-        if (groups[i]["type"] !== 4) continue;
         let opt = document.createElement("option");
         opt.value = groups[i]["id"];
         opt.innerText = groups[i]["name"];
-        console.log("Checking:", selectedGroup, groups[i]["id"]);
+        console.log("Checking:", selectedGroup, groups[i]["id"], groups[i]);
         if (selectedGroup === groups[i]["id"]) opt.selected = true;
         groupSelect.appendChild(opt);
     }
@@ -3481,56 +3508,59 @@ function createHueMap() {
     groupSelectCol.appendChild(groupSelect);
     hueMapRow.appendChild(groupSelectCol);
 
-    if (!isValid(group) || !isValid(group["lights"])) {
-        console.log("No group, returning: ", group);
+    if (!isValid(groupId)) {
+        console.log("No group, returning: ", groupId);
         return hueMapRow;
     }
 
-    let lights = deviceData["lights"];
-    let lightMap = deviceData["mappedLights"];
-    if (!isValid(lights) || !isValid(lightMap)) {
+    if (!isValid(groupData) || !isValid(groupData["services"])) {
+        console.log("No service/group data, returning: ", groupData);
+        return hueMapRow;
+    }
+    let lights = groupData["services"];
+    if (!isValid(lights)) {
         return hueMapRow;
     }
     // Get the main light group
     let lightRow = document.createElement("div");
     lightRow.classList.add("row", "justify-content-center", "col-12", "delSetting");
-    const ids = group["lights"];
-
+    
     // Sort our lights by name
     lights = lights.sort(function (a, b) {
         if (!a.hasOwnProperty('name') || !b.hasOwnProperty('name')) return false;
         return a["name"].localeCompare(b["name"]);
     });
-    // Loop through our list of all lights
-    for (let l in lights) {
-        if (lights.hasOwnProperty(l)) {
-            let light = lights[l];
-            let id = light["id"];
-            let map;
-            let brightness = 255;
-            let override = false;
-            let selection = -1;
-
-            for (let m in lightMap) {
-                if (lightMap.hasOwnProperty(m)) {
-                    if (lightMap[m]["id"] === id) {
-                        map = lightMap[m];
-                        brightness = map["brightness"];
-                        override = map["override"];
-                        if (!override) brightness = devBrightness;
-                        selection = map["targetSector"];
-                    }
-                }
-            }
-            if (ids.includes(id)) {
-                // Create the div for the other divs
+    
+    let targetGroup;
+    for (let i=0; i < groups.length; i++) {
+        if (groups[i]["id"] === selectedGroup) {
+            targetGroup = groups[i];
+            break;
+        }
+    }
+    console.log("Selected group: ", targetGroup);
+    
+    if (targetGroup !== undefined) {
+        let services = targetGroup["services"];
+        for (let l in services) {
+            if (services.hasOwnProperty(l)) {
+                let light = services[l];
+                let c = light["channel"]
+                let id = light["svcId"];
+                let override = light["override"];
+                let brightness = light["override"] ? light["brightness"] : devBrightness
+                let selection = light["targetSector"];
                 let name = light["name"];
+                if (light["type"].includes("strip")) {
+                    name += " ("+ c +")";
+                }
+                // Create the div for the other divs
                 const lightCol = document.createElement('div');
                 lightCol.className += "delSel col-12 col-md-6 col-lg-3 justify-content-center form-group";
                 lightCol.id = id;
                 lightCol.setAttribute('data-name', name);
                 lightCol.setAttribute('data-id', id);
-
+                lightCol.setAttribute('data-channel', c);
                 // Light name
 
                 let lightLabel = document.createElement("div");
@@ -3551,7 +3581,8 @@ function createHueMap() {
                 let targetSelect = document.createElement('select');
                 targetSelect.className = "lightProperty form-control text-dark bg-light";
                 targetSelect.setAttribute('data-id', id);
-                targetSelect.setAttribute('data-property', "TargetSector");
+                targetSelect.setAttribute('data-property', "targetSector");
+                targetSelect.setAttribute('data-channel', c);
 
                 // Create the blank "unmapped" option
                 let opt = document.createElement("option");
@@ -3588,13 +3619,14 @@ function createHueMap() {
                 newRange.className = "form-control lightProperty";
                 newRange.setAttribute("type", "range");
                 newRange.setAttribute('data-id', id);
-                newRange.setAttribute('data-property', "Brightness");
+                newRange.setAttribute('data-channel', c);
+                newRange.setAttribute('data-property', "brightness");
                 newRange.setAttribute('name', 'brightness' + id);
                 newRange.setAttribute('min', "0");
                 newRange.setAttribute('max', "100");
                 newRange.setAttribute('value', brightness.toString());
                 newRange.setAttribute('data-id', id);
-                newRange.setAttribute('data-property', "Brightness");
+                newRange.setAttribute('data-property', "brightness");
                 if (!override) newRange.disabled = true;
 
                 // Create container div for brightness slider
@@ -3613,7 +3645,8 @@ function createHueMap() {
                 const newCheck = document.createElement("input");
                 newCheck.className += "overrideBright custom-control-input lightProperty";
                 newCheck.setAttribute('data-id', id);
-                newCheck.setAttribute('data-property', "Override");
+                newCheck.setAttribute('data-channel', c);
+                newCheck.setAttribute('data-property', "override");
                 newCheck.setAttribute("type", "checkbox");
                 if (override) newCheck.setAttribute("checked", 'checked');
 
@@ -3628,10 +3661,11 @@ function createHueMap() {
                 lightCol.appendChild(selDiv);
                 lightCol.appendChild(rangeDiv);
                 lightCol.appendChild(chkDiv);
-                lightRow.appendChild(lightCol);
-            }
-        }
-    }
+                lightRow.appendChild(lightCol);                   
+            
+            }            
+        }        
+    }     
     hueMapRow.appendChild(lightRow);
     return hueMapRow;
 }
@@ -3886,14 +3920,50 @@ function setNanoMap(id, current) {
 
 }
 
-function ranges(ledCount, offset, total) {
+// 300, 20, 150
+// 300, -10, 150
+/**
+ * Calculate the total range that LEDs fall into.
+ *
+ * @param systemTotal - The total number of LEDs our system has
+ * @param offset - Starting point in relation to the total number of LEDs
+ * @param deviceTotal - The number of LEDs for the desired device
+ * @returns {*[]} - The range of LEDs
+ */
+function ranges(systemTotal, offset, deviceTotal) {
     let range = [];
-    while (range.length < offset + total) {
-        for (let i = 0; i < ledCount; i++) {
+    let fromEnd = 0;
+    let startOffset = offset;
+    // If negative offset, we need to start from the end
+    if (offset < 0) {
+        fromEnd = systemTotal + offset;
+        deviceTotal += offset;
+        offset = fromEnd;
+        startOffset = 0;
+    } else if (offset + deviceTotal > systemTotal) {
+        if (offset > systemTotal) {
+            while (offset > systemTotal) {
+                offset -= systemTotal;
+            }
+        }
+        fromEnd = systemTotal - offset;
+        deviceTotal -= fromEnd;
+        startOffset = 0;
+    }
+
+    // Start from the end if required
+    if (fromEnd !== 0) {
+        for (let i = offset; i < systemTotal; i++) {
             range.push(i);
         }
     }
-    return range.slice(offset, total + offset);
+
+    if (deviceTotal > 0) {
+        for (let i = startOffset; i < startOffset + deviceTotal; i++) {
+            range.push(i);
+        }
+    }
+    return range;
 }
 
 function sizeContent() {

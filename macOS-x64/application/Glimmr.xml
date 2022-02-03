@@ -714,6 +714,150 @@
                 UI Properties.
             </summary>
         </member>
+        <member name="P:Glimmr.Models.ColorTarget.HueV2.HueV2Data.Brightness">
+            <summary>
+                Brightness to use for all enabled hue bulbs, unless override is specified.
+            </summary>
+        </member>
+        <member name="P:Glimmr.Models.ColorTarget.HueV2.HueV2Data.Groups">
+            <summary>
+                List of available entertainment groups.
+            </summary>
+        </member>
+        <member name="P:Glimmr.Models.ColorTarget.HueV2.HueV2Data.SelectedGroup">
+            <summary>
+                Target entertainment group to use for streaming.
+            </summary>
+        </member>
+        <member name="P:Glimmr.Models.ColorTarget.HueV2.HueV2Data.Token">
+            <summary>
+                Token for entertainment streaming assigned after device is linked.
+            </summary>
+        </member>
+        <member name="P:Glimmr.Models.ColorTarget.HueV2.HueV2Data.AppKey">
+            <summary>
+                Hue user ID assigned after device is linked.
+            </summary>
+        </member>
+        <member name="P:Glimmr.Models.ColorTarget.HueV2.HueV2Data.Tag">
+            <summary>
+                Device tag
+            </summary>
+        </member>
+        <member name="P:Glimmr.Models.ColorTarget.HueV2.HueV2Data.Name">
+            <summary>
+                Device name.
+            </summary>
+        </member>
+        <member name="P:Glimmr.Models.ColorTarget.HueV2.HueV2Data.Id">
+            <summary>
+                Unique device ID.
+            </summary>
+        </member>
+        <member name="P:Glimmr.Models.ColorTarget.HueV2.HueV2Data.IpAddress">
+            <summary>
+                Device IP Address.
+            </summary>
+        </member>
+        <member name="P:Glimmr.Models.ColorTarget.HueV2.HueV2Data.Enable">
+            <summary>
+                Enable device for streaming.
+            </summary>
+        </member>
+        <member name="P:Glimmr.Models.ColorTarget.HueV2.HueV2Data.LastSeen">
+            <summary>
+                Last time the device was seen during discovery.
+            </summary>
+        </member>
+        <member name="P:Glimmr.Models.ColorTarget.HueV2.HueV2Data.KeyProperties">
+            <summary>
+                UI Properties.
+            </summary>
+        </member>
+        <member name="M:Glimmr.Models.ColorTarget.HueV2.HueEntertainmentConfig.#ctor">
+            <summary>
+            Config ID
+            </summary>
+        </member>
+        <member name="T:Glimmr.Models.ColorTarget.HueV2.LightMapV2">
+            <summary>
+                Used to associate light data with mapping/brightness info.
+            </summary>
+        </member>
+        <member name="P:Glimmr.Models.ColorTarget.HueV2.LightMapV2.SvcId">
+            <summary>
+            Channel ID of light/device
+            </summary>
+        </member>
+        <member name="P:Glimmr.Models.ColorTarget.HueV2.LightMapV2.Override">
+            <summary>
+                Override hue brightness and use light-specific value.
+            </summary>
+        </member>
+        <member name="P:Glimmr.Models.ColorTarget.HueV2.LightMapV2.Brightness">
+            <summary>
+                Light-specific brightness - needs override enable to be used.
+            </summary>
+        </member>
+        <member name="P:Glimmr.Models.ColorTarget.HueV2.LightMapV2.TargetSector">
+            <summary>
+                Target sector used for streaming.
+            </summary>
+        </member>
+        <member name="P:Glimmr.Models.ColorTarget.HueV2.LightMapV2.Id">
+            <summary>
+            Light ID
+            </summary>
+        </member>
+        <member name="P:Glimmr.Models.ColorTarget.HueV2.LightMapV2.Owner">
+            <summary>
+            Owner RID of the light.
+            </summary>
+        </member>
+        <member name="P:Glimmr.Models.ColorTarget.HueV2.LightMapV2.Name">
+            <summary>
+            Light name
+            </summary>
+        </member>
+        <member name="P:Glimmr.Models.ColorTarget.HueV2.LightMapV2.Type">
+            <summary>
+            ArchType of the device
+            </summary>
+        </member>
+        <member name="P:Glimmr.Models.ColorTarget.HueV2.LightMapV2.Channel">
+            <summary>
+            Device channel
+            </summary>
+        </member>
+        <member name="P:Glimmr.Models.ColorTarget.HueV2.HueGroup.Name">
+            <summary>
+            Group Name
+            </summary>
+        </member>
+        <member name="P:Glimmr.Models.ColorTarget.HueV2.HueGroup.Id">
+            <summary>
+            Group ID
+            </summary>
+        </member>
+        <member name="P:Glimmr.Models.ColorTarget.HueV2.HueGroup.Services">
+            <summary>
+            List of all services associated with this group.
+            </summary>
+        </member>
+        <member name="M:Glimmr.Models.ColorTarget.HueV2.HueV2Device.StartStream(System.Threading.CancellationToken)">
+            <summary>
+                Set up and create a new streaming layer based on our light map
+            </summary>
+            <param name="ct">A cancellation token.</param>
+        </member>
+        <member name="M:Glimmr.Models.ColorTarget.HueV2.HueV2Device.SetColor(System.Collections.Generic.IReadOnlyList{System.Drawing.Color},System.Int32,System.Boolean)">
+            <summary>
+                Update lights in entertainment group...
+            </summary>
+            <param name="sectors"></param>
+            <param name="fadeTime"></param>
+            <param name="force"></param>
+        </member>
         <member name="P:Glimmr.Models.ColorTarget.Hue.HueData.Brightness">
             <summary>
                 Brightness to use for all enabled hue bulbs, unless override is specified.
@@ -2278,6 +2422,11 @@
         <member name="P:Glimmr.Models.SystemData.LeftCount">
             <summary>
                 Number of LEDs along the left side of the screen.
+            </summary>
+        </member>
+        <member name="P:Glimmr.Models.SystemData.LogLevel">
+            <summary>
+                Level to log the logging at. 0 = debug, 1 = inf
             </summary>
         </member>
         <member name="P:Glimmr.Models.SystemData.OpenRgbPort">
